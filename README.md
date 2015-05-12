@@ -1,0 +1,2 @@
+# bimos
+Binary Image Mosaicing
