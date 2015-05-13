@@ -18,32 +18,54 @@
 * along with bimos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "bimos/MosaicBuilder.h"
+#ifndef _PARAMS_H
+#define _PARAMS_H
+
+#include <ros/ros.h>
+
+#include <bimos/util/util.h>
 
 namespace bimos
 {
 
 /**
- * @brief Default class constructor.
- * @param nh ROS node handle.
+ * @brief Singleton class to store the parameters of the application.
  */
-MosaicBuilder::MosaicBuilder(const ros::NodeHandle _nh)
-    : nh(_nh),
-      params(0)
+class Params
 {
-    ROS_INFO("Initializing node ...");
-    ROS_INFO("Reading parameters ...");
-    params = Params::getInstance();
-    params->readParams(nh);
-    ROS_INFO("Parameters read");
-    ROS_INFO("Node initialized");
-}
+public:
+    // Parameters
+    std::string images_dir;
+    int nimages;
+    std::vector<std::string> img_filenames;
+    std::string working_dir;
+    std::string img_descriptor;
+    int nkeypoints;
 
-/**
- * @brief Default class destructor.
- */
-MosaicBuilder::~MosaicBuilder()
-{
-}
+    // Public functions.
+    static Params* getInstance();
+    void readParams(const ros::NodeHandle& nh);
+
+protected:
+    // Protected constructor. Singleton class.
+    Params() :
+        nimages(0),
+        nkeypoints(2500)
+    {
+    }
+
+    ~Params()
+    {
+        delete _instance;
+    }
+
+    Params(const Params &);
+    Params& operator=(const Params &);
+
+private:
+    // Single instance.
+    static Params* _instance;
+};
 
 }
+#endif /* _PARAMS_H */

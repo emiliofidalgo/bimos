@@ -22,20 +22,28 @@
 #define MOSAICBUILDER_H
 
 #include <omp.h>
-#include <opencv2/opencv.hpp>
-#include <ros/ros.h>
+
+#include <bimos/util/Image.h>
+#include <bimos/util/Params.h>
+#include <bimos/util/util.h>
 
 namespace bimos
 {
 
+/**
+ * @brief Main bimos class.
+ */
 class MosaicBuilder
 {
 public:
-    MosaicBuilder(const ros::NodeHandle nh);
+    MosaicBuilder(const ros::NodeHandle _nh);
     ~MosaicBuilder();
 
     // ROS
-    ros::NodeHandle _nh;
+    ros::NodeHandle nh;
+
+    // Parameters
+    Params* params;
 };
 
 }

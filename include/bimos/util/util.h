@@ -18,32 +18,22 @@
 * along with bimos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "bimos/MosaicBuilder.h"
+#ifndef UTILBINMOS_H
+#define UTILBINMOS_H
+
+#include <stdio.h>
+
+#include <boost/filesystem.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+
+#include <bimos/util/Image.h>
 
 namespace bimos
 {
 
-/**
- * @brief Default class constructor.
- * @param nh ROS node handle.
- */
-MosaicBuilder::MosaicBuilder(const ros::NodeHandle _nh)
-    : nh(_nh),
-      params(0)
-{
-    ROS_INFO("Initializing node ...");
-    ROS_INFO("Reading parameters ...");
-    params = Params::getInstance();
-    params->readParams(nh);
-    ROS_INFO("Parameters read");
-    ROS_INFO("Node initialized");
-}
-
-/**
- * @brief Default class destructor.
- */
-MosaicBuilder::~MosaicBuilder()
-{
-}
+void ratioMatching(const Image& query, const Image& train, std::vector<cv::DMatch>& matches, const float ratio = 0.8f);
+void getImageFilenames(const std::string& directory, std::vector<std::string>& filenames);
 
 }
+#endif

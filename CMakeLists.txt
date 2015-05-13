@@ -25,7 +25,7 @@ catkin_package(
     INCLUDE_DIRS include
     LIBRARIES bimos
     CATKIN_DEPENDS roscpp
-	DEPENDS OpenCV Boost
+    DEPENDS OpenCV Boost
 )
 
 ###########
@@ -40,7 +40,9 @@ add_custom_target(dtarget_bimos SOURCES ${HDRS} ${SRCS} ${LNCH})
 
 # MosaicBuilder Library
 set(BIMOS_SRCS
-	src/MosaicBuilder.cpp
+    src/MosaicBuilder.cpp
+    src/util/Params.cpp
+    src/util/util.cpp
 )
 add_library(bimos ${BIMOS_SRCS})
 target_link_libraries(bimos ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${catkin_LIBRARIES})
