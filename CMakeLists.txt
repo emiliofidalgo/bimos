@@ -40,6 +40,8 @@ add_custom_target(dtarget_bimos SOURCES ${HDRS} ${SRCS} ${LNCH})
 
 # MosaicBuilder Library
 set(BIMOS_SRCS
+    src/imgdesc/ldb.cpp
+    src/imgdesc/ORBextractor.cc
     src/MosaicBuilder.cpp
     src/util/Params.cpp
     src/util/util.cpp
