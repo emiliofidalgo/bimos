@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package>
+    <name>bimos</name>
+    <version>0.1.0</version>
+    <description>Binary Image Mosaicing Package</description>
+    <author email="emilio.garcia@uib.es">Emilio Garcia-Fidalgo</author>
+    <maintainer email="emilio.garcia@uib.es">Emilio Garcia-Fidalgo</maintainer>
+    <license>GPL</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <build_depend>roscpp</build_depend>
+
+    <run_depend>roscpp</run_depend>
+</package>

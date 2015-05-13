@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+
+    <!-- Arguments -->
+    <arg name="images_dir" default="/datasets/ODEMAR/130f/" />
+    <arg name="working_dir" default="/home/emilio/Escritorio/Mosaicing/" />
+    <arg name="img_description" default="FAST_LDB" />
+    <arg name="nkeypoints" default="3000" />
+    <arg name="regularization_factor" default="8.0" />
+
+    <!-- Mosaic Builder node -->
+    <node pkg="bimos" type="bimos_node" name="bimos_node" output="screen">
+        <param name="images_dir" value="$(arg images_dir)" />
+        <param name="working_dir" value="$(arg working_dir)" />
+        <param name="img_description" value="$(arg img_description)" />
+        <param name="nkeypoints" value="$(arg nkeypoints)" />
+        <param name="regularization_factor" value="$(arg regularization_factor)" />
+    </node>
+
+</launch>
