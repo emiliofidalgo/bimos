@@ -29,14 +29,15 @@ namespace bimos
  */
 MosaicBuilder::MosaicBuilder(const ros::NodeHandle _nh)
     : nh(_nh),
-      params(0)
+      p(Params::getInstance())
 {
     ROS_INFO("Initializing node ...");
     ROS_INFO("Reading parameters ...");
-    params = Params::getInstance();
-    params->readParams(nh);
+    p->readParams(nh);
     ROS_INFO("Parameters read");
     ROS_INFO("Node initialized");
+
+    createMosaic();
 }
 
 /**
@@ -44,6 +45,30 @@ MosaicBuilder::MosaicBuilder(const ros::NodeHandle _nh)
  */
 MosaicBuilder::~MosaicBuilder()
 {
+}
+
+/**
+ * @brief Starts the mosaicing process using the options stored in params.
+ */
+void MosaicBuilder::createMosaic()
+{
+   ImageDescriptor imgdes(p->img_descriptor, p->nkeypoints);
+
+   for (int i = 0; i < p->nimages; i++)
+   {
+       cv::Mat img = cv::imread(p->img_filenames[i], 0);
+       std::vector<cv::KeyPoint> kps;
+       cv::Mat dscs;
+       imgdes.describeImage(img, kps, dscs);
+
+       std::cout << "Kps: " << kps.size() << std::endl;
+
+       cv::Mat outimg;
+       cv::drawKeypoints(img, kps, outimg);
+
+       cv::imshow("Kps", outimg);
+       cv::waitKey(0);
+   }
 }
 
 }

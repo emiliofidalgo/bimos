@@ -23,6 +23,7 @@
 
 #include <omp.h>
 
+#include <bimos/imgdesc/ImageDescriptor.h>
 #include <bimos/util/Image.h>
 #include <bimos/util/Params.h>
 #include <bimos/util/util.h>
@@ -39,11 +40,13 @@ public:
     MosaicBuilder(const ros::NodeHandle _nh);
     ~MosaicBuilder();
 
+    void createMosaic();
+
     // ROS
     ros::NodeHandle nh;
 
     // Parameters
-    Params* params;
+    Params* p;
 };
 
 }
