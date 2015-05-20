@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp camera_calibration_parsers sensor
 
 # System dependencies
 find_package(OpenCV REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system filesystem)
+find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 find_package(OpenMP REQUIRED)
 if(OPENMP_FOUND)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -43,6 +43,7 @@ set(BIMOS_SRCS
     src/imgdesc/ImageDescriptor.cpp
     src/imgdesc/ldb.cpp
     src/imgdesc/ORBextractor.cc
+    src/kfsel/KeyframeSelector.cpp
     src/MosaicBuilder.cpp
     src/util/Params.cpp
     src/util/util.cpp
