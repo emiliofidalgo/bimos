@@ -34,10 +34,8 @@ namespace bimos
 class Params
 {
 public:
-    // Parameters
-    std::string images_dir;
-    int nimages;
-    std::vector<std::string> img_filenames;
+    // Parameters    
+    int nimages;    
     std::string working_dir;
     std::string img_descriptor;
     int nkeypoints;

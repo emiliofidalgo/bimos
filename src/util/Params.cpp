@@ -44,20 +44,13 @@ Params* Params::getInstance()
  */
 void Params::readParams(const ros::NodeHandle& nh)
 {
-    nh.param<std::string>("images_dir", images_dir, "");
-    ROS_INFO("[Params] Image directory: %s", images_dir.c_str());
-
-    getImageFilenames(images_dir, img_filenames);
-    nimages = img_filenames.size();
-    ROS_INFO("[Params] %u images found", nimages);
-
     nh.param<std::string>("working_dir", working_dir, "");
     ROS_INFO("[Params] Working directory: %s", working_dir.c_str());
 
     nh.param<std::string>("img_descriptor", img_descriptor, "FAST_LDB");
     ROS_INFO("[Params] Image description %s", img_descriptor.c_str());
 
-    nh.param("nkeypoints", nkeypoints, 2500);
+    nh.param("nkeypoints", nkeypoints, 3000);
     ROS_INFO("[Params] Number of features: %i", nkeypoints);
 }
 
