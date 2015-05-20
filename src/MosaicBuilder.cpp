@@ -44,7 +44,7 @@ MosaicBuilder::MosaicBuilder(const ros::NodeHandle _nh)
  * @brief Default class destructor.
  */
 MosaicBuilder::~MosaicBuilder()
-{
+{    
 }
 
 /**
@@ -52,7 +52,12 @@ MosaicBuilder::~MosaicBuilder()
  */
 void MosaicBuilder::createMosaic()
 {
-   ImageDescriptor imgdes(p->img_descriptor, p->nkeypoints);
+    KeyframeSelector kfsel(nh);
+    boost::thread kfsel_thread(&KeyframeSelector::run, &kfsel);
+
+    kfsel_thread.join();
+
+   /*ImageDescriptor imgdes(p->img_descriptor, p->nkeypoints);
 
    for (int i = 0; i < p->nimages; i++)
    {
@@ -68,7 +73,7 @@ void MosaicBuilder::createMosaic()
 
        cv::imshow("Kps", outimg);
        cv::waitKey(0);
-   }
+   }*/
 }
 
 }

@@ -21,9 +21,11 @@
 #ifndef MOSAICBUILDER_H
 #define MOSAICBUILDER_H
 
+#include <boost/thread.hpp>
 #include <omp.h>
 
 #include <bimos/imgdesc/ImageDescriptor.h>
+#include <bimos/kfsel/KeyframeSelector.h>
 #include <bimos/util/Image.h>
 #include <bimos/util/Params.h>
 #include <bimos/util/util.h>
@@ -41,6 +43,8 @@ public:
     ~MosaicBuilder();
 
     void createMosaic();
+
+private:
 
     // ROS
     ros::NodeHandle nh;
