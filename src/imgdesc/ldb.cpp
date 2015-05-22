@@ -29,6 +29,7 @@
 
     CHANGES:
         The #include statement has been updated to be used in this package.
+        A bug in the function compute() has been fixed to work with color images.
 */
 
 #include <fstream>
@@ -667,11 +668,15 @@ int LDB::descriptorSize() const
         return kBytes;
 }
 
-void LDB::compute( const Mat& _image, 
+void LDB::compute( const Mat& image,
 				   vector<KeyPoint>& _keypoints, 
 				   Mat& _descriptors, 
 				   bool flag) const
 {
+    // Added to work with color images.
+    cv::Mat _image;
+    image.copyTo(_image);
+
 	if(_image.empty() )
 		return;
 
