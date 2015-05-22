@@ -26,10 +26,11 @@ namespace bimos
 /**
  * @brief Default constructor.
  */
-KeyframeSelector::KeyframeSelector(const ros::NodeHandle& nh) :
-    _nh(nh)
+KeyframeSelector::KeyframeSelector(const ros::NodeHandle& nh, Params* params) :
+    _nh(nh),
+    p(params)
 {
-    _img_subs = _nh.subscribe("image", 1, &KeyframeSelector::processImage, this);
+    imgdesc = new ImageDescriptor(p->img_descriptor, p->nkeypoints);
 }
 
 /**
@@ -37,6 +38,7 @@ KeyframeSelector::KeyframeSelector(const ros::NodeHandle& nh) :
  */
 KeyframeSelector::~KeyframeSelector()
 {
+    delete imgdesc;
 }
 
 /**
@@ -44,6 +46,7 @@ KeyframeSelector::~KeyframeSelector()
  */
 void KeyframeSelector::run()
 {
+    _img_subs = _nh.subscribe("image", 1, &KeyframeSelector::processImage, this);
     ros::spin();
 }
 
@@ -52,11 +55,11 @@ void KeyframeSelector::run()
  * @param msg Image as a ROS message.
  */
 void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
-{
+{    
     cv_bridge::CvImageConstPtr cv_ptr;
     try
     {
-        cv_ptr = cv_bridge::toCvShare(msg);
+        cv_ptr = cv_bridge::toCvShare(msg);        
     }
     catch (cv_bridge::Exception& e)
     {
@@ -64,7 +67,13 @@ void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
         return;
     }
 
-    cv::imshow("Image", cv_ptr->image);
+    std::vector<cv::KeyPoint> kps;
+    cv::Mat dscs;
+    imgdesc->describeImage(cv_ptr->image, kps, dscs);
+    std::cout << "KPS: " << kps.size() << std::endl;
+    cv::Mat outimg;
+    cv::drawKeypoints(img, kps, outimg);
+    cv::imshow("KPS", outimg);
     cv::waitKey(50);
 }
 

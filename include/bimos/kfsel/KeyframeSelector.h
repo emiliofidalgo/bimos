@@ -26,6 +26,9 @@
 #include <sensor_msgs/Image.h>
 #include <opencv2/opencv.hpp>
 
+#include <bimos/util/Params.h>
+#include <bimos/imgdesc/ImageDescriptor.h>
+
 namespace bimos
 {
 
@@ -35,7 +38,7 @@ namespace bimos
 class KeyframeSelector
 {
 public:
-    KeyframeSelector(const ros::NodeHandle& nh);
+    KeyframeSelector(const ros::NodeHandle& nh, Params* params);
     ~KeyframeSelector();
 
     void run();
@@ -44,6 +47,12 @@ public:
 private:
     ros::NodeHandle _nh;
     ros::Subscriber _img_subs;
+
+    // Parameters
+    Params* p;
+
+    // Image descriptor
+    ImageDescriptor* imgdesc;
 };
 
 }
