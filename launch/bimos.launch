@@ -9,7 +9,7 @@
     <arg name="run_image_proc" default="false" />
     <!-- Arguments for bimos -->
     <arg name="img_topic" default="/image_publisher/image_raw" />
-    <arg name="working_dir" default="/home/emilio/Escritorio/Mosaicing/" />
+    <arg name="working_dir" default="/home/emilio/Escritorio/Serialization/Mosaicing/" />
     <arg name="img_descriptor" default="FAST_LDB" />
     <arg name="nkeypoints" default="3000" />
 
