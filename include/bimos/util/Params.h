@@ -34,8 +34,7 @@ namespace bimos
 class Params
 {
 public:
-    // Parameters    
-    int nimages;    
+    // Parameters
     std::string working_dir;
     std::string img_descriptor;
     int nkeypoints;
@@ -46,8 +45,7 @@ public:
 
 protected:
     // Protected constructor. Singleton class.
-    Params() :
-        nimages(0),
+    Params() :        
         nkeypoints(2500)
     {
     }
