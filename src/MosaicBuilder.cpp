@@ -52,28 +52,24 @@ MosaicBuilder::~MosaicBuilder()
  */
 void MosaicBuilder::createMosaic()
 {
-    KeyframeSelector kfsel(nh);
+    // Preparing working directory
+    ROS_INFO("Preparing working directory ...");
+    boost::filesystem::path res_imgs_dir = p->working_dir + "images/";
+    boost::filesystem::remove_all(res_imgs_dir);
+    boost::filesystem::create_directory(res_imgs_dir);
+    ROS_INFO("Working directory ready");
+
+    KeyframeSelector kfsel(nh, p);
     boost::thread kfsel_thread(&KeyframeSelector::run, &kfsel);
 
-    kfsel_thread.join();
+    ros::Rate rate(1.0);
+    while (ros::ok())
+    {
+        // TODO Publishing Mosaicing Information
+        rate.sleep();
+    }
 
-   /*ImageDescriptor imgdes(p->img_descriptor, p->nkeypoints);
-
-   for (int i = 0; i < p->nimages; i++)
-   {
-       cv::Mat img = cv::imread(p->img_filenames[i], 0);
-       std::vector<cv::KeyPoint> kps;
-       cv::Mat dscs;
-       imgdes.describeImage(img, kps, dscs);
-
-       std::cout << "Kps: " << kps.size() << std::endl;
-
-       cv::Mat outimg;
-       cv::drawKeypoints(img, kps, outimg);
-
-       cv::imshow("Kps", outimg);
-       cv::waitKey(0);
-   }*/
+    ros::shutdown();    
 }
 
 }
