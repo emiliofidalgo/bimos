@@ -28,7 +28,9 @@ namespace bimos
  */
 KeyframeSelector::KeyframeSelector(const ros::NodeHandle& nh, Params* params) :
     _nh(nh),
-    p(params)
+    p(params),
+    nimages(0),
+    nkfs(0)
 {
     imgdesc = new ImageDescriptor(p->img_descriptor, p->nkeypoints);
 }
@@ -46,6 +48,10 @@ KeyframeSelector::~KeyframeSelector()
  */
 void KeyframeSelector::run()
 {
+    nimages = 0;
+    nkfs = 0;
+
+    // Launching the topic for receiving images
     _img_subs = _nh.subscribe("image", 1, &KeyframeSelector::processImage, this);
     ros::spin();
 }
@@ -67,14 +73,24 @@ void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
         return;
     }
 
-    std::vector<cv::KeyPoint> kps;
-    cv::Mat dscs;
-    imgdesc->describeImage(cv_ptr->image, kps, dscs);
-    std::cout << "KPS: " << kps.size() << std::endl;
-    cv::Mat outimg;
-    cv::drawKeypoints(img, kps, outimg);
-    cv::imshow("KPS", outimg);
-    cv::waitKey(50);
+    // Serialize the image on disk
+    std::string image_filename_orig = p->working_dir + "images/image%06d.jpg";
+    char name_orig[500];
+    sprintf(name_orig, image_filename_orig.c_str(), nimages);
+    cv::imwrite(name_orig, cv_ptr->image);
+
+    // Creating a instance of the bimos::Image class
+    Image* image = new Image;
+
+    // Filling the image structure.
+    image->id = nimages;
+    image->filename = std::string(name_orig);
+    cv_ptr->image.copyTo(image->image);
+    imgdesc->describeImage(image->image, image->kps, image->dscs);
+    ROS_INFO("Found %lu keypoints in image %i", image->kps.size(), nimages);
+    nimages++;
+
+    delete image;
 }
 
 }

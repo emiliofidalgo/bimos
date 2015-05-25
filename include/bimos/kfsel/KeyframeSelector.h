@@ -28,6 +28,7 @@
 
 #include <bimos/util/Params.h>
 #include <bimos/imgdesc/ImageDescriptor.h>
+#include <bimos/util/Image.h>
 
 namespace bimos
 {
@@ -53,6 +54,10 @@ private:
 
     // Image descriptor
     ImageDescriptor* imgdesc;
+
+    // Counters
+    int nimages;
+    int nkfs;
 };
 
 }
