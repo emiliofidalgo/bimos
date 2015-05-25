@@ -45,6 +45,7 @@ set(BIMOS_SRCS
     src/imgdesc/ORBextractor.cc
     src/kfsel/KeyframeSelector.cpp
     src/MosaicBuilder.cpp
+    src/util/Transform.cpp
     src/util/Params.cpp
     src/util/util.cpp
 )
