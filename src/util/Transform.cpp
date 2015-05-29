@@ -23,6 +23,10 @@
 namespace bimos
 {
 
+/**
+ * @brief Default class constructor
+ * @param _type Transform type
+ */
 Transform::Transform(const TransformType& _type)
 {
     type = _type;
@@ -60,6 +64,11 @@ Transform::Transform(const TransformType& _type)
     }
 }
 
+/**
+ * @brief Class constructor
+ * @param _type Transform type
+ * @param _H Homography
+ */
 Transform::Transform(const TransformType& _type, const cv::Mat_<double>& _H)
 {
     type = _type;
@@ -98,6 +107,10 @@ Transform::Transform(const TransformType& _type, const cv::Mat_<double>& _H)
     }
 }
 
+/**
+ * @brief Copy constructor
+ * @param other The other transformation
+ */
 Transform::Transform(const Transform& other)
 {
     type = other.type;
@@ -136,11 +149,19 @@ Transform::Transform(const Transform& other)
     }
 }
 
+/**
+ * @brief Default destructor
+ */
 Transform::~Transform()
 {
     delete params;
 }
 
+/**
+ * @brief Transform::operator =
+ * @param other The other transformation
+ * @return
+ */
 Transform& Transform::operator=(const Transform& other)
 {
     assert(type == other.type);
@@ -180,6 +201,11 @@ Transform& Transform::operator=(const Transform& other)
     return *this;
 }
 
+/**
+ * @brief Transform::operator *
+ * @param other The other transformation
+ * @return
+ */
 Transform Transform::operator*(const Transform& other)
 {
     assert(type == other.type);
@@ -190,6 +216,10 @@ Transform Transform::operator*(const Transform& other)
     return result;
 }
 
+/**
+ * @brief Decompose the homography in parameters
+ * @param _params The output parameters
+ */
 void Transform::decomposeTransformation(std::vector<double>& _params)
 {
     switch (type)
@@ -209,6 +239,9 @@ void Transform::decomposeTransformation(std::vector<double>& _params)
     }
 }
 
+/**
+ * @brief Update the homography using the values stored in params
+ */
 void Transform::updateHomography()
 {
     switch (type)
@@ -243,6 +276,10 @@ void Transform::updateHomography()
     }
 }
 
+/**
+ * @brief Computes the inverse transformation
+ * @return The inverse transformation
+ */
 Transform Transform::inv()
 {
     switch (type)
@@ -347,6 +384,10 @@ Transform Transform::inv()
     }
 }
 
+/**
+ * @brief Returns the string representation of the transformation
+ * @return The string representing the transformation
+ */
 std::string Transform::toString()
 {
     std::stringstream os;
