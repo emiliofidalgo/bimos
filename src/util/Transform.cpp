@@ -69,7 +69,7 @@ Transform::Transform(const TransformType& _type)
  * @param _type Transform type
  * @param _H Homography
  */
-Transform::Transform(const TransformType& _type, const cv::Mat_<double>& _H)
+Transform::Transform(const cv::Mat_<double>& _H, const TransformType& _type)
 {
     type = _type;
     H.release();
@@ -212,7 +212,7 @@ Transform Transform::operator*(const Transform& other)
 
     cv::Mat_<double> Ht = H * other.H;
 
-    Transform result(type, Ht);
+    Transform result(Ht, type);
     return result;
 }
 

@@ -66,7 +66,7 @@ class Transform
 {
 public:
     Transform(const TransformType& _type = SIMILARITY);
-    Transform(const TransformType& _type, const cv::Mat_<double>& _H);
+    Transform(const cv::Mat_<double>& _H, const TransformType& _type = SIMILARITY);
     Transform(const Transform& other);
     ~Transform();
 
