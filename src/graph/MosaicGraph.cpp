@@ -27,7 +27,8 @@ namespace bimos
  * @brief Default constructor.
  */
 MosaicGraph::MosaicGraph() :
-    last_kf_inserted(0)
+    last_kf_inserted(0),
+    mosaic_frame(0)
 {
 }
 
@@ -88,6 +89,10 @@ void MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
             edges[b][a] = medge;
             graph.addEdge(b, a, weight);
         }
+    }
+    else
+    {
+        mosaic_frame = kf;
     }
 
     // Updating the last KF inserted

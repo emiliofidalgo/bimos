@@ -48,6 +48,7 @@ protected:
 
     // Last Keyframe inserted
     Keyframe* last_kf_inserted;
+    Keyframe* mosaic_frame;
 
     // Mutex to control the access to the mosaic graph
     boost::mutex mutex_mgraph;
