@@ -21,6 +21,8 @@
 #ifndef MOSAICGRAPH_H
 #define MOSAICGRAPH_H
 
+#include <boost/thread.hpp>
+
 #include <bimos/graph/Edge.h>
 #include <bimos/graph/Graph.h>
 #include <bimos/graph/Keyframe.h>
@@ -38,6 +40,7 @@ public:
     void linkKFs(const int a, const int b, const double weight, const cv::Mat& t);
     bool existsEdge(const int ori, const int dest);
 
+protected:
     // Structures
     Graph graph;
     std::vector<Keyframe*> kfs;
@@ -45,6 +48,9 @@ public:
 
     // Last Keyframe inserted
     Keyframe* last_kf_inserted;
+
+    // Mutex to control the access to the mosaic graph
+    boost::mutex mutex_mgraph;
 };
 
 }

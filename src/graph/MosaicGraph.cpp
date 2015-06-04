@@ -60,6 +60,8 @@ MosaicGraph::~MosaicGraph()
  */
 void MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
 {
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+
     // Creating and adding the new keyframe structure
     Keyframe* kf = new Keyframe(img);
     kf->id = static_cast<int>(kfs.size());
@@ -69,7 +71,23 @@ void MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
     // Linking the new keyframe with the last inserted, if needed
     if (last_kf_inserted != 0)
     {
-        linkKFs(last_kf_inserted->id, kf->id, weight, t);
+        int a = last_kf_inserted->id;
+        int b = kf->id;
+
+        // Linking images in both directions
+        if (!existsEdge(a, b))
+        {
+            Edge* medge = new Edge(a, b, weight, t);
+            edges[a][b] = medge;
+            graph.addEdge(a, b, weight);
+        }
+
+        if (!existsEdge(b, a))
+        {
+            Edge* medge = new Edge(b, a, weight, t.inv());
+            edges[b][a] = medge;
+            graph.addEdge(b, a, weight);
+        }
     }
 
     // Updating the last KF inserted
@@ -85,6 +103,8 @@ void MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
  */
 void MosaicGraph::linkKFs(const int a, const int b, const double weight, const cv::Mat& t)
 {
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+
     // Linking images in both directions
     if (!existsEdge(a, b))
     {
