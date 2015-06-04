@@ -26,9 +26,10 @@ namespace bimos
 /**
  * @brief Default constructor.
  */
-KeyframeSelector::KeyframeSelector(const ros::NodeHandle& nh, Params* params) :
+KeyframeSelector::KeyframeSelector(const ros::NodeHandle& nh, Params* params, MosaicGraph* _mgraph) :
     _nh(nh),
     p(params),
+    mgraph(_mgraph),
     nimages(0),
     nkfs(0)
 {

@@ -26,6 +26,7 @@
 #include <sensor_msgs/Image.h>
 #include <opencv2/opencv.hpp>
 
+#include <bimos/graph/MosaicGraph.h>
 #include <bimos/util/Params.h>
 #include <bimos/imgdesc/ImageDescriptor.h>
 #include <bimos/util/Image.h>
@@ -39,7 +40,7 @@ namespace bimos
 class KeyframeSelector
 {
 public:
-    KeyframeSelector(const ros::NodeHandle& nh, Params* params);
+    KeyframeSelector(const ros::NodeHandle& nh, Params* params, MosaicGraph* _mgraph);
     ~KeyframeSelector();
 
     void run();
@@ -51,6 +52,9 @@ private:
 
     // Parameters
     Params* p;
+
+    // Graph Management
+    MosaicGraph* mgraph;
 
     // Image descriptor
     ImageDescriptor* imgdesc;
