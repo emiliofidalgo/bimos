@@ -46,6 +46,9 @@ set(BIMOS_SRCS
     src/imgdesc/ldb.cpp
     src/imgdesc/ORBextractor.cc
     src/kfsel/KeyframeSelector.cpp
+    src/motionest/AffineEstimator2D.cpp
+    src/motionest/HomographyEstimator.cpp
+    src/motionest/SimilarityEstimator2D.cpp
     src/MosaicBuilder.cpp
     src/util/Transform.cpp
     src/util/Params.cpp
