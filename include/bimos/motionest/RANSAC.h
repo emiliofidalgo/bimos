@@ -292,7 +292,7 @@ double RANSAC<T,S>::compute(std::vector<S> &parameters,
                 paramEstimator->agree(parameters, *(leastSquaresEstimateData[j]), &dist);
                 total_error += dist;
             }
-            (*reperror) = total_error;
+            (*reperror) = total_error / (double)leastSquaresEstimateData.size();
         }
         else
         {
