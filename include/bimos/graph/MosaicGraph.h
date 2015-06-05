@@ -36,7 +36,7 @@ public:
     MosaicGraph();
     ~MosaicGraph();
 
-    void addKeyframe(Image* img, const double weight, const cv::Mat& t);
+    int addKeyframe(Image* img, const double weight, const cv::Mat& t);
     void linkKFs(const int a, const int b, const double weight, const cv::Mat& t);
     bool existsEdge(const int ori, const int dest);
 

@@ -59,7 +59,7 @@ MosaicGraph::~MosaicGraph()
  * @param weight Link weight.
  * @param t The tranformation from the last inserted keyframe to the current keyframe.
  */
-void MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
+int MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
 {
     boost::mutex::scoped_lock lock(mutex_mgraph);
 
@@ -97,6 +97,8 @@ void MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
 
     // Updating the last KF inserted
     last_kf_inserted = kf;
+
+    return kf->id;
 }
 
 /**
