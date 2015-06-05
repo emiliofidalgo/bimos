@@ -150,6 +150,10 @@ Keyframe* MosaicGraph::getLastInsertedKF()
     return last_kf_inserted;
 }
 
+/**
+ * @brief Gets the mosaic frame.
+ * @return Returns a pointer to the mosaic frame.
+ */
 Keyframe* MosaicGraph::getMosaicFrame()
 {
     boost::mutex::scoped_lock lock(mutex_mgraph);
