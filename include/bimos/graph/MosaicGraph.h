@@ -40,6 +40,9 @@ public:
     void linkKFs(const int a, const int b, const double weight, const cv::Mat& t);
     bool existsEdge(const int ori, const int dest);
 
+    Keyframe* getLastInsertedKF();
+    Keyframe* getMosaicFrame();
+
 protected:
     // Structures
     Graph graph;

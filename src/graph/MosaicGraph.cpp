@@ -140,4 +140,20 @@ bool MosaicGraph::existsEdge(const int ori, const int dest)
     return j != (i->second.end());
 }
 
+/**
+ * @brief Gets the last inserted keyframe.
+ * @return Returns a pointer to the last inserted keyframe.
+ */
+Keyframe* MosaicGraph::getLastInsertedKF()
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+    return last_kf_inserted;
+}
+
+Keyframe* MosaicGraph::getMosaicFrame()
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+    return mosaic_frame;
+}
+
 }
