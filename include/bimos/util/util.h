@@ -32,7 +32,7 @@
 namespace bimos
 {
 
-void ratioMatching(const Image& query, const Image& train, std::vector<cv::DMatch>& matches, const float ratio = 0.8f);
+void ratioMatching(Image* query, Image* train, std::vector<cv::DMatch>& matches, const float ratio = 0.8f);
 void getImageFilenames(const std::string& directory, std::vector<std::string>& filenames);
 
 }
