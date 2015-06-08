@@ -24,6 +24,7 @@
 #include <boost/thread.hpp>
 #include <omp.h>
 
+#include <bimos/graph/MosaicGraph.h>
 #include <bimos/imgdesc/ImageDescriptor.h>
 #include <bimos/kfsel/KeyframeSelector.h>
 #include <bimos/util/Image.h>

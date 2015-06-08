@@ -59,7 +59,11 @@ void MosaicBuilder::createMosaic()
     boost::filesystem::create_directory(res_imgs_dir);
     ROS_INFO("Working directory ready");
 
-    KeyframeSelector kfsel(nh, p);
+    // Creating the MosaicGraph structure
+    MosaicGraph mgraph;
+
+    // Keyframe Selector Thread
+    KeyframeSelector kfsel(nh, p, &mgraph);
     boost::thread kfsel_thread(&KeyframeSelector::run, &kfsel);
 
     ros::Rate rate(1.0);

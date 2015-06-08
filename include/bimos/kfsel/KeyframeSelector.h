@@ -26,9 +26,10 @@
 #include <sensor_msgs/Image.h>
 #include <opencv2/opencv.hpp>
 
-#include <bimos/graph/MosaicGraph.h>
-#include <bimos/util/Params.h>
 #include <bimos/imgdesc/ImageDescriptor.h>
+#include <bimos/graph/MosaicGraph.h>
+#include <bimos/motionest/HomographyEstimator.h>
+#include <bimos/util/Params.h>
 #include <bimos/util/Image.h>
 
 namespace bimos
