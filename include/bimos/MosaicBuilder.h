@@ -21,8 +21,14 @@
 #ifndef MOSAICBUILDER_H
 #define MOSAICBUILDER_H
 
+#include <cstdlib>
+#include <fstream>
+
 #include <boost/thread.hpp>
+#include <cv_bridge/cv_bridge.h>
+#include <image_transport/image_transport.h>
 #include <omp.h>
+#include <sensor_msgs/Image.h>
 
 #include <bimos/graph/MosaicGraph.h>
 #include <bimos/imgdesc/ImageDescriptor.h>
@@ -45,10 +51,15 @@ public:
 
     void createMosaic();
 
+    // Functions for publishing information about the mosaicing process
+    void publishGraphInfo(MosaicGraph* mgraph);
+
 private:
 
     // ROS
     ros::NodeHandle nh;
+    image_transport::ImageTransport it;
+    image_transport::Publisher pub_graph;
 
     // Parameters
     Params* p;

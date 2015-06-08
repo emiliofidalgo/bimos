@@ -29,6 +29,7 @@ namespace bimos
  */
 MosaicBuilder::MosaicBuilder(const ros::NodeHandle _nh)
     : nh(_nh),
+      it(_nh),
       p(Params::getInstance())
 {
     ROS_INFO("Initializing node ...");
@@ -36,6 +37,9 @@ MosaicBuilder::MosaicBuilder(const ros::NodeHandle _nh)
     p->readParams(nh);
     ROS_INFO("Parameters read");
     ROS_INFO("Node initialized");
+
+    // Starting ROS publishers
+    pub_graph = it.advertise("mosaic_graph", 1);
 
     createMosaic();
 }
@@ -69,11 +73,43 @@ void MosaicBuilder::createMosaic()
     ros::Rate rate(1.0);
     while (ros::ok())
     {
-        // TODO Publishing Mosaicing Information
+        publishGraphInfo(&mgraph);
+
         rate.sleep();
     }
 
-    ros::shutdown();    
+    ros::shutdown();
+}
+
+/**
+ * @brief This function creates a graph according to the graph information an publish it as an image
+ */
+void MosaicBuilder::publishGraphInfo(MosaicGraph* mgraph)
+{
+    // Getting graph information
+    std::string dot_graph;
+    mgraph->getDotGraph(dot_graph);
+
+    // Storing the .dot file
+    std::string mgraph_file = p->working_dir + "mgraph.dot";
+    std::ofstream out(mgraph_file.c_str());
+    out << dot_graph;
+    out.close();
+
+    // Calling to the conversion function
+    std::string command = "dot -Kneato -n -Tpng " + p->working_dir + "mgraph.dot -o " + p->working_dir + "mgraph.png";
+    std::system(command.c_str());
+
+    // Publishing the image
+    std_msgs::Header hdr;
+    hdr.stamp = ros::Time::now();
+    hdr.frame_id = "mosaic_graph";
+    cv::Mat img_graph = cv::imread(p->working_dir + "mgraph.png");
+
+    sensor_msgs::Image img_msg;
+    cv_bridge::CvImage cv_image(hdr, "bgr8", img_graph);
+    cv_image.toImageMsg(img_msg);
+    pub_graph.publish(img_msg);
 }
 
 }
