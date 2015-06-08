@@ -66,6 +66,10 @@ int MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
     // Creating and adding the new keyframe structure
     Keyframe* kf = new Keyframe(img);
     kf->id = static_cast<int>(kfs.size());
+    if (last_kf_inserted != 0)
+    {
+        kf->trans = last_kf_inserted->trans * Transform(t);
+    }
     kfs.push_back(kf);
     graph.addVertex();
 
