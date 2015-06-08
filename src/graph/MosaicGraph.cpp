@@ -166,4 +166,53 @@ Keyframe* MosaicGraph::getMosaicFrame()
     return mosaic_frame;
 }
 
+void MosaicGraph::getDotGraph(std::string& contents)
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+    std::stringstream ss;
+    ss << "graph mgraph {" << std::endl;    
+
+    if (kfs.size() == 0)
+    {
+        ss << "0 [label=\"0\", pos=\"0,0!\"];" << std::endl;
+    }
+    else
+    {
+        // Filling nodes
+        for (unsigned i = 0; i < kfs.size(); i++)
+        {            
+            // Getting current node position
+            int xpos = (int)(kfs[i]->trans.H(0, 2));
+            int ypos = (int)(kfs[i]->trans.H(1, 2));
+
+            std::stringstream t;
+            t << kfs[i]->id << " [label=\"" << kfs[i]->id << "\", pos=\"" << xpos << "," << -ypos << "!\"];" << std::endl;
+            ss << t.str();
+        }
+
+        // Filling edges
+        cv::Mat_<char> eadded = cv::Mat::zeros((int)kfs.size(), (int)kfs.size(), CV_8UC1);
+        for (unsigned i = 0; i < graph.adjlist.size(); i++)
+        {
+            for (unsigned j = 0; j < graph.adjlist[i].size(); j++)
+            {
+                int ori = i;
+                int dest = graph.adjlist[i][j].target;
+                if (eadded(dest, ori) == 0)
+                {
+                    std::stringstream t;
+                    t << ori << " -- " << dest << ";" << std::endl;
+                    ss << t.str();
+                    eadded(ori, dest) = 1;
+                }
+            }
+        }
+    }
+
+    ss << "}";
+    ss << std::endl;
+    //std::cout << ss.str() << std::endl; // TODO Comment this line. It is only for debugging.
+    contents = ss.str();
+}
+
 }

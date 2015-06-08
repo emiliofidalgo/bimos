@@ -21,6 +21,8 @@
 #ifndef MOSAICGRAPH_H
 #define MOSAICGRAPH_H
 
+#include <sstream>
+
 #include <boost/thread.hpp>
 
 #include <bimos/graph/Edge.h>
@@ -42,6 +44,7 @@ public:
 
     Keyframe* getLastInsertedKF();
     Keyframe* getMosaicFrame();
+    void getDotGraph(std::string& contents);
 
 protected:
     // Structures
