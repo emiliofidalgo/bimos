@@ -28,6 +28,7 @@
 #include <bimos/graph/Edge.h>
 #include <bimos/graph/Graph.h>
 #include <bimos/graph/Keyframe.h>
+#include <bimos/util/ConcurrentQueue.hpp>
 
 namespace bimos
 {
@@ -45,6 +46,9 @@ public:
     Keyframe* getLastInsertedKF();
     Keyframe* getMosaicFrame();
     void getDotGraph(std::string& contents);
+
+    // Queues for thread intercommunication
+    ConcurrentQueue<Keyframe *> newKFs;
 
 protected:
     // Structures

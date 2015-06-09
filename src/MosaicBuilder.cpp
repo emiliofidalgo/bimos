@@ -70,6 +70,10 @@ void MosaicBuilder::createMosaic()
     KeyframeSelector kfsel(nh, p, &mgraph);
     boost::thread kfsel_thread(&KeyframeSelector::run, &kfsel);
 
+    // Loop Closer Thread
+    LoopCloser lcloser(nh, p, &mgraph);
+    boost::thread lcloser_thread(&LoopCloser::run, &lcloser);
+
     ros::Rate rate(1.0);
     while (ros::ok())
     {

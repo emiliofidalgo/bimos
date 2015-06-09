@@ -102,6 +102,9 @@ int MosaicGraph::addKeyframe(Image* img, const double weight, const cv::Mat& t)
     // Updating the last KF inserted
     last_kf_inserted = kf;
 
+    // Notifying the existence of a new keyframe
+    newKFs.push(kf);
+
     return kf->id;
 }
 

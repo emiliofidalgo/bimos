@@ -18,53 +18,40 @@
 * along with bimos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MOSAICBUILDER_H
-#define MOSAICBUILDER_H
+#ifndef LOOPCLOSER_H
+#define LOOPCLOSER_H
 
-#include <cstdlib>
-#include <fstream>
-
-#include <boost/thread.hpp>
 #include <cv_bridge/cv_bridge.h>
-#include <image_transport/image_transport.h>
-#include <omp.h>
-#include <sensor_msgs/Image.h>
+#include <ros/ros.h>
+#include <opencv2/opencv.hpp>
 
 #include <bimos/graph/MosaicGraph.h>
-#include <bimos/imgdesc/ImageDescriptor.h>
-#include <bimos/kfsel/KeyframeSelector.h>
-#include <bimos/loopcloser/LoopCloser.h>
-#include <bimos/util/Image.h>
 #include <bimos/util/Params.h>
-#include <bimos/util/util.h>
+#include <bimos/util/Image.h>
 
 namespace bimos
 {
 
 /**
- * @brief Main bimos class.
+ * @brief This class is executed in a thread in order to detect loop between new inserted keyframes and the existents in the graph.
  */
-class MosaicBuilder
+class LoopCloser
 {
 public:
-    MosaicBuilder(const ros::NodeHandle _nh);
-    ~MosaicBuilder();
+    LoopCloser(const ros::NodeHandle& nh, Params* params, MosaicGraph* _mgraph);
+    ~LoopCloser();
 
-    void createMosaic();
-
-    // Functions for publishing information about the mosaicing process
-    void publishGraphInfo(MosaicGraph* mgraph);
+    void run();    
 
 private:
-
-    // ROS
-    ros::NodeHandle nh;
-    image_transport::ImageTransport it;
-    image_transport::Publisher pub_graph;
+    ros::NodeHandle _nh;    
 
     // Parameters
     Params* p;
+
+    // Graph Management
+    MosaicGraph* mgraph;
 };
 
 }
-#endif // MOSAICBUILDER_H
+#endif // KFSELECTOR_H
