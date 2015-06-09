@@ -38,6 +38,7 @@ public:
     std::string working_dir;
     std::string img_descriptor;
     int nkeypoints;
+    bool pub_debug_info;
 
     // Public functions.
     static Params* getInstance();
@@ -46,7 +47,8 @@ public:
 protected:
     // Protected constructor. Singleton class.
     Params() :        
-        nkeypoints(2500)
+        nkeypoints(2500),
+        pub_debug_info(false)
     {
     }
 

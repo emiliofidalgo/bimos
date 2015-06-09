@@ -52,6 +52,9 @@ void Params::readParams(const ros::NodeHandle& nh)
 
     nh.param("nkeypoints", nkeypoints, 3000);
     ROS_INFO("[Params] Number of features: %i", nkeypoints);
+
+    nh.param("pub_debug_info", pub_debug_info, false);
+    ROS_INFO("[Params] Publish debug info: %i", pub_debug_info ? 1 : 0);
 }
 
 }

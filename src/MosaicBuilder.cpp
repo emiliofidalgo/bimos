@@ -73,7 +73,10 @@ void MosaicBuilder::createMosaic()
     ros::Rate rate(1.0);
     while (ros::ok())
     {
-        publishGraphInfo(&mgraph);
+        if (p->pub_debug_info)
+        {
+            publishGraphInfo(&mgraph);
+        }
 
         rate.sleep();
     }
