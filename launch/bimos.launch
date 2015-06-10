@@ -13,6 +13,7 @@
     <arg name="img_descriptor" default="FAST_LDB" />
     <arg name="nkeypoints" default="3000" />
     <arg name="pub_debug_info" default="false" />
+    <arg name="lc_delay_kfs" default="5" />
 
     <!-- Sequence Publisher node -->
     <node pkg="bimos" type="image_publisher" name="image_publisher" output="screen">
@@ -31,6 +32,7 @@
         <param name="img_descriptor" value="$(arg img_descriptor)" />
         <param name="nkeypoints" value="$(arg nkeypoints)" />
         <param name="pub_debug_info" value="$(arg pub_debug_info)" />
+        <param name="lc_delay_kfs" value="$(arg lc_delay_kfs)" />
 
         <remap from="~image" to="$(arg img_topic)" />
     </node>

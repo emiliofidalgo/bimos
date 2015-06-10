@@ -55,6 +55,9 @@ void Params::readParams(const ros::NodeHandle& nh)
 
     nh.param("pub_debug_info", pub_debug_info, false);
     ROS_INFO("[Params] Publish debug info: %i", pub_debug_info ? 1 : 0);
+
+    nh.param("lc_delay_kfs", lc_delay_kfs, 5);
+    ROS_INFO("[Params] LC delay buffer size: %i", lc_delay_kfs);
 }
 
 }

@@ -39,6 +39,7 @@ public:
     std::string img_descriptor;
     int nkeypoints;
     bool pub_debug_info;
+    int lc_delay_kfs;
 
     // Public functions.
     static Params* getInstance();
@@ -48,7 +49,8 @@ protected:
     // Protected constructor. Singleton class.
     Params() :        
         nkeypoints(2500),
-        pub_debug_info(false)
+        pub_debug_info(false),
+        lc_delay_kfs(5)
     {
     }
 
