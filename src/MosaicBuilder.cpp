@@ -84,8 +84,10 @@ void MosaicBuilder::createMosaic()
 
         rate.sleep();
     }
-
     ros::shutdown();
+
+    kfsel_thread.join();
+    lcloser_thread.join();
 }
 
 /**

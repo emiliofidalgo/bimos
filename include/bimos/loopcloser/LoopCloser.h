@@ -21,13 +21,14 @@
 #ifndef LOOPCLOSER_H
 #define LOOPCLOSER_H
 
-#include <cv_bridge/cv_bridge.h>
 #include <ros/ros.h>
-#include <opencv2/opencv.hpp>
 
 #include <bimos/graph/MosaicGraph.h>
 #include <bimos/util/Params.h>
-#include <bimos/util/Image.h>
+#include <bimos/motionest/HomographyEstimator.h>
+#include <obindex/BinaryIndex.h>
+
+namespace vi = obindex;
 
 namespace bimos
 {
@@ -51,7 +52,16 @@ private:
 
     // Graph Management
     MosaicGraph* mgraph;
+
+    // Delay buffer
+    std::queue<Keyframe* > buffer;
+
+    // Binary index
+    vi::BinaryIndex* bindex;
+
+    // Variable to manage BinaryIndex initialization
+    bool bindex_init;
 };
 
 }
-#endif // KFSELECTOR_H
+#endif // LOOPCLOSER_H

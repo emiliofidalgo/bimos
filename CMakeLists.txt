@@ -8,7 +8,7 @@ file(GLOB_RECURSE SRCS ${CMAKE_CURRENT_SOURCE_DIR} *.cxx *.cpp *.c *.py)
 file(GLOB_RECURSE LNCH ${CMAKE_CURRENT_SOURCE_DIR} *.launch)
 
 # Catkin dependencies
-find_package(catkin REQUIRED COMPONENTS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge)
+find_package(catkin REQUIRED COMPONENTS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge obindex)
 
 # System dependencies
 find_package(OpenCV REQUIRED)
@@ -24,8 +24,8 @@ endif()
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES bimos
-    CATKIN_DEPENDS roscpp
-    DEPENDS OpenCV Boost
+    CATKIN_DEPENDS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge obindex
+    DEPENDS OpenCV Boost OpenMP
 )
 
 ###########
@@ -57,7 +57,7 @@ set(BIMOS_SRCS
     src/util/util.cpp
 )
 add_library(bimos ${BIMOS_SRCS})
-target_link_libraries(bimos ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(bimos ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
 
 # MosaicBuilder Node
 add_executable(bimos_node src/node/bimos_node.cpp)
@@ -67,4 +67,4 @@ target_link_libraries(bimos_node bimos)
 add_executable(image_publisher
     src/util/util.cpp
     src/node/image_publisher_node.cpp)
-target_link_libraries(image_publisher ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(image_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
