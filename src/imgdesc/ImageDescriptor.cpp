@@ -99,7 +99,7 @@ void ImageDescriptor::describeImage_FASTBRIEF(const cv::Mat &image, std::vector<
 void ImageDescriptor::describeImage_FASTLDB(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
 {    
     _fastdet.detect(image, kps);
-    _ldbdes.compute(image, kps, descs, true);
+    _ldbdes.compute(image, kps, descs, false); // There is a bug in LDB when computing angle. It needs to be revised, but for now it is set to false.
 }
 
 /**
@@ -110,10 +110,16 @@ void ImageDescriptor::describeImage_FASTLDB(const cv::Mat &image, std::vector<cv
  * @param descs \see ImageDescriptor::describeImage
  */
 void ImageDescriptor::describeImage_ORBBRIEF(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
-{    
-    _orb(image, cv::Mat(), kps, descs);
+{
+    cv::Mat greyMat;
+    if (image.type() != CV_8UC1)
+    {
+        cv::cvtColor(image, greyMat, CV_BGR2GRAY);
+    }
+
+    _orb(greyMat, cv::Mat(), kps, descs);
     descs.release();
-    _briefdes.compute(image, kps, descs);
+    _briefdes.compute(greyMat, kps, descs);
 }
 
 /**
@@ -124,8 +130,14 @@ void ImageDescriptor::describeImage_ORBBRIEF(const cv::Mat &image, std::vector<c
  * @param descs \see ImageDescriptor::describeImage
  */
 void ImageDescriptor::describeImage_ORBORB(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
-{    
-    _orb(image, cv::Mat(), kps, descs);
+{
+    cv::Mat greyMat;
+    if (image.type() != CV_8UC1)
+    {
+        cv::cvtColor(image, greyMat, CV_BGR2GRAY);
+    }
+
+    _orb(greyMat, cv::Mat(), kps, descs);
 }
 
 /**
@@ -136,10 +148,16 @@ void ImageDescriptor::describeImage_ORBORB(const cv::Mat &image, std::vector<cv:
  * @param descs \see ImageDescriptor::describeImage
  */
 void ImageDescriptor::describeImage_ORBLDB(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
-{    
-    _orb(image, cv::Mat(), kps, descs);
+{
+    cv::Mat greyMat;
+    if (image.type() != CV_8UC1)
+    {
+        cv::cvtColor(image, greyMat, CV_BGR2GRAY);
+    }
+
+    _orb(greyMat, cv::Mat(), kps, descs);
     descs.release();
-    _ldbdes.compute(image, kps, descs, false);
+    _ldbdes.compute(greyMat, kps, descs, false);
 }
 
 }
