@@ -58,6 +58,9 @@ void Params::readParams(const ros::NodeHandle& nh)
 
     nh.param("lc_delay_kfs", lc_delay_kfs, 5);
     ROS_INFO("[Params] LC delay buffer size: %i", lc_delay_kfs);
+
+    nh.param("match_ratio", match_ratio, 0.8);
+    ROS_INFO("[Params] NNDR: %f", match_ratio);
 }
 
 }

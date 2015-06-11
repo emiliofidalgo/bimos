@@ -25,11 +25,11 @@ namespace bimos
 
 double inline SQF(double x) { return x * x; }
 
-bool HomographyEstimator::estimate(Image* image_prev, Image* image, cv::Mat_<double>& H, std::vector<cv::DMatch>& matches_inliers, double& rep_error, double hom_delta, TransformType type)
+bool HomographyEstimator::estimate(Image* image_prev, Image* image, cv::Mat_<double>& H, std::vector<cv::DMatch>& matches_inliers, double& rep_error, double ratio, double hom_delta, TransformType type)
 {
     // Matching images
     std::vector<cv::DMatch> matches;
-    ratioMatching(image, image_prev, matches);
+    ratioMatching(image, image_prev, matches, ratio);
 
     rep_error = std::numeric_limits<double>::infinity();
     bool correct = false;

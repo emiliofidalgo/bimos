@@ -104,7 +104,7 @@ void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
         cv::Mat_<double> H;
         std::vector<cv::DMatch> inliers;
         double rep_error;
-        HomographyEstimator::estimate(last_kf->image, image, H, inliers, rep_error);
+        HomographyEstimator::estimate(last_kf->image, image, H, inliers, rep_error, p->match_ratio);
         ROS_INFO("[kfsel] Inliers %i, Mean Reprojection Error: %f", static_cast<int>(inliers.size()), rep_error);
 
         if (image->id % 3 == 0)

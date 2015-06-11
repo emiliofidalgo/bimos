@@ -30,7 +30,7 @@ namespace bimos
  * @param matches Final filtered matches.
  * @param ratio Distance ratio between the nearest and the second-nearest neigbours.
  */
-void ratioMatching(Image* query, Image* train, std::vector<cv::DMatch>& matches, const float ratio)
+void ratioMatching(Image* query, Image* train, std::vector<cv::DMatch>& matches, const double ratio)
 {
     matches.clear();
     cv::BFMatcher matcher(cv::NORM_HAMMING);
