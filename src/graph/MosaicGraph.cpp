@@ -169,6 +169,17 @@ Keyframe* MosaicGraph::getMosaicFrame()
     return mosaic_frame;
 }
 
+/**
+ * @brief Returns a pointer to a keyframe of the graph.
+ * @param id Keyframe ID.
+ * @return A pointer to the KF.
+ */
+Keyframe* MosaicGraph::getKeyframe(const int id)
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+    return kfs[id];
+}
+
 void MosaicGraph::getDotGraph(std::string& contents)
 {
     boost::mutex::scoped_lock lock(mutex_mgraph);
