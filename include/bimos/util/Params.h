@@ -41,6 +41,7 @@ public:
     bool pub_debug_info;
     int lc_delay_kfs;
     double match_ratio;
+    int min_inliers;
 
     // Public functions.
     static Params* getInstance();
@@ -52,7 +53,8 @@ protected:
         nkeypoints(2500),
         pub_debug_info(false),
         lc_delay_kfs(5),
-        match_ratio(0.8)
+        match_ratio(0.8),
+        min_inliers(200)
     {
     }
 

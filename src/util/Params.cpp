@@ -61,6 +61,9 @@ void Params::readParams(const ros::NodeHandle& nh)
 
     nh.param("match_ratio", match_ratio, 0.8);
     ROS_INFO("[Params] NNDR: %f", match_ratio);
+
+    nh.param("min_inliers", min_inliers, 200);
+    ROS_INFO("[Params] Minimum number of inliers for LC: %i", min_inliers);
 }
 
 }
