@@ -38,8 +38,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <vector>
 
-using namespace cv;
-using namespace std;
+//using namespace cv;
+//using namespace std;
 
 class LDB
 {
@@ -52,7 +52,7 @@ public:
     // returns the descriptor size in bytes
         int descriptorSize() const;
     // Compute the LDB features and descriptors on an image
-	void compute( const Mat& image, vector<KeyPoint>& keypoints, Mat& descriptors, bool flag) const;
+    void compute( const cv::Mat& image, cv::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, bool flag) const;
 
 protected:
 	

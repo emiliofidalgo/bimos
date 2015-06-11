@@ -30,6 +30,7 @@
     CHANGES:
         The #include statement has been updated to be used in this package.
         A bug in the function compute() has been fixed to work with color images.
+        Adjusting the code to be used with the namespace before each instruction.
 */
 
 #include <fstream>
@@ -40,19 +41,19 @@
 //#include "ldb.h"
 #include "bimos/imgdesc/ldb.h"
 
-using namespace std;
-using namespace cv;
+//using namespace std;
+//using namespace cv;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-vector<vector<vector<int> > > rotated_X_;
-vector<vector<vector<int> > > rotated_Y_;
+std::vector<std::vector<std::vector<int> > > rotated_X_;
+std::vector<std::vector<std::vector<int> > > rotated_Y_;
 
 bool generateCoordFlag = false;
-vector<vector<int> > coordinates2by2_;
-vector<vector<int> > coordinates3by3_;
-vector<vector<int> > coordinates4by4_;
-vector<vector<int> > coordinates5by5_;
-vector<int> randomSequence_;
+std::vector<std::vector<int> > coordinates2by2_;
+std::vector<std::vector<int> > coordinates3by3_;
+std::vector<std::vector<int> > coordinates4by4_;
+std::vector<std::vector<int> > coordinates5by5_;
+std::vector<int> randomSequence_;
 
 
 int n_levels = 0;
@@ -97,10 +98,10 @@ static int bit_pattern_256_[selected_bits] =
 	1334, 1336, 1343, 1350, 1351, 1354, 1356, 1373
 };
 
-static float IC_Angle(const Mat& image, 
+static float IC_Angle(const cv::Mat& image,
 					  const int half_k, 
-					  Point2f pt,
-					  const vector<int> & u_max)
+                      cv::Point2f pt,
+                      const std::vector<int> & u_max)
 {
 	int m_01 = 0, m_10 = 0;
 
@@ -126,20 +127,20 @@ static float IC_Angle(const Mat& image,
 		m_01 += v * v_sum;
 	}
 
-	return fastAtan2((float)m_01, (float)m_10);
+    return cv::fastAtan2((float)m_01, (float)m_10);
 }
 
 static void generateRotatedPatterns(const int& patch_size,
 									const int& kNumAngles,
-									vector<vector<vector<int> > >& rotatedX, 
-									vector<vector<vector<int> > >& rotatedY)
+                                    std::vector<std::vector<std::vector<int> > >& rotatedX,
+                                    std::vector<std::vector<std::vector<int> > >& rotatedY)
 {
 	int win_offset = (patch_size-1)/2;
 	for (int i = 0; i < kNumAngles; i++)
 	{
-		vector<vector<int> > mappedX, mappedY;
+        std::vector<std::vector<int> > mappedX, mappedY;
 		for(int m = 0; m < patch_size; m++){
-			vector<int> one_row(patch_size);
+            std::vector<int> one_row(patch_size);
 			mappedX.push_back(one_row);
 			mappedY.push_back(one_row);
 		}
@@ -166,13 +167,13 @@ static void generateRotatedPatterns(const int& patch_size,
 }
 
 /** computer the grid coordinates for computing LDB*/
-void computeCoordinates(vector<vector<int> >& coordinates, int step, int patch_size)
+void computeCoordinates(std::vector<std::vector<int> >& coordinates, int step, int patch_size)
 {
 	int win_size = step - 1;
 	int m = 0;
 	for(int i = -patch_size/2 + 1; i < patch_size/2 - 2; i+= step){
 		for(int j = -patch_size/2 + 1; j < patch_size/2 - 2; j+=step, m++){
-			vector<int> coord;
+            std::vector<int> coord;
 			int x1 = j;				int y1 = i;
 			int x2 = j+win_size;	int y2 = i;
 			int x3 = j;				int y3 = i+win_size;
@@ -203,10 +204,10 @@ void computeCoordinates(vector<vector<int> >& coordinates, int step, int patch_s
 }
 
 /** generate random sequence size of 256 for computing LDP*/
-void generateRandSequence(vector<int>& randomSequence)
+void generateRandSequence(std::vector<int>& randomSequence)
 {
 	srand(time(NULL));
-	set<int> visited;
+    std::set<int> visited;
 	int count = 0;
 	do{
 		int randNum = rand() % total_bits;
@@ -226,10 +227,10 @@ static inline int angle2Wedge(const int& kNumAngles, float angle)
 }
 
 inline void rotatedIntegralImage(double descriptor_dir,
-								 const cv::KeyPoint& kpt,
-								 const cv::Mat& img,
+                                 const cv::KeyPoint& kpt,
+                                 const cv::Mat& img,
 								 const int& patch_size,
-								 Mat& win_integral_image)
+                                 cv::Mat& win_integral_image)
 {
 
 	//* Nearest neighbour version (faster) */
@@ -237,7 +238,7 @@ inline void rotatedIntegralImage(double descriptor_dir,
 	float sin_dir = sin(descriptor_dir);
 	float cos_dir = cos(descriptor_dir);
 	float win_offset = (int)(patch_size/2);
-	Mat win(patch_size, patch_size, CV_8U);
+    cv::Mat win(patch_size, patch_size, CV_8U);
 	//******************************************************//
 	// faster version: xin yang @ 2012-07-05 11:22am
 	//******************************************************//
@@ -258,16 +259,16 @@ inline void rotatedIntegralImage(double descriptor_dir,
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static void computeLdbDescriptor(const cv::KeyPoint& kpt, 
-								 const cv::Mat& img, 
-								 const cv::Mat& sum, 
+static void computeLdbDescriptor(const cv::KeyPoint& kpt,
+                                 const cv::Mat& img,
+                                 const cv::Mat& sum,
 								 unsigned char * desc, 
 								 const int& patch_size,
-								 const vector<vector<int> >& coordinates2by2_, 
-								 const vector<vector<int> >& coordinates3by3_,
-								 const vector<vector<int> >& coordinates4by4_, 
-								 const vector<vector<int> >& coordinates5by5_,
-								 const vector<int>& randSequence, 
+                                 const std::vector<std::vector<int> >& coordinates2by2_,
+                                 const std::vector<std::vector<int> >& coordinates3by3_,
+                                 const std::vector<std::vector<int> >& coordinates4by4_,
+                                 const std::vector<std::vector<int> >& coordinates5by5_,
+                                 const std::vector<int>& randSequence,
 								 bool flag)
 {
 #ifdef TRAINING
@@ -288,7 +289,7 @@ static void computeLdbDescriptor(const cv::KeyPoint& kpt,
 	int sum2by2_size = 4, sum3by3_size = 9, sum4by4_size = 16, sum5by5_size = 25;
 
 	int offset = patch_size/2;
-	Mat win_integral_image(patch_size+1, patch_size+1, CV_32S);
+    cv::Mat win_integral_image(patch_size+1, patch_size+1, CV_32S);
 
 	if(flag == true)
 		rotatedIntegralImage(kpt.angle, kpt, img, patch_size, win_integral_image);
@@ -565,11 +566,11 @@ static void computeLdbDescriptor(const cv::KeyPoint& kpt,
 	}
 }
 
-static void computeOrientation(const Mat& image, 
-							   vector<KeyPoint>& keypoints,
+static void computeOrientation(const cv::Mat& image,
+                               std::vector<cv::KeyPoint>& keypoints,
 							   int halfPatchSize)
 {
-        vector<int> umax(halfPatchSize + 2);
+        std::vector<int> umax(halfPatchSize + 2);
         int v, v0, vmax = cvFloor(halfPatchSize * sqrt(2.f) / 2 + 1);  
         int vmin = cvCeil(halfPatchSize * sqrt(2.f) / 2);  
         for (v = 0; v <= vmax; ++v)  
@@ -585,7 +586,7 @@ static void computeOrientation(const Mat& image,
         }  
 
 	// Process each keypoint
-	for (vector<KeyPoint>::iterator keypoint = keypoints.begin(),
+    for (std::vector<cv::KeyPoint>::iterator keypoint = keypoints.begin(),
 		keypointEnd = keypoints.end(); keypoint != keypointEnd; ++keypoint)
 	{
 		keypoint->angle = IC_Angle(image, halfPatchSize, keypoint->pt, umax);
@@ -601,18 +602,18 @@ static void computeOrientation(const Mat& image,
 * @param dsize is size of LDB descriptor (current LDB only support 8bytes)
 * @param flag indicates whether LDB is steered or not
 */
-static void computeDescriptors(const Mat& image, 
-							   const cv::Mat& integral_image,
+static void computeDescriptors(const cv::Mat& image,
+                               const cv::Mat& integral_image,
 							   const int& patchSize, 
-							   vector<KeyPoint>& keypoints, 
-							   Mat& descriptors, 
+                               std::vector<cv::KeyPoint>& keypoints,
+                               cv::Mat& descriptors,
 							   int dsize, 
 							   bool flag)
 {
 	//convert to grayscale if more than one color
 	CV_Assert(image.type() == CV_8UC1);
-	//create the descriptor mat, keypoints.size() rows, BYTES cols
-	descriptors = Mat::zeros((int)keypoints.size(), dsize, CV_8UC1);
+    //create the descriptor cv::Mat, keypoints.size() rows, BYTES cols
+    descriptors = cv::Mat::zeros((int)keypoints.size(), dsize, CV_8UC1);
 
 	for (size_t i = 0; i < keypoints.size(); i++)
 		computeLdbDescriptor(keypoints[i], image, integral_image, descriptors.ptr((int)i),
@@ -668,9 +669,9 @@ int LDB::descriptorSize() const
         return kBytes;
 }
 
-void LDB::compute( const Mat& image,
-				   vector<KeyPoint>& _keypoints, 
-				   Mat& _descriptors, 
+void LDB::compute( const cv::Mat& image,
+                   std::vector<cv::KeyPoint>& _keypoints,
+                   cv::Mat& _descriptors,
 				   bool flag) const
 {
     // Added to work with color images.
@@ -696,37 +697,37 @@ void LDB::compute( const Mat& image,
     }
 
 	// Pre-compute the scale pyramids
-	vector<Mat> imagePyramid(levelsNum);
+    std::vector<cv::Mat> imagePyramid(levelsNum);
 	for (int level = 0; level < levelsNum; ++level)
 	{
 		float scale = 1/getScale(level, firstLevel, scaleFactor);
-		Size sz(cvRound(_image.cols*scale), cvRound(_image.rows*scale));
-		Size wholeSize(sz.width + border*2, sz.height + border*2);
-		Mat temp(wholeSize, _image.type()), masktemp;
-		imagePyramid[level] = temp(Rect(border, border, sz.width, sz.height));
+        cv::Size sz(cvRound(_image.cols*scale), cvRound(_image.rows*scale));
+        cv::Size wholeSize(sz.width + border*2, sz.height + border*2);
+        cv::Mat temp(wholeSize, _image.type()), masktemp;
+        imagePyramid[level] = temp(cv::Rect(border, border, sz.width, sz.height));
 
 		// Compute the resized image
 		if( level != firstLevel )
 		{
 			if( level < firstLevel )
-				resize(_image, imagePyramid[level], sz, 0, 0, INTER_LINEAR);
+                resize(_image, imagePyramid[level], sz, 0, 0, cv::INTER_LINEAR);
 			else
-				resize(imagePyramid[level-1], imagePyramid[level], sz, 0, 0, INTER_LINEAR);
+                resize(imagePyramid[level-1], imagePyramid[level], sz, 0, 0, cv::INTER_LINEAR);
 
-			copyMakeBorder(imagePyramid[level], temp, border, border, border, border,
-				BORDER_REFLECT_101+BORDER_ISOLATED);
+            cv::copyMakeBorder(imagePyramid[level], temp, border, border, border, border,
+                cv::BORDER_REFLECT_101+cv::BORDER_ISOLATED);
 		}
 		else
-			copyMakeBorder(_image, temp, border, border, border, border,
-				BORDER_REFLECT_101);
+            cv::copyMakeBorder(_image, temp, border, border, border, border,
+                cv::BORDER_REFLECT_101);
 	}
 
 	// Pre-compute the keypoints (we keep the best over all scales, so this has to be done beforehand
-	vector < vector<KeyPoint> > allKeypoints;
+    std::vector < std::vector<cv::KeyPoint> > allKeypoints;
 
 	// Cluster the input keypoints depending on the level they were computed at
 	allKeypoints.resize(levelsNum);
-	for (vector<KeyPoint>::iterator keypoint = _keypoints.begin(),
+    for (std::vector<cv::KeyPoint>::iterator keypoint = _keypoints.begin(),
 		keypointEnd = _keypoints.end(); keypoint != keypointEnd; ++keypoint)
 		allKeypoints[keypoint->octave].push_back(*keypoint);
 
@@ -736,22 +737,22 @@ void LDB::compute( const Mat& image,
 		if (level == firstLevel)
 			continue;
 
-		vector<KeyPoint> & keypoints = allKeypoints[level];
+        std::vector<cv::KeyPoint> & keypoints = allKeypoints[level];
 		float scale = 1/getScale(level, firstLevel, scaleFactor);
-		for (vector<KeyPoint>::iterator keypoint = keypoints.begin(),
+        for (std::vector<cv::KeyPoint>::iterator keypoint = keypoints.begin(),
 			keypointEnd = keypoints.end(); keypoint != keypointEnd; ++keypoint)
 			keypoint->pt *= scale;
 	}
 
-	Mat descriptors;
-	vector<Point> pattern;
+    cv::Mat descriptors;
+    std::vector<cv::Point> pattern;
 
 	int nkeypoints = 0;
 	for (int level = 0; level < levelsNum; ++level){
-		vector<KeyPoint>& keypoints = allKeypoints[level];
-		Mat& workingMat = imagePyramid[level];
+        std::vector<cv::KeyPoint>& keypoints = allKeypoints[level];
+        cv::Mat& workingmat = imagePyramid[level];
 		if(keypoints.size() > 1)
-			KeyPointsFilter::runByImageBorder(keypoints, workingMat.size(), border); 
+            cv::KeyPointsFilter::runByImageBorder(keypoints, workingmat.size(), border);
 
 		nkeypoints += keypoints.size();
 	}
@@ -768,32 +769,32 @@ void LDB::compute( const Mat& image,
 	for (int level = 0; level < levelsNum; ++level)
 	{
 		// preprocess the resized image
-		Mat& workingMat = imagePyramid[level];
+        cv::Mat& workingmat = imagePyramid[level];
 		// Get the features and compute their orientation
-		vector<KeyPoint>& keypoints = allKeypoints[level];
+        std::vector<cv::KeyPoint>& keypoints = allKeypoints[level];
 		if(keypoints.size() > 1)
-			KeyPointsFilter::runByImageBorder(keypoints, workingMat.size(), border); 
+            cv::KeyPointsFilter::runByImageBorder(keypoints, workingmat.size(), border);
 		int nkeypoints = (int)keypoints.size();
 
 		// Compute the descriptors
-		Mat desc;
+        cv::Mat desc;
 		if (!descriptors.empty())
 		{
 			desc = descriptors.rowRange(offset, offset + nkeypoints);
 		}
 
 		offset += nkeypoints;
-		//boxFilter(working_mat, working_mat, working_mat.depth(), Size(5,5), Point(-1,-1), true, BORDER_REFLECT_101);
-		GaussianBlur(workingMat, workingMat, Size(7, 7), 2, 2, BORDER_REFLECT_101);
-		cv::Mat integral_image;
-		integral(workingMat, integral_image, CV_32S);
-		computeDescriptors(workingMat, integral_image, patchSize, keypoints, desc, descriptorSize(), flag);
+        //boxFilter(working_cv::Mat, working_cv::Mat, working_cv::Mat.depth(), Size(5,5), Point(-1,-1), true, BORDER_REFLECT_101);
+        GaussianBlur(workingmat, workingmat, cv::Size(7, 7), 2, 2, cv::BORDER_REFLECT_101);
+        cv::Mat integral_image;
+        integral(workingmat, integral_image, CV_32S);
+        computeDescriptors(workingmat, integral_image, patchSize, keypoints, desc, descriptorSize(), flag);
 
 		// Copy to the output data
 		if (level != firstLevel)
 		{
 			float scale = getScale(level, firstLevel, scaleFactor);
-			for (vector<KeyPoint>::iterator keypoint = keypoints.begin(),
+            for (std::vector<cv::KeyPoint>::iterator keypoint = keypoints.begin(),
 				keypointEnd = keypoints.end(); keypoint != keypointEnd; ++keypoint)
 				keypoint->pt *= scale;
 		}
@@ -802,4 +803,3 @@ void LDB::compute( const Mat& image,
 	}
 	
 }
-

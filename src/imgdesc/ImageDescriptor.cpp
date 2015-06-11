@@ -83,7 +83,7 @@ void ImageDescriptor::describeImage(const cv::Mat& image, std::vector<cv::KeyPoi
  * @param kps \see ImageDescriptor::describeImage
  * @param descs \see ImageDescriptor::describeImage
  */
-void ImageDescriptor::describeImage_FASTBRIEF(const Mat &image, std::vector<KeyPoint> &kps, Mat &descs)
+void ImageDescriptor::describeImage_FASTBRIEF(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
 {    
     _fastdet.detect(image, kps);
     _briefdes.compute(image, kps, descs);
@@ -96,7 +96,7 @@ void ImageDescriptor::describeImage_FASTBRIEF(const Mat &image, std::vector<KeyP
  * @param kps \see ImageDescriptor::describeImage
  * @param descs \see ImageDescriptor::describeImage
  */
-void ImageDescriptor::describeImage_FASTLDB(const Mat &image, std::vector<KeyPoint> &kps, Mat &descs)
+void ImageDescriptor::describeImage_FASTLDB(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
 {    
     _fastdet.detect(image, kps);
     _ldbdes.compute(image, kps, descs, true);
@@ -109,7 +109,7 @@ void ImageDescriptor::describeImage_FASTLDB(const Mat &image, std::vector<KeyPoi
  * @param kps \see ImageDescriptor::describeImage
  * @param descs \see ImageDescriptor::describeImage
  */
-void ImageDescriptor::describeImage_ORBBRIEF(const Mat &image, std::vector<KeyPoint> &kps, Mat &descs)
+void ImageDescriptor::describeImage_ORBBRIEF(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
 {    
     _orb(image, cv::Mat(), kps, descs);
     descs.release();
@@ -123,7 +123,7 @@ void ImageDescriptor::describeImage_ORBBRIEF(const Mat &image, std::vector<KeyPo
  * @param kps \see ImageDescriptor::describeImage
  * @param descs \see ImageDescriptor::describeImage
  */
-void ImageDescriptor::describeImage_ORBORB(const Mat &image, std::vector<KeyPoint> &kps, Mat &descs)
+void ImageDescriptor::describeImage_ORBORB(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
 {    
     _orb(image, cv::Mat(), kps, descs);
 }
@@ -135,7 +135,7 @@ void ImageDescriptor::describeImage_ORBORB(const Mat &image, std::vector<KeyPoin
  * @param kps \see ImageDescriptor::describeImage
  * @param descs \see ImageDescriptor::describeImage
  */
-void ImageDescriptor::describeImage_ORBLDB(const Mat &image, std::vector<KeyPoint> &kps, Mat &descs)
+void ImageDescriptor::describeImage_ORBLDB(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
 {    
     _orb(image, cv::Mat(), kps, descs);
     descs.release();
