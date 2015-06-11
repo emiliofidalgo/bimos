@@ -12,10 +12,10 @@
     <arg name="working_dir" default="/home/emilio/Escritorio/Serialization/Mosaicing/" />
     <arg name="img_descriptor" default="FAST_LDB" />
     <arg name="nkeypoints" default="3000" />
-    <arg name="pub_debug_info" default="false" />
+    <arg name="pub_debug_info" default="true" />
     <arg name="lc_delay_kfs" default="5" />
     <arg name="match_ratio" default="0.8" />
-    <arg name="min_inliers" default="200" />
+    <arg name="min_inliers" default="90" />
 
     <!-- Sequence Publisher node -->
     <node pkg="bimos" type="image_publisher" name="image_publisher" output="screen">
