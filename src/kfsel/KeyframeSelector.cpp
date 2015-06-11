@@ -53,7 +53,7 @@ void KeyframeSelector::run()
     nkfs = 0;
 
     // Launching the topic for receiving images
-    _img_subs = _nh.subscribe("image", 1, &KeyframeSelector::processImage, this);
+    _img_subs = _nh.subscribe("image", 150, &KeyframeSelector::processImage, this);
     ros::spin();
 }
 
