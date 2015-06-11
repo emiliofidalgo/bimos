@@ -5,7 +5,7 @@
     <!-- Arguments for image_sequence_publisher -->
     <arg name="images_dir" default="/datasets/ODEMAR/130f/" />
     <arg name="camera_info_file" default="/datasets/ODEMAR/calibration.yaml" />
-    <arg name="freq" default="2.0" />
+    <arg name="freq" default="1.0" />
     <arg name="run_image_proc" default="false" />
     <!-- Arguments for bimos -->
     <arg name="img_topic" default="/image_publisher/image_raw" />
@@ -13,20 +13,9 @@
     <arg name="img_descriptor" default="FAST_LDB" />
     <arg name="nkeypoints" default="3000" />
     <arg name="pub_debug_info" default="true" />
-    <arg name="lc_delay_kfs" default="5" />
+    <arg name="lc_delay_kfs" default="7" />
     <arg name="match_ratio" default="0.8" />
-    <arg name="min_inliers" default="90" />
-
-    <!-- Sequence Publisher node -->
-    <node pkg="bimos" type="image_publisher" name="image_publisher" output="screen">
-        <param name="images_dir" value="$(arg images_dir)" />
-        <param name="camera_info_file" value="$(arg camera_info_file)" />
-        <param name="freq" value="$(arg freq)" />
-    </node>
-
-    <group if="$(arg run_image_proc)" ns="image_publisher">
-        <node pkg="image_proc" type="image_proc" name="image_proc" output="screen" />
-    </group>
+    <arg name="min_inliers" default="170" />
 
     <!-- Mosaic Builder node -->
     <node pkg="bimos" type="bimos_node" name="bimos_node" output="screen">
@@ -40,5 +29,16 @@
 
         <remap from="~image" to="$(arg img_topic)" />
     </node>
+
+    <!-- Sequence Publisher node -->
+    <node pkg="bimos" type="image_publisher" name="image_publisher" output="screen">
+        <param name="images_dir" value="$(arg images_dir)" />
+        <param name="camera_info_file" value="$(arg camera_info_file)" />
+        <param name="freq" value="$(arg freq)" />
+    </node>
+
+    <group if="$(arg run_image_proc)" ns="image_publisher">
+        <node pkg="image_proc" type="image_proc" name="image_proc" output="screen" />
+    </group>
 
 </launch>
