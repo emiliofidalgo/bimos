@@ -139,7 +139,7 @@ void ImageDescriptor::describeImage_ORBLDB(const cv::Mat &image, std::vector<cv:
 {    
     _orb(image, cv::Mat(), kps, descs);
     descs.release();
-    _ldbdes.compute(image, kps, descs, true);
+    _ldbdes.compute(image, kps, descs, false);
 }
 
 }
