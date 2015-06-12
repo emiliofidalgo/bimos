@@ -74,7 +74,7 @@ void MosaicBuilder::createMosaic()
     LoopCloser lcloser(nh, p, &mgraph);
     boost::thread lcloser_thread(&LoopCloser::run, &lcloser);
 
-    ros::Rate rate(1.0);
+    ros::Rate rate(0.5);
     while (ros::ok())
     {
         if (p->pub_debug_info)
@@ -84,10 +84,11 @@ void MosaicBuilder::createMosaic()
 
         rate.sleep();
     }
-    ros::shutdown();
 
     kfsel_thread.join();
-    lcloser_thread.join();
+    lcloser_thread.join();    
+
+    ros::shutdown();
 }
 
 /**
