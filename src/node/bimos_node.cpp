@@ -18,13 +18,71 @@
 * along with bimos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "bimos/MosaicBuilder.h"
+#include <cstdlib>
+#include <fstream>
+#include <signal.h>
+
+#include <boost/thread.hpp>
+
+#include <bimos/graph/MosaicGraph.h>
+#include <bimos/imgdesc/ImageDescriptor.h>
+#include <bimos/kfsel/KeyframeSelector.h>
+#include <bimos/loopcloser/LoopCloser.h>
+#include <bimos/util/MosaicPublisher.h>
+#include <bimos/util/Image.h>
+#include <bimos/util/Params.h>
+#include <bimos/util/util.h>
 
 int main(int argc, char** argv)
-{
+{    
+    ROS_INFO("Initializing node ...");
+
+    // ROS
     ros::init(argc, argv, "bimos");
-    ros::NodeHandle nh_private("~");
-    bimos::MosaicBuilder mosaic_builder(nh_private);
-    ros::spin();
+    ros::NodeHandle nh("~");
+
+    bimos::Params* p = bimos::Params::getInstance();
+    ROS_INFO("Reading parameters ...");
+    p->readParams(nh);
+    ROS_INFO("Parameters read");
+
+    // Preparing working directory
+    ROS_INFO("Preparing working directory ...");
+    boost::filesystem::path res_imgs_dir = p->working_dir + "images/";
+    boost::filesystem::remove_all(res_imgs_dir);
+    boost::filesystem::create_directory(res_imgs_dir);
+    ROS_INFO("Working directory ready");
+
+    // Creating the MosaicGraph structure
+    bimos::MosaicGraph mgraph;
+
+    // Creating the information publisher class
+    bimos::MosaicPublisher mpublisher(nh, &mgraph, p);
+
+    ROS_INFO("Node initialized");
+
+    // Keyframe Selector Thread
+    bimos::KeyframeSelector kfsel(nh, p, &mgraph);
+    boost::thread kfsel_thread(&bimos::KeyframeSelector::run, &kfsel);
+
+    // Loop Closer Thread
+    bimos::LoopCloser lcloser(nh, p, &mgraph);
+    boost::thread lcloser_thread(&bimos::LoopCloser::run, &lcloser);
+
+    ros::Rate rate(0.5);
+    while (ros::ok())
+    {
+        if (p->pub_debug_info)
+        {
+            mpublisher.publishGraphInfo();
+        }
+
+        ros::spinOnce();
+        rate.sleep();
+    }
+
+    lcloser_thread.join();
+    kfsel_thread.join();
+
     return 0;
 }

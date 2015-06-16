@@ -128,14 +128,14 @@ void LoopCloser::run()
                 std::vector<cv::DMatch> inliers;
                 double rep_error;
                 HomographyEstimator::estimate(newkf->image, cand_kf->image, H, inliers, rep_error, p->match_ratio);
-                ROS_INFO("[loopdetector] Candidate %i, Score %f, Inliers %i, MRE: %f", cand_id, score, static_cast<int>(inliers.size()), rep_error);
+                ROS_INFO("[loopcloser] Candidate %i, Score %f, Inliers %i, MRE: %f", cand_id, score, static_cast<int>(inliers.size()), rep_error);
 
                 // Detecting if the number of inliers is higher than the indicated threshold
                 if (inliers.size() > p->min_inliers)
                 {
                     // Linking the images in the graph
                     mgraph->linkKFs(newkf->id, cand_id, rep_error, H);
-                    ROS_INFO("[loopdetector] --- Loop detected!, Linking KFs %i and %i", newkf->id, cand_id);
+                    ROS_INFO("[loopcloser] --- Loop detected!, Linking KFs %i and %i", newkf->id, cand_id);
                 }
                 else
                 {

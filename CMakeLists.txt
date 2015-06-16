@@ -38,7 +38,7 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${Boos
 # Custom target to include headers and launch files in QtCreator
 add_custom_target(dtarget_bimos SOURCES ${HDRS} ${SRCS} ${LNCH})
 
-# MosaicBuilder Library
+# BIMOS sources
 set(BIMOS_SRCS
     src/graph/Graph.cpp
     src/graph/MosaicGraph.cpp
@@ -52,16 +52,16 @@ set(BIMOS_SRCS
     src/motionest/SimilarityEstimator2D.cpp
     src/MosaicBuilder.cpp
     include/bimos/util/ConcurrentQueue.hpp
+    src/util/MosaicPublisher.cpp
     src/util/Transform.cpp
     src/util/Params.cpp
     src/util/util.cpp
+    src/node/bimos_node.cpp
 )
-add_library(bimos ${BIMOS_SRCS})
-target_link_libraries(bimos ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
 
-# MosaicBuilder Node
-add_executable(bimos_node src/node/bimos_node.cpp)
-target_link_libraries(bimos_node bimos)
+# BIMOS Node
+add_executable(bimos_node ${BIMOS_SRCS})
+target_link_libraries(bimos_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
 
 # Image Publisher Node
 add_executable(image_publisher
