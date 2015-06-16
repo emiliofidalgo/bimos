@@ -18,23 +18,17 @@
 * along with bimos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MOSAICBUILDER_H
-#define MOSAICBUILDER_H
+#ifndef _MOSAICPUB_H
+#define _MOSAICPUB_H
 
-#include <cstdlib>
-#include <fstream>
-
-#include <boost/thread.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
 #include <omp.h>
 #include <sensor_msgs/Image.h>
 
+#include <ros/ros.h>
+
 #include <bimos/graph/MosaicGraph.h>
-#include <bimos/imgdesc/ImageDescriptor.h>
-#include <bimos/kfsel/KeyframeSelector.h>
-#include <bimos/loopcloser/LoopCloser.h>
-#include <bimos/util/Image.h>
 #include <bimos/util/Params.h>
 #include <bimos/util/util.h>
 
@@ -42,18 +36,15 @@ namespace bimos
 {
 
 /**
- * @brief Main bimos class.
+ * @brief Main Publisher class
  */
-class MosaicBuilder
+class MosaicPublisher
 {
 public:
-    MosaicBuilder(const ros::NodeHandle _nh);
-    ~MosaicBuilder();
-
-    void createMosaic();
+    MosaicPublisher(const ros::NodeHandle _nh, MosaicGraph* graph, Params* _p);
 
     // Functions for publishing information about the mosaicing process
-    void publishGraphInfo(MosaicGraph* mgraph);
+    void publishGraphInfo();
 
 private:
 
@@ -64,7 +55,8 @@ private:
 
     // Parameters
     Params* p;
+    MosaicGraph* mgraph;
 };
 
 }
-#endif // MOSAICBUILDER_H
+#endif /* _MOSAICPUB_H */

@@ -18,81 +18,21 @@
 * along with bimos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "bimos/MosaicBuilder.h"
+#include <bimos/util/MosaicPublisher.h>
 
 namespace bimos
 {
 
-/**
- * @brief Default class constructor.
- * @param nh ROS node handle.
- */
-MosaicBuilder::MosaicBuilder(const ros::NodeHandle _nh)
-    : nh(_nh),
-      it(_nh),
-      p(Params::getInstance())
+MosaicPublisher::MosaicPublisher(const ros::NodeHandle _nh, bimos::MosaicGraph *graph, bimos::Params *_p) :
+    nh(_nh),
+    it(nh),
+    mgraph(graph),
+    p(_p)
 {
-    ROS_INFO("Initializing node ...");
-    ROS_INFO("Reading parameters ...");
-    p->readParams(nh);
-    ROS_INFO("Parameters read");
-    ROS_INFO("Node initialized");
-
-    // Starting ROS publishers
     pub_graph = it.advertise("mosaic_graph", 1);
-
-    createMosaic();
 }
 
-/**
- * @brief Default class destructor.
- */
-MosaicBuilder::~MosaicBuilder()
-{    
-}
-
-/**
- * @brief Starts the mosaicing process using the options stored in params.
- */
-void MosaicBuilder::createMosaic()
-{
-    // Preparing working directory
-    ROS_INFO("Preparing working directory ...");
-    boost::filesystem::path res_imgs_dir = p->working_dir + "images/";
-    boost::filesystem::remove_all(res_imgs_dir);
-    boost::filesystem::create_directory(res_imgs_dir);
-    ROS_INFO("Working directory ready");
-
-    // Creating the MosaicGraph structure
-    MosaicGraph mgraph;
-
-    // Keyframe Selector Thread
-    KeyframeSelector kfsel(nh, p, &mgraph);
-    boost::thread kfsel_thread(&KeyframeSelector::run, &kfsel);
-
-    // Loop Closer Thread
-    LoopCloser lcloser(nh, p, &mgraph);
-    boost::thread lcloser_thread(&LoopCloser::run, &lcloser);
-
-    ros::Rate rate(0.5);
-    while (ros::ok())
-    {        
-        if (p->pub_debug_info)
-        {
-            publishGraphInfo(&mgraph);
-        }
-
-        ros::spinOnce();
-        rate.sleep();
-    }
-
-    ros::shutdown();
-}
-
-/**
- * @brief This function creates a graph according to the graph information an publish it as an image
- */
-void MosaicBuilder::publishGraphInfo(MosaicGraph* mgraph)
+void MosaicPublisher::publishGraphInfo()
 {
     // Getting graph information
     std::string dot_graph;
