@@ -146,6 +146,7 @@ void LoopCloser::run()
         }
 
         // Sleeping the needed time
+        ros::spinOnce();
         r.sleep();
     }
 }

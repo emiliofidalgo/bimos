@@ -76,17 +76,15 @@ void MosaicBuilder::createMosaic()
 
     ros::Rate rate(0.5);
     while (ros::ok())
-    {
+    {        
         if (p->pub_debug_info)
         {
             publishGraphInfo(&mgraph);
         }
 
+        ros::spinOnce();
         rate.sleep();
     }
-
-    kfsel_thread.join();
-    lcloser_thread.join();    
 
     ros::shutdown();
 }
