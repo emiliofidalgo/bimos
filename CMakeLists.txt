@@ -49,8 +49,7 @@ set(BIMOS_SRCS
     src/loopcloser/LoopCloser.cpp
     src/motionest/AffineEstimator2D.cpp
     src/motionest/HomographyEstimator.cpp
-    src/motionest/SimilarityEstimator2D.cpp
-    src/MosaicBuilder.cpp
+    src/motionest/SimilarityEstimator2D.cpp    
     include/bimos/util/ConcurrentQueue.hpp
     src/util/MosaicPublisher.cpp
     src/util/Transform.cpp
