@@ -46,6 +46,7 @@ public:
     Keyframe* getLastInsertedKF();
     Keyframe* getMosaicFrame();
     Keyframe* getKeyframe(const int id);
+    int getNumberOfKeyframes();
     void getDotGraph(std::string& contents);
 
     // Queues for thread intercommunication

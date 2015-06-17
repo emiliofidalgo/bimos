@@ -180,6 +180,20 @@ Keyframe* MosaicGraph::getKeyframe(const int id)
     return kfs[id];
 }
 
+/**
+ * @brief Method for returning the number of KFs currently stored in the graph.
+ * @return
+ */
+int MosaicGraph::getNumberOfKeyframes()
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+    return static_cast<int>(kfs.size());
+}
+
+/**
+ * @brief Returns the description of the graph using the Dot language.
+ * @param contents
+ */
 void MosaicGraph::getDotGraph(std::string& contents)
 {
     boost::mutex::scoped_lock lock(mutex_mgraph);
