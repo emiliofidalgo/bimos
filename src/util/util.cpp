@@ -77,4 +77,83 @@ void getImageFilenames(const std::string& directory, std::vector<std::string>& f
     }
 }
 
+/**
+ * @brief Stores matchings on disk.
+ * @param ori Origin KF.
+ * @param dest Destination  KF.
+ * @param dir Directory to store the file.
+ * @param matches The matching vector.
+ */
+void saveMatchings(const int ori, const int dest, const std::string& dir, const std::vector<cv::DMatch>& matches)
+{
+    // Saving matchings in forward direction
+    char name[500];
+    std::string yfilename = dir + "matchings%06d_%06d.yml";
+    sprintf(name, yfilename.c_str(), ori, dest);
+
+    cv::FileStorage fs1(std::string(name), cv::FileStorage::WRITE);
+    fs1 << "matches" << "[";
+    for (unsigned m = 0; m < matches.size(); m++)
+    {
+        fs1 << "{:";
+        fs1 << "q" << matches[m].queryIdx;
+        fs1 << "t" << matches[m].trainIdx;
+        fs1 << "i" << matches[m].imgIdx;
+        fs1 << "d" << matches[m].distance;
+        fs1 << "}";
+    }
+    fs1 << "]";
+    fs1.release();
+
+    // Saving matchings in backward direction
+    // FIXME
+    sprintf(name, yfilename.c_str(), dest, ori);
+
+    cv::FileStorage fs2(std::string(name), cv::FileStorage::WRITE);
+    fs2 << "matches" << "[";
+    for (unsigned m = 0; m < matches.size(); m++)
+    {
+        fs2 << "{:";
+        fs2 << "q" << matches[m].trainIdx;
+        fs2 << "t" << matches[m].queryIdx;
+        fs2 << "i" << matches[m].imgIdx;
+        fs2 << "d" << matches[m].distance;
+        fs2 << "}";
+    }
+    fs2 << "]";
+    fs2.release();
+}
+
+/**
+ * @brief Loads matchings from disk.
+ * @param ori Origin KF.
+ * @param dest Destination KF.
+ * @param dir Directory from where to load the file.
+ * @param matches The matching vector.
+ */
+void loadMatchings(const int ori, const int dest, const std::string& dir, std::vector<cv::DMatch>& matches)
+{
+    char name[500];
+    std::string yfilename = dir + "matchings%06d_%06d.yml";
+    sprintf(name, yfilename.c_str(), ori, dest);
+
+    cv::FileStorage fs(std::string(name), cv::FileStorage::READ);
+
+    cv::FileNode mtchs = fs["matches"];
+    cv::FileNodeIterator it = mtchs.begin(), it_end = mtchs.end();
+    matches.clear();
+    for(; it != it_end; it++)
+    {
+        cv::DMatch match;
+        match.queryIdx = (int)(*it)["q"];
+        match.trainIdx = (int)(*it)["t"];
+        match.imgIdx = (int)(*it)["i"];
+        match.distance = (float)(*it)["d"];
+
+        matches.push_back(match);
+    }
+
+    fs.release();
+}
+
 }

@@ -34,6 +34,8 @@ namespace bimos
 
 void ratioMatching(Image* query, Image* train, std::vector<cv::DMatch>& matches, const double ratio = 0.8);
 void getImageFilenames(const std::string& directory, std::vector<std::string>& filenames);
+void saveMatchings(const int ori, const int dest, const std::string& dir, const std::vector<cv::DMatch>& matches);
+void loadMatchings(const int ori, const int dest, const std::string& dir, std::vector<cv::DMatch>& matches);
 
 }
 #endif

@@ -135,6 +135,7 @@ void LoopCloser::run()
                 {
                     // Linking the images in the graph
                     mgraph->linkKFs(newkf->id, cand_id, rep_error, H);
+                    saveMatchings(newkf->id, cand_kf->id, p->working_dir + "inliers/", inliers);
                     ROS_INFO("[loopcloser] --- Loop detected!, Linking KFs %i and %i", newkf->id, cand_id);
                 }
                 else

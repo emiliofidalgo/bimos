@@ -98,18 +98,19 @@ void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
     }
     else
     {
-        // Homography computation
-        Keyframe* last_kf = mgraph->getLastInsertedKF();
-        ROS_INFO("[kfsel] Estimating homography between KF %i and image %i ...", last_kf->id, image->id);
-        cv::Mat_<double> H;
-        std::vector<cv::DMatch> inliers;
-        double rep_error;
-        HomographyEstimator::estimate(last_kf->image, image, H, inliers, rep_error, p->match_ratio);
-        ROS_INFO("[kfsel] Inliers %i, Mean Reprojection Error: %f", static_cast<int>(inliers.size()), rep_error);
-
-        if (image->id % 3 == 0)
+        if (image->id % 3 == 0) // TODO Temporal criteria for taking a decision about a KF
         {
+            // Homography computation
+            Keyframe* last_kf = mgraph->getLastInsertedKF();
+            ROS_INFO("[kfsel] Estimating homography between KF %i and image %i ...", last_kf->id, image->id);
+            cv::Mat_<double> H;
+            std::vector<cv::DMatch> inliers;
+            double rep_error;
+            HomographyEstimator::estimate(last_kf->image, image, H, inliers, rep_error, p->match_ratio);
+            ROS_INFO("[kfsel] Inliers %i, Mean Reprojection Error: %f", static_cast<int>(inliers.size()), rep_error);
+            // Adding the KF to the graph
             int nkf = mgraph->addKeyframe(image, rep_error, H);
+            saveMatchings(last_kf->id, nkf, p->working_dir + "inliers/", inliers);
             ROS_INFO("[kfsel] Adding KF %i to the graph", nkf);
         }
         else

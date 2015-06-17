@@ -51,6 +51,9 @@ int main(int argc, char** argv)
     boost::filesystem::path res_imgs_dir = p->working_dir + "images/";
     boost::filesystem::remove_all(res_imgs_dir);
     boost::filesystem::create_directory(res_imgs_dir);
+    res_imgs_dir = p->working_dir + "inliers/";
+    boost::filesystem::remove_all(res_imgs_dir);
+    boost::filesystem::create_directory(res_imgs_dir);
     ROS_INFO("Working directory ready");
 
     // Creating the MosaicGraph structure
