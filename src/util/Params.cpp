@@ -64,6 +64,9 @@ void Params::readParams(const ros::NodeHandle& nh)
 
     nh.param("min_inliers", min_inliers, 200);
     ROS_INFO("[Params] Minimum number of inliers for LC: %i", min_inliers);
+
+    nh.param("optim_every_kfs", optim_every_kfs, 15);
+    ROS_INFO("[Params] Optimizer after every KFs: %i", optim_every_kfs);
 }
 
 }
