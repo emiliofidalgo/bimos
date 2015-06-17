@@ -40,6 +40,7 @@ add_custom_target(dtarget_bimos SOURCES ${HDRS} ${SRCS} ${LNCH})
 
 # BIMOS sources
 set(BIMOS_SRCS
+    include/bimos/util/ConcurrentQueue.hpp
     src/graph/Graph.cpp
     src/graph/MosaicGraph.cpp
     src/imgdesc/ImageDescriptor.cpp
@@ -49,8 +50,8 @@ set(BIMOS_SRCS
     src/loopcloser/LoopCloser.cpp
     src/motionest/AffineEstimator2D.cpp
     src/motionest/HomographyEstimator.cpp
-    src/motionest/SimilarityEstimator2D.cpp    
-    include/bimos/util/ConcurrentQueue.hpp
+    src/motionest/SimilarityEstimator2D.cpp
+    src/optim/Optimizer.cpp
     src/util/MosaicPublisher.cpp
     src/util/Transform.cpp
     src/util/Params.cpp
