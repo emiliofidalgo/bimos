@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp camera_calibration_parsers sensor
 # System dependencies
 find_package(OpenCV REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem thread)
+find_package(Ceres REQUIRED)
 find_package(OpenMP REQUIRED)
 if(OPENMP_FOUND)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -25,7 +26,7 @@ catkin_package(
     INCLUDE_DIRS include
     LIBRARIES bimos
     CATKIN_DEPENDS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge obindex
-    DEPENDS OpenCV Boost OpenMP
+    DEPENDS OpenCV Boost Ceres OpenMP
 )
 
 ###########
@@ -33,7 +34,7 @@ catkin_package(
 ###########
 
 # Including directories.
-include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${CERES_INCLUDE_DIRS})
 
 # Custom target to include headers and launch files in QtCreator
 add_custom_target(dtarget_bimos SOURCES ${HDRS} ${SRCS} ${LNCH})
@@ -61,7 +62,7 @@ set(BIMOS_SRCS
 
 # BIMOS Node
 add_executable(bimos_node ${BIMOS_SRCS})
-target_link_libraries(bimos_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(bimos_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${CERES_LIBRARIES})
 
 # Image Publisher Node
 add_executable(image_publisher

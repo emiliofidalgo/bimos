@@ -47,6 +47,9 @@ private:
 
     // Graph Management
     MosaicGraph* mgraph;
+
+    // Last KF where the optimization was launched
+    int last_kf_optim;
 };
 
 }

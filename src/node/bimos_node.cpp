@@ -28,6 +28,7 @@
 #include <bimos/imgdesc/ImageDescriptor.h>
 #include <bimos/kfsel/KeyframeSelector.h>
 #include <bimos/loopcloser/LoopCloser.h>
+#include <bimos/optim/Optimizer.h>
 #include <bimos/util/MosaicPublisher.h>
 #include <bimos/util/Image.h>
 #include <bimos/util/Params.h>
@@ -72,6 +73,10 @@ int main(int argc, char** argv)
     bimos::LoopCloser lcloser(nh, p, &mgraph);
     boost::thread lcloser_thread(&bimos::LoopCloser::run, &lcloser);
 
+    // Optimizer Thread
+    bimos::Optimizer optim(p, &mgraph);
+    boost::thread optim_thread(&bimos::Optimizer::run, &optim);
+
     ros::Rate rate(0.5);
     while (ros::ok())
     {
@@ -84,6 +89,7 @@ int main(int argc, char** argv)
         rate.sleep();
     }
 
+    optim_thread.join();
     lcloser_thread.join();
     kfsel_thread.join();
 

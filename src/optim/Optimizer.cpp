@@ -28,7 +28,8 @@ namespace bimos
  */
 Optimizer::Optimizer(Params* params, MosaicGraph* _mgraph) :
     p(params),
-    mgraph(_mgraph)
+    mgraph(_mgraph),
+    last_kf_optim(0)
 {
 }
 
@@ -44,6 +45,21 @@ Optimizer::~Optimizer()
  */
 void Optimizer::run()
 {
+    ros::Rate r(200);
+    while(ros::ok())
+    {
+        // Checking if we have to execute an optimization
+        int nkfs = mgraph->getNumberOfKeyframes();
+        if (nkfs - last_kf_optim > p->optim_every_kfs)
+        {
+            ROS_INFO("[optim] Optimize!!");
+            last_kf_optim = nkfs;
+        }
+
+        // Sleeping the needed time
+        ros::spinOnce();
+        r.sleep();
+    }
 }
 
 }
