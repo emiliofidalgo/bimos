@@ -231,6 +231,21 @@ int MosaicGraph::getNumberOfKeyframes()
 }
 
 /**
+ * @brief Returns a vector of the current transformation for each KF.
+ * @param transforms An ordered vector of tranformations for each KF.
+ */
+void MosaicGraph::getKFTransforms(std::vector<Transform> &transforms)
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+    transforms.clear();
+    for (unsigned i = 0; i < kfs.size(); i++)
+    {
+        Transform t(kfs[i]->trans);
+        transforms.push_back(t);
+    }
+}
+
+/**
  * @brief Returns the description of the graph using the Dot language.
  * @param contents
  */

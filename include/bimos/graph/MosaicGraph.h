@@ -50,6 +50,7 @@ public:
     Keyframe* getMosaicFrame();
     Keyframe* getKeyframe(const int id);
     int getNumberOfKeyframes();
+    void getKFTransforms(std::vector<Transform>& transforms);
     void getDotGraph(std::string& contents);
 
     // Queues for thread intercommunication
