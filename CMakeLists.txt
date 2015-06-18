@@ -42,6 +42,7 @@ add_custom_target(dtarget_bimos SOURCES ${HDRS} ${SRCS} ${LNCH})
 # BIMOS sources
 set(BIMOS_SRCS
     include/bimos/util/ConcurrentQueue.hpp
+    src/blend/Blender.cpp
     src/graph/Graph.cpp
     src/graph/MosaicGraph.cpp
     src/imgdesc/ImageDescriptor.cpp
