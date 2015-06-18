@@ -34,6 +34,9 @@
 #include <bimos/util/Params.h>
 #include <bimos/util/util.h>
 
+// Creating the MosaicGraph structure
+bimos::MosaicGraph mgraph;
+
 int main(int argc, char** argv)
 {    
     ROS_INFO("Initializing node ...");
@@ -55,10 +58,7 @@ int main(int argc, char** argv)
     res_imgs_dir = p->working_dir + "inliers/";
     boost::filesystem::remove_all(res_imgs_dir);
     boost::filesystem::create_directory(res_imgs_dir);
-    ROS_INFO("Working directory ready");
-
-    // Creating the MosaicGraph structure
-    bimos::MosaicGraph mgraph;
+    ROS_INFO("Working directory ready");    
 
     // Creating the information publisher class
     bimos::MosaicPublisher mpublisher(nh, &mgraph, p);
