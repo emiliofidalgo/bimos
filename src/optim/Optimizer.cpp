@@ -52,7 +52,14 @@ void Optimizer::run()
         int nkfs = mgraph->getNumberOfKeyframes();
         if (nkfs - last_kf_optim > p->optim_every_kfs)
         {
-            ROS_INFO("[optim] Optimize!!");
+            ROS_INFO("[optim] Optimize the positions of the mosaic...");
+
+            ceres::Solver::Summary summ;
+            mgraph->optimize(summ);
+
+            ROS_INFO("[optim] %s", summ.BriefReport().c_str());
+
+            // Updating the last KF optimized
             last_kf_optim = nkfs;
         }
 

@@ -110,7 +110,9 @@ void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
             ROS_INFO("[kfsel] Inliers %i, Mean Reprojection Error: %f", static_cast<int>(inliers.size()), rep_error);
             // Adding the KF to the graph
             int nkf = mgraph->addKeyframe(image, rep_error, H);
-            saveMatchings(last_kf->id, nkf, p->working_dir + "inliers/", inliers);
+            //saveMatchings(last_kf->id, nkf, p->working_dir + "inliers/", inliers);
+            Keyframe* new_kf = mgraph->getLastInsertedKF();
+            mgraph->addConstraints(last_kf, new_kf, inliers);
             ROS_INFO("[kfsel] Adding KF %i to the graph", nkf);
         }
         else

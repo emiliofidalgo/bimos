@@ -136,6 +136,46 @@ void MosaicGraph::linkKFs(const int a, const int b, const double weight, const c
 }
 
 /**
+ * @brief Adds constraints to the optimizer.
+ * @param kf_prev Original KF.
+ * @param kf Destination KF.
+ * @param matches Inliers between the KFs.
+ */
+void MosaicGraph::addConstraints(Keyframe* kf_prev, Keyframe* kf, std::vector<cv::DMatch>& matches)
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+    madj.addConstraints(kf_prev, kf, matches);
+}
+
+/**
+ * @brief Performs an optimization of the absolute positions of the graph.
+ * @param summary Ceres solver summary.
+ */
+void MosaicGraph::optimize(ceres::Solver::Summary& summary)
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+
+    // Performing the optimization
+    ceres::Solver::Options solver_options;
+    solver_options.linear_solver_type = ceres::SPARSE_SCHUR;
+    solver_options.max_num_iterations = 100;
+    solver_options.minimizer_progress_to_stdout = false;
+    solver_options.num_threads = sysconf( _SC_NPROCESSORS_ONLN );
+    solver_options.num_linear_solver_threads = sysconf( _SC_NPROCESSORS_ONLN );
+    solver_options.parameter_tolerance = 0;
+    solver_options.function_tolerance = 0;
+    solver_options.gradient_tolerance = 0;
+
+    madj.adjust(solver_options, summary);
+
+    // Updating the absolute homographies.
+    for (unsigned kf_ind = 0; kf_ind < kfs.size(); kf_ind++)
+    {
+        kfs[kf_ind]->trans.updateHomography();
+    }
+}
+
+/**
  * @brief Determines if a link exists in the graph.
  * @param ori Origin KF.
  * @param dest Destination KF.

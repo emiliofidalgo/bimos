@@ -28,6 +28,7 @@
 #include <bimos/graph/Edge.h>
 #include <bimos/graph/Graph.h>
 #include <bimos/graph/Keyframe.h>
+#include <bimos/optim/MosaicAdjuster.h>
 #include <bimos/util/ConcurrentQueue.hpp>
 
 namespace bimos
@@ -41,6 +42,8 @@ public:
 
     int addKeyframe(Image* img, const double weight, const cv::Mat& t);
     void linkKFs(const int a, const int b, const double weight, const cv::Mat& t);
+    void addConstraints(Keyframe* kf_prev, Keyframe* kf, std::vector<cv::DMatch>& matches);
+    void optimize(ceres::Solver::Summary& summary);
     bool existsEdge(const int ori, const int dest);
 
     Keyframe* getLastInsertedKF();
@@ -50,20 +53,24 @@ public:
     void getDotGraph(std::string& contents);
 
     // Queues for thread intercommunication
-    ConcurrentQueue<Keyframe *> newKFs;
+    ConcurrentQueue<Keyframe *> newKFs;    
 
 protected:
     // Structures
     Graph graph;
     std::vector<Keyframe*> kfs;
-    std::map<int, std::map<int, Edge*> > edges;
+    std::map<int, std::map<int, Edge*> > edges;    
 
     // Last Keyframe inserted
     Keyframe* last_kf_inserted;
+    // Mosaic frame
     Keyframe* mosaic_frame;
 
     // Mutex to control the access to the mosaic graph
     boost::mutex mutex_mgraph;
+
+    // Adjuster for optimizing mosaic poses
+    MosaicAdjuster madj;
 };
 
 }
