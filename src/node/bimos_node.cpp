@@ -23,6 +23,7 @@
 #include <signal.h>
 
 #include <boost/thread.hpp>
+#include <std_srvs/Empty.h>
 
 #include <bimos/graph/MosaicGraph.h>
 #include <bimos/imgdesc/ImageDescriptor.h>
@@ -37,6 +38,25 @@
 // Creating the MosaicGraph structure
 bimos::MosaicGraph mgraph;
 
+// Callback for optimize service
+bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+{
+    ROS_INFO("[optim] Optimize the positions of the mosaic...");
+
+    ceres::Solver::Summary summ;
+    mgraph.optimize(summ);
+
+    ROS_INFO("[optim] %s", summ.BriefReport().c_str());
+    return true;
+}
+
+// Callback for blend service
+bool blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+{
+    ROS_INFO("Blend!");
+    return true;
+}
+
 int main(int argc, char** argv)
 {    
     ROS_INFO("Initializing node ...");
@@ -44,6 +64,8 @@ int main(int argc, char** argv)
     // ROS
     ros::init(argc, argv, "bimos");
     ros::NodeHandle nh("~");
+    ros::ServiceServer optservice = nh.advertiseService("optimize", optimize);
+    ros::ServiceServer blendservice = nh.advertiseService("blend", blend);
 
     bimos::Params* p = bimos::Params::getInstance();
     ROS_INFO("Reading parameters ...");
