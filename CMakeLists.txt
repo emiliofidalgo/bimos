@@ -52,6 +52,7 @@ set(BIMOS_SRCS
     src/motionest/AffineEstimator2D.cpp
     src/motionest/HomographyEstimator.cpp
     src/motionest/SimilarityEstimator2D.cpp
+    src/optim/MosaicAdjuster.cpp
     src/optim/Optimizer.cpp
     src/util/MosaicPublisher.cpp
     src/util/Transform.cpp
