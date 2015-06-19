@@ -25,6 +25,7 @@
 #include <boost/thread.hpp>
 #include <std_srvs/Empty.h>
 
+#include <bimos/blend/Blender.h>
 #include <bimos/graph/MosaicGraph.h>
 #include <bimos/imgdesc/ImageDescriptor.h>
 #include <bimos/kfsel/KeyframeSelector.h>
@@ -37,6 +38,9 @@
 
 // Creating the MosaicGraph structure
 bimos::MosaicGraph mgraph;
+
+// Blender class
+bimos::Blender blender;
 
 // Callback for optimize service
 bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
@@ -53,7 +57,7 @@ bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
 // Callback for blend service
 bool blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
 {
-    ROS_INFO("Blend!");
+    boost::thread blender_thread(&bimos::Blender::run, &blender);
     return true;
 }
 
@@ -98,6 +102,10 @@ int main(int argc, char** argv)
     // Optimizer Thread
     bimos::Optimizer optim(p, &mgraph);
     boost::thread optim_thread(&bimos::Optimizer::run, &optim);
+
+    // Assigning parameters to the blender
+    blender.setParams(p);
+    blender.setGraph(&mgraph);
 
     ros::Rate rate(0.5);
     while (ros::ok())

@@ -33,7 +33,7 @@ namespace bimos
 class MosaicAdjuster
 {
 public:
-    MosaicAdjuster(const double _rfactor = 8.0);
+    MosaicAdjuster(const double _rfactor = 4.0);
     ~MosaicAdjuster();
 
     void addConstraints(Keyframe* kf_prev, Keyframe* kf, const std::vector<cv::DMatch>& matches);

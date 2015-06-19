@@ -11,6 +11,7 @@
     <arg name="match_ratio" default="0.8" />
     <arg name="min_inliers" default="170" />
     <arg name="optim_every_kfs" default="15" />
+    <arg name="blend_exp" default="false" />
 
     <!-- Mosaic Builder node -->
     <node pkg="bimos" type="bimos_node" name="bimos_node" output="screen">
@@ -22,6 +23,7 @@
         <param name="match_ratio" value="$(arg match_ratio)" />
         <param name="min_inliers" value="$(arg min_inliers)" />
         <param name="optim_every_kfs" value="$(arg optim_every_kfs)" />
+        <param name="blend_exp" value="$(arg blend_exp)" />
 
         <remap from="~image" to="$(arg img_topic)" />
     </node>

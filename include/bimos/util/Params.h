@@ -43,6 +43,7 @@ public:
     double match_ratio;
     int min_inliers;
     int optim_every_kfs;
+    bool blend_exp;
 
     // Public functions.
     static Params* getInstance();
@@ -56,7 +57,8 @@ protected:
         lc_delay_kfs(5),
         match_ratio(0.8),
         min_inliers(200),
-        optim_every_kfs(15)
+        optim_every_kfs(15),
+        blend_exp(false)
     {
     }
 

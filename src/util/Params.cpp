@@ -67,6 +67,9 @@ void Params::readParams(const ros::NodeHandle& nh)
 
     nh.param("optim_every_kfs", optim_every_kfs, 15);
     ROS_INFO("[Params] Optimizer after every KFs: %i", optim_every_kfs);
+
+    nh.param("blend_exp", blend_exp, false);
+    ROS_INFO("[Params] Exposure Compensator in Blending %i", blend_exp ? 1 : 0);
 }
 
 }

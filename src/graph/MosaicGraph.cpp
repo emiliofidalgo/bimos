@@ -158,7 +158,7 @@ void MosaicGraph::optimize(ceres::Solver::Summary& summary)
     // Performing the optimization
     ceres::Solver::Options solver_options;
     solver_options.linear_solver_type = ceres::SPARSE_SCHUR;
-    solver_options.max_num_iterations = 100;
+    solver_options.max_num_iterations = 1000;
     solver_options.minimizer_progress_to_stdout = false;
     solver_options.num_threads = sysconf( _SC_NPROCESSORS_ONLN );
     solver_options.num_linear_solver_threads = sysconf( _SC_NPROCESSORS_ONLN );

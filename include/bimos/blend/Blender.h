@@ -23,9 +23,22 @@
 
 #include <ros/ros.h>
 #include <opencv2/opencv.hpp>
+#include <opencv2/stitching/detail/autocalib.hpp>
+#include <opencv2/stitching/detail/blenders.hpp>
+#include <opencv2/stitching/detail/camera.hpp>
+#include <opencv2/stitching/detail/exposure_compensate.hpp>
+#include <opencv2/stitching/detail/matchers.hpp>
+#include <opencv2/stitching/detail/motion_estimators.hpp>
+#include <opencv2/stitching/detail/seam_finders.hpp>
+#include <opencv2/stitching/detail/util.hpp>
+#include <opencv2/stitching/detail/warpers.hpp>
+#include <opencv2/stitching/warpers.hpp>
 
 #include <bimos/graph/MosaicGraph.h>
 #include <bimos/util/Params.h>
+
+#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
 
 namespace bimos
 {
@@ -36,10 +49,13 @@ namespace bimos
 class Blender
 {
 public:
-    Blender(Params* params, MosaicGraph* _mgraph);
+    Blender();
     ~Blender();
 
     void run();
+
+    void setParams(Params* _p);
+    void setGraph(MosaicGraph* _mgraph);
 
 private:
     // Parameters
@@ -47,6 +63,15 @@ private:
 
     // Graph Management
     MosaicGraph* mgraph;
+
+    // Mosaic ID
+    int mosaic_id;
+
+    // Methods for supporting the blending process
+    void detectResultRoi(cv::Size src_size, Transform& t, cv::Point& dst_tl, cv::Point& dst_br);
+    cv::Rect buildMaps(const cv::Size src_size, Transform& t, cv::Mat& xmap, cv::Mat& ymap);
+    cv::Point warpImg(const cv::Mat& src, Transform& t, cv::Mat& dst, int interp_mode, int border_mode);
+    cv::Rect resultRoi(const std::vector<cv::Point>& corners, const std::vector<cv::Size>& sizes);
 };
 
 }
