@@ -7,7 +7,7 @@
     <arg name="img_descriptor" default="FAST_LDB" />
     <arg name="nkeypoints" default="3000" />
     <arg name="pub_debug_info" default="true" />
-    <arg name="lc_delay_kfs" default="7" />
+    <arg name="lc_delay_kfs" default="3" />
     <arg name="match_ratio" default="0.8" />
     <arg name="min_inliers" default="170" />
     <arg name="optim_every_kfs" default="15" />
