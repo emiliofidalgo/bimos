@@ -166,9 +166,11 @@ void MosaicGraph::optimize(ceres::Solver::Summary& summary, bool opt_local)
         solver_options.minimizer_progress_to_stdout = false;
         solver_options.num_threads = sysconf( _SC_NPROCESSORS_ONLN );
         solver_options.num_linear_solver_threads = sysconf( _SC_NPROCESSORS_ONLN );
-        solver_options.parameter_tolerance = 0;
-        solver_options.function_tolerance = 0;
-        solver_options.gradient_tolerance = 0;
+        //solver_options.parameter_tolerance = 0;
+        //solver_options.function_tolerance = 0;
+        //solver_options.gradient_tolerance = 0;
+        solver_options.initial_trust_region_radius = 1e14;
+        solver_options.max_solver_time_in_seconds = 300;
     }
     else
     {
@@ -178,9 +180,11 @@ void MosaicGraph::optimize(ceres::Solver::Summary& summary, bool opt_local)
         solver_options.minimizer_progress_to_stdout = false;
         solver_options.num_threads = sysconf( _SC_NPROCESSORS_ONLN );
         solver_options.num_linear_solver_threads = sysconf( _SC_NPROCESSORS_ONLN );
-        solver_options.parameter_tolerance = 0;
-        solver_options.function_tolerance = 0;
-        solver_options.gradient_tolerance = 0;
+        solver_options.initial_trust_region_radius = 1e14;
+        solver_options.max_solver_time_in_seconds = 30;
+        //solver_options.parameter_tolerance = 0;
+        //solver_options.function_tolerance = 0;
+        //solver_options.gradient_tolerance = 0;
     }
 
     madj.adjust(solver_options, summary);

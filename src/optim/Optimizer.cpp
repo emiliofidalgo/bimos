@@ -55,7 +55,7 @@ void Optimizer::run()
             ROS_INFO("[optim] Optimize the positions of the mosaic...");
 
             ceres::Solver::Summary summ;
-            mgraph->optimize(summ);
+            mgraph->optimize(summ, true);
 
             ROS_INFO("[optim] %s", summ.BriefReport().c_str());
 

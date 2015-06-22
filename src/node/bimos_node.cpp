@@ -48,9 +48,9 @@ bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
     ROS_INFO("[optim] Optimize the positions of the mosaic...");
 
     ceres::Solver::Summary summ;
-    mgraph.optimize(summ);
+    mgraph.optimize(summ, false);
 
-    ROS_INFO("[optim] %s", summ.BriefReport().c_str());
+    ROS_INFO("[optim] %s", summ.FullReport().c_str());
     return true;
 }
 
