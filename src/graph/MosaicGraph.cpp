@@ -151,20 +151,37 @@ void MosaicGraph::addConstraints(Keyframe* kf_prev, Keyframe* kf, std::vector<cv
  * @brief Performs an optimization of the absolute positions of the graph.
  * @param summary Ceres solver summary.
  */
-void MosaicGraph::optimize(ceres::Solver::Summary& summary)
+void MosaicGraph::optimize(ceres::Solver::Summary& summary, bool opt_local)
 {
     boost::mutex::scoped_lock lock(mutex_mgraph);
 
-    // Performing the optimization
     ceres::Solver::Options solver_options;
-    solver_options.linear_solver_type = ceres::SPARSE_SCHUR;
-    solver_options.max_num_iterations = 1000;
-    solver_options.minimizer_progress_to_stdout = false;
-    solver_options.num_threads = sysconf( _SC_NPROCESSORS_ONLN );
-    solver_options.num_linear_solver_threads = sysconf( _SC_NPROCESSORS_ONLN );
-    solver_options.parameter_tolerance = 0;
-    solver_options.function_tolerance = 0;
-    solver_options.gradient_tolerance = 0;
+
+    // Performing the optimization
+    if (!opt_local)
+    {
+        // Global Optimization
+        solver_options.linear_solver_type = ceres::SPARSE_SCHUR;
+        solver_options.max_num_iterations = 1000;
+        solver_options.minimizer_progress_to_stdout = false;
+        solver_options.num_threads = sysconf( _SC_NPROCESSORS_ONLN );
+        solver_options.num_linear_solver_threads = sysconf( _SC_NPROCESSORS_ONLN );
+        solver_options.parameter_tolerance = 0;
+        solver_options.function_tolerance = 0;
+        solver_options.gradient_tolerance = 0;
+    }
+    else
+    {
+        // Local Optimization
+        solver_options.linear_solver_type = ceres::SPARSE_SCHUR;
+        solver_options.max_num_iterations = 50;
+        solver_options.minimizer_progress_to_stdout = false;
+        solver_options.num_threads = sysconf( _SC_NPROCESSORS_ONLN );
+        solver_options.num_linear_solver_threads = sysconf( _SC_NPROCESSORS_ONLN );
+        solver_options.parameter_tolerance = 0;
+        solver_options.function_tolerance = 0;
+        solver_options.gradient_tolerance = 0;
+    }
 
     madj.adjust(solver_options, summary);
 

@@ -43,7 +43,7 @@ public:
     int addKeyframe(Image* img, const double weight, const cv::Mat& t);
     void linkKFs(const int a, const int b, const double weight, const cv::Mat& t);
     void addConstraints(Keyframe* kf_prev, Keyframe* kf, std::vector<cv::DMatch>& matches);
-    void optimize(ceres::Solver::Summary& summary);
+    void optimize(ceres::Solver::Summary& summary, bool opt_local = true);
     bool existsEdge(const int ori, const int dest);
 
     Keyframe* getLastInsertedKF();
