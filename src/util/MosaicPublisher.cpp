@@ -45,14 +45,14 @@ void MosaicPublisher::publishGraphInfo()
     out.close();
 
     // Calling to the conversion function
-    std::string command = "dot -Kneato -n -Tpng " + p->working_dir + "mgraph.dot -o " + p->working_dir + "mgraph.png";
+    std::string command = "dot -Kneato -n -Tjpg " + p->working_dir + "mgraph.dot -o " + p->working_dir + "mgraph.jpg";
     std::system(command.c_str());
 
     // Publishing the image
     std_msgs::Header hdr;
     hdr.stamp = ros::Time::now();
     hdr.frame_id = "mosaic_graph";
-    cv::Mat img_graph = cv::imread(p->working_dir + "mgraph.png");
+    cv::Mat img_graph = cv::imread(p->working_dir + "mgraph.jpg");
 
     sensor_msgs::Image img_msg;
     cv_bridge::CvImage cv_image(hdr, "bgr8", img_graph);
