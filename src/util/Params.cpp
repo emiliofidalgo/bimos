@@ -69,7 +69,13 @@ void Params::readParams(const ros::NodeHandle& nh)
     ROS_INFO("[Params] Optimizer after every KFs: %i", optim_every_kfs);
 
     nh.param("blend_exp", blend_exp, false);
-    ROS_INFO("[Params] Exposure Compensator in Blending %i", blend_exp ? 1 : 0);
+    ROS_INFO("[Params] Exposure compensator in blending %i", blend_exp ? 1 : 0);
+
+    nh.param("kf_min_inliers", kf_min_inliers, 550);
+    ROS_INFO("[Params] Minimum number of inliers for KF: %i", kf_min_inliers);
+
+    nh.param("kf_overlap", kf_overlap, 0.4);
+    ROS_INFO("[Params] Minimum overlap for KF: %f", kf_overlap);
 }
 
 }

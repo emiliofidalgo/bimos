@@ -12,6 +12,8 @@
     <arg name="min_inliers" default="170" />
     <arg name="optim_every_kfs" default="15" />
     <arg name="blend_exp" default="false" />
+    <arg name="kf_min_inliers" default="550" />
+    <arg name="kf_overlap" default="0.4" />
 
     <!-- Mosaic Builder node -->
     <node pkg="bimos" type="bimos_node" name="bimos_node" output="screen">
@@ -24,6 +26,8 @@
         <param name="min_inliers" value="$(arg min_inliers)" />
         <param name="optim_every_kfs" value="$(arg optim_every_kfs)" />
         <param name="blend_exp" value="$(arg blend_exp)" />
+        <param name="kf_min_inliers" value="$(arg kf_min_inliers)" />
+        <param name="kf_overlap" value="$(arg kf_overlap)" />
 
         <remap from="~image" to="$(arg img_topic)" />
     </node>

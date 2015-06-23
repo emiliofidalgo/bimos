@@ -44,6 +44,8 @@ public:
     int min_inliers;
     int optim_every_kfs;
     bool blend_exp;
+    int kf_min_inliers;
+    double kf_overlap;
 
     // Public functions.
     static Params* getInstance();
@@ -58,7 +60,9 @@ protected:
         match_ratio(0.8),
         min_inliers(200),
         optim_every_kfs(15),
-        blend_exp(false)
+        blend_exp(false),
+        kf_min_inliers(550),
+        kf_overlap(0.4)
     {
     }
 
