@@ -30,6 +30,8 @@ KeyframeSelector::KeyframeSelector(const ros::NodeHandle& nh, Params* params, Mo
     _nh(nh),
     p(params),
     mgraph(_mgraph),
+    lvkf_image(0),
+    lvkf_rerror(0),
     nimages(0),
     nkfs(0)
 {
@@ -98,26 +100,73 @@ void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
     }
     else
     {
-        if (image->id % 3 == 0) // TODO Temporal criteria for taking a decision about a KF
+        // Homography computation
+        Keyframe* last_kf = mgraph->getLastInsertedKF();
+        ROS_INFO("[kfsel] Estimating homography between KF %i and image %i ...", last_kf->id, image->id);
+        cv::Mat_<double> H;
+        std::vector<cv::DMatch> inliers;
+        double rep_error;
+        HomographyEstimator::estimate(last_kf->image, image, H, inliers, rep_error, p->match_ratio);
+
+        // Iterating for each match
+        std::vector<cv::Point2f> tpoints;
+        std::vector<cv::Point2f> qpoints;
+        for (unsigned match_ind = 0; match_ind < inliers.size(); match_ind++)
         {
-            // Homography computation
-            Keyframe* last_kf = mgraph->getLastInsertedKF();
-            ROS_INFO("[kfsel] Estimating homography between KF %i and image %i ...", last_kf->id, image->id);
-            cv::Mat_<double> H;
-            std::vector<cv::DMatch> inliers;
-            double rep_error;
-            HomographyEstimator::estimate(last_kf->image, image, H, inliers, rep_error, p->match_ratio);
-            ROS_INFO("[kfsel] Inliers %i, Mean Reprojection Error: %f", static_cast<int>(inliers.size()), rep_error);
-            // Adding the KF to the graph
-            int nkf = mgraph->addKeyframe(image, rep_error, H);
-            //saveMatchings(last_kf->id, nkf, p->working_dir + "inliers/", inliers);
-            Keyframe* new_kf = mgraph->getLastInsertedKF();
-            mgraph->addConstraints(last_kf, new_kf, inliers);
-            ROS_INFO("[kfsel] Adding KF %i to the graph", nkf);
+            int train_id = inliers[match_ind].trainIdx;
+            int query_id = inliers[match_ind].queryIdx;
+            cv::Point2f tpoint = last_kf->image->kps[train_id].pt;
+            cv::Point2f qpoint = image->kps[query_id].pt;
+            tpoints.push_back(tpoint);
+            qpoints.push_back(qpoint);
+        }
+        cv::Rect tbox = cv::boundingRect(tpoints);
+        cv::Rect qbox = cv::boundingRect(qpoints);
+
+        double overlap_train = double(tbox.area()) / (last_kf->image->image.cols * last_kf->image->image.rows);
+        double overlap_query = double(qbox.area()) / (image->image.cols * image->image.rows);
+        double overlap = cv::min(overlap_train, overlap_query);
+
+        ROS_INFO("[kfsel] Inliers %i, Overlap: %f, Mean Reprojection Error: %f", static_cast<int>(inliers.size()), overlap, rep_error);
+
+        if (inliers.size() > 700 && overlap > 0.5)
+        {
+            // This image is valid to be considered as a KF
+            if (lvkf_image)
+            {
+                delete lvkf_image;
+                lvkf_inliers.clear();
+            }
+
+            lvkf_image = image;
+            lvkf_rerror = rep_error;
+            lvkf_H = H;
+            lvkf_inliers = inliers;
         }
         else
         {
-            delete image;
+            // Current image cannot be considered a KF
+
+            // Adding the previous image as KF in the graph
+            int nkf = mgraph->addKeyframe(lvkf_image, lvkf_rerror, lvkf_H);
+            //saveMatchings(last_kf->id, nkf, p->working_dir + "inliers/", inliers);
+            Keyframe* new_kf = mgraph->getLastInsertedKF();
+            mgraph->addConstraints(last_kf, new_kf, lvkf_inliers);
+            ROS_INFO("[kfsel] Adding KF %i to the graph", nkf);
+
+            // Recomputing the transformation from the current image to the current KF
+            ROS_INFO("[kfsel] Recomputing homography between KF %i and image %i ...", new_kf->id, image->id);
+            cv::Mat_<double> H_n;
+            std::vector<cv::DMatch> inliers_n;
+            double rep_error_n;
+            HomographyEstimator::estimate(new_kf->image, image, H_n, inliers_n, rep_error_n, p->match_ratio);
+
+            // Assigning this image as the new possible KF
+            lvkf_image = image;
+            lvkf_rerror = rep_error_n;
+            lvkf_H = H_n;
+            lvkf_inliers = inliers_n;
+            ROS_INFO("[kfsel] Inliers %i, Mean Reprojection Error: %f", static_cast<int>(inliers_n.size()), rep_error_n);
         }
     }
 }

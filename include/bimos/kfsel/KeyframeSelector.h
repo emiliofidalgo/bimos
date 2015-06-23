@@ -60,6 +60,12 @@ private:
     // Image descriptor
     ImageDescriptor* imgdesc;
 
+    // Last valid KF information
+    Image* lvkf_image;
+    double lvkf_rerror;
+    cv::Mat_<double> lvkf_H;
+    std::vector<cv::DMatch> lvkf_inliers;
+
     // Counters
     int nimages;
     int nkfs;
