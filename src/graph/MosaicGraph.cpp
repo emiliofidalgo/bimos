@@ -170,7 +170,7 @@ void MosaicGraph::optimize(ceres::Solver::Summary& summary, bool opt_local)
         //solver_options.function_tolerance = 0;
         //solver_options.gradient_tolerance = 0;
         solver_options.initial_trust_region_radius = 1e14;
-        solver_options.max_solver_time_in_seconds = 300;
+        solver_options.max_solver_time_in_seconds = 600;
     }
     else
     {

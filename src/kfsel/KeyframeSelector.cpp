@@ -129,7 +129,7 @@ void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
 
         ROS_INFO("[kfsel] Inliers %i, Overlap: %f, Mean Reprojection Error: %f", static_cast<int>(inliers.size()), overlap, rep_error);
 
-        if (inliers.size() > 700 && overlap > 0.5)
+        if (inliers.size() > p->kf_min_inliers && overlap > p->kf_overlap)
         {
             // This image is valid to be considered as a KF
             if (lvkf_image)
