@@ -52,6 +52,7 @@ public:
     int getNumberOfKeyframes();
     void getKFTransforms(std::vector<Transform>& transforms);
     void getDotGraph(std::string& contents);
+    double getMosaicTime();
 
     // Queues for thread intercommunication
     ConcurrentQueue<Keyframe *> newKFs;    

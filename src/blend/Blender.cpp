@@ -42,6 +42,8 @@ Blender::~Blender()
  */
 void Blender::run()
 {
+    double init_time = omp_get_wtime();
+
     // Getting the current state of the graph
     std::vector<Transform> transforms;
     mgraph->getKFTransforms(transforms);
@@ -122,9 +124,11 @@ void Blender::run()
     cv::Mat result, result_mask;
     blender->blend(result, result_mask);
 
+    double end_time = omp_get_wtime();
+
     //  Saving the results
     std::string pano_filename = p->working_dir + "mosaic_" + SSTR(mosaic_id) + ".jpg";
-    ROS_INFO("[Blender] Saving mosaic to %s", pano_filename.c_str());
+    ROS_INFO("[blender] Saving mosaic to %s", pano_filename.c_str());
     cv::imwrite(pano_filename, result);
 
     std::string pano_filename2 = p->working_dir + "mosaic_" + SSTR(mosaic_id) + "_r2.jpg";
@@ -135,9 +139,11 @@ void Blender::run()
     std::string pano_filename4 = p->working_dir + "mosaic_" + SSTR(mosaic_id) + "_r4.jpg";
     cv::Mat pano_r4;
     cv::resize(pano_r2, pano_r4, cv::Size(), 0.5, 0.5, CV_INTER_AREA);
-    cv::imwrite(pano_filename4, pano_r4);
+    cv::imwrite(pano_filename4, pano_r4);    
 
     mosaic_id++;
+
+    ROS_INFO("[blend] Blending time: %f", end_time - init_time);
 }
 
 /**

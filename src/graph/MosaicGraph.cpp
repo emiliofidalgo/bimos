@@ -319,4 +319,14 @@ void MosaicGraph::getDotGraph(std::string& contents)
     contents = ss.str();
 }
 
+/**
+ * @brief Returns the current Mosaic time.
+ * @return Returns the current mosaic time until this moment.
+ */
+double MosaicGraph::getMosaicTime()
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+    return (last_kf_inserted->end_time - kfs[0]->init_time);
+}
+
 }

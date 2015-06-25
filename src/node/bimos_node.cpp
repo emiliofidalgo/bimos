@@ -20,6 +20,7 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <omp.h>
 #include <signal.h>
 
 #include <boost/thread.hpp>
@@ -47,10 +48,15 @@ bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
 {
     ROS_INFO("[optim] Optimize the positions of the mosaic...");
 
+    double init_time = omp_get_wtime();
+
     ceres::Solver::Summary summ;
     mgraph.optimize(summ, false);
 
+    double end_time = omp_get_wtime();
+
     ROS_INFO("[optim] %s", summ.FullReport().c_str());
+    ROS_INFO("[optim] Optimization time: %f", end_time - init_time);
     return true;
 }
 
@@ -58,6 +64,33 @@ bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
 bool blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
 {
     boost::thread blender_thread(&bimos::Blender::run, &blender);
+    return true;
+}
+
+// Callback for optim_blend service
+bool optim_blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+{
+    ROS_INFO("[optim] Optimize the positions of the mosaic...");
+
+    double init_opttime = omp_get_wtime();
+    ceres::Solver::Summary summ;
+    mgraph.optimize(summ, false);
+    double end_opttime = omp_get_wtime();
+
+    ROS_INFO("[optim] %s", summ.FullReport().c_str());
+
+    double init_blentime = omp_get_wtime();
+    blender.run();
+    double end_blentime = omp_get_wtime();
+
+    double graph_time = mgraph.getMosaicTime();
+
+    ROS_INFO("[Timing]");
+    ROS_INFO("Alignment time: %f", graph_time);
+    ROS_INFO("Optimization time: %f", end_opttime - init_opttime);
+    ROS_INFO("Blending: %f", end_blentime - init_blentime);
+    ROS_INFO("Total:: %f s", graph_time + (end_opttime - init_opttime) + (end_blentime - init_blentime));
+
     return true;
 }
 
@@ -70,6 +103,7 @@ int main(int argc, char** argv)
     ros::NodeHandle nh("~");
     ros::ServiceServer optservice = nh.advertiseService("optimize", optimize);
     ros::ServiceServer blendservice = nh.advertiseService("blend", blend);
+    ros::ServiceServer optimblendservice = nh.advertiseService("optim_blend", optim_blend);
 
     bimos::Params* p = bimos::Params::getInstance();
     ROS_INFO("Reading parameters ...");

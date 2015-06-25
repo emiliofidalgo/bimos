@@ -21,6 +21,8 @@
 #ifndef KEYFRAME_H
 #define KEYFRAME_H
 
+#include <omp.h>
+
 #include <bimos/util/Image.h>
 #include <bimos/util/Transform.h>
 
@@ -30,7 +32,8 @@ namespace bimos
 struct Keyframe
 {
     Keyframe(Image* img) :
-        image(img)
+        image(img),
+        init_time(omp_get_wtime())
     {
     }
 
@@ -43,6 +46,10 @@ struct Keyframe
     int id;
     Image* image;
     Transform trans;
+
+    // Timing variables
+    double init_time;
+    double end_time;
 };
 
 }

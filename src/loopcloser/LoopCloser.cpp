@@ -145,6 +145,9 @@ void LoopCloser::run()
                     break;
                 }
             }
+
+            // Registering the processing time of the current KF
+            newkf->end_time = omp_get_wtime();
         }
 
         // Sleeping the needed time
