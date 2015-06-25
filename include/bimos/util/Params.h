@@ -46,6 +46,8 @@ public:
     bool blend_exp;
     int kf_min_inliers;
     double kf_overlap;
+    bool batch;
+    std::string batch_images_dir;
 
     // Public functions.
     static Params* getInstance();
@@ -62,7 +64,8 @@ protected:
         optim_every_kfs(15),
         blend_exp(false),
         kf_min_inliers(550),
-        kf_overlap(0.4)
+        kf_overlap(0.4),
+        batch(false)
     {
     }
 

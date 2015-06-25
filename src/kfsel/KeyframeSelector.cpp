@@ -55,7 +55,7 @@ void KeyframeSelector::run()
     nkfs = 0;
 
     // Launching the topic for receiving images
-    _img_subs = _nh.subscribe("image", 300, &KeyframeSelector::processImage, this);
+    _img_subs = _nh.subscribe("image", 300, &KeyframeSelector::receiveImage, this);
     ros::spin();
 }
 
@@ -63,7 +63,7 @@ void KeyframeSelector::run()
  * @brief Process each image that arrives to the mosaicing algorithm.
  * @param msg Image as a ROS message.
  */
-void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
+void KeyframeSelector::receiveImage(const sensor_msgs::ImageConstPtr& msg)
 {
     // Converting the image to OpenCV
     cv_bridge::CvImageConstPtr cv_ptr;
@@ -77,24 +77,29 @@ void KeyframeSelector::processImage(const sensor_msgs::ImageConstPtr& msg)
         return;
     }
 
+    processImage(cv_ptr->image);
+}
+
+void KeyframeSelector::processImage(const cv::Mat& img)
+{
     // Serialize the image on disk
     std::string image_filename_orig = p->working_dir + "images/image%06d.jpg";
     char name_orig[500];
     sprintf(name_orig, image_filename_orig.c_str(), nimages);
-    cv::imwrite(name_orig, cv_ptr->image);
+    cv::imwrite(name_orig, img);
 
     // Creating a instance of the bimos::Image class and filling the structure
     Image* image = new Image;
     image->id = nimages;
     image->filename = std::string(name_orig);
-    cv_ptr->image.copyTo(image->image);
+    img.copyTo(image->image);
     imgdesc->describeImage(image->image, image->kps, image->dscs);
     ROS_INFO("[kfsel] Found %lu keypoints in image %i", image->kps.size(), nimages);
     nimages++;
 
     // If the image is the first one, it is considered as the first keyframe
     if (image->id == 0)
-    {        
+    {
         mgraph->addKeyframe(image, 1.0, cv::Mat());
         ROS_INFO("[kfsel] Adding KF 0 to the graph");
     }

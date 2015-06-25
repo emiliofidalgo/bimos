@@ -76,6 +76,12 @@ void Params::readParams(const ros::NodeHandle& nh)
 
     nh.param("kf_overlap", kf_overlap, 0.4);
     ROS_INFO("[Params] Minimum overlap for KF: %f", kf_overlap);
+
+    nh.param("batch", batch, false);
+    ROS_INFO("[Params] Batch processing %i", batch ? 1 : 0);
+
+    nh.param<std::string>("batch_images_dir", batch_images_dir, "");
+    ROS_INFO("[Params] Batch processing image directory %s", batch_images_dir.c_str());
 }
 
 }

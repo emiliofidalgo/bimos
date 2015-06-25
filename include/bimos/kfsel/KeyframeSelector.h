@@ -45,7 +45,8 @@ public:
     ~KeyframeSelector();
 
     void run();
-    void processImage(const sensor_msgs::ImageConstPtr& msg);
+    void receiveImage(const sensor_msgs::ImageConstPtr& msg);
+    void processImage(const cv::Mat& img);
 
 private:
     ros::NodeHandle _nh;

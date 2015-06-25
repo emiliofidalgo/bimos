@@ -14,6 +14,8 @@
     <arg name="blend_exp" default="false" />
     <arg name="kf_min_inliers" default="550" />
     <arg name="kf_overlap" default="0.4" />
+    <arg name="batch" default="false" />
+    <arg name="batch_images_dir" default="/datasets/ODEMAR/130f/" />
 
     <!-- Mosaic Builder node -->
     <node pkg="bimos" type="bimos_node" name="bimos_node" output="screen">
@@ -28,6 +30,8 @@
         <param name="blend_exp" value="$(arg blend_exp)" />
         <param name="kf_min_inliers" value="$(arg kf_min_inliers)" />
         <param name="kf_overlap" value="$(arg kf_overlap)" />
+        <param name="batch" value="$(arg batch)" />
+        <param name="batch_images_dir" value="$(arg batch_images_dir)" />
 
         <remap from="~image" to="$(arg img_topic)" />
     </node>

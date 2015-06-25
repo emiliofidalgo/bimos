@@ -20,6 +20,8 @@
     <arg name="blend_exp" default="false" />
     <arg name="kf_min_inliers" default="550" />
     <arg name="kf_overlap" default="0.4" />
+    <arg name="batch" default="true" />
+    <arg name="batch_images_dir" default="/datasets/ODEMAR/130f/" />
 
     <!-- Mosaic Builder node -->
     <node pkg="bimos" type="bimos_node" name="bimos_node" output="screen">
@@ -34,19 +36,10 @@
         <param name="blend_exp" value="$(arg blend_exp)" />
         <param name="kf_min_inliers" value="$(arg kf_min_inliers)" />
         <param name="kf_overlap" value="$(arg kf_overlap)" />
+        <param name="batch" value="$(arg batch)" />
+        <param name="batch_images_dir" value="$(arg batch_images_dir)" />
 
         <remap from="~image" to="$(arg img_topic)" />
     </node>
-
-    <!-- Sequence Publisher node -->
-    <node pkg="bimos" type="image_publisher" name="image_publisher" output="screen">
-        <param name="images_dir" value="$(arg images_dir)" />
-        <param name="camera_info_file" value="$(arg camera_info_file)" />
-        <param name="freq" value="$(arg freq)" />
-    </node>
-
-    <group if="$(arg run_image_proc)" ns="image_publisher">
-        <node pkg="image_proc" type="image_proc" name="image_proc" output="screen" />
-    </group>
 
 </launch>
