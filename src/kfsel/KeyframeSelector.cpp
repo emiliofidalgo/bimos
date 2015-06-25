@@ -60,7 +60,7 @@ void KeyframeSelector::run()
         std::vector<std::string> img_filenames;
         getImageFilenames(p->batch_images_dir, img_filenames);
 
-        ros::Rate r(500);
+        ros::Rate r(200);
         for (unsigned i = 0; i < img_filenames.size(); i++)
         {
             cv::Mat img = cv::imread(img_filenames[i]);
