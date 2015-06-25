@@ -71,6 +71,9 @@ void Params::readParams(const ros::NodeHandle& nh)
     nh.param("blend_exp", blend_exp, false);
     ROS_INFO("[Params] Exposure compensator in blending %i", blend_exp ? 1 : 0);
 
+    nh.param("blend_seams", blend_seams, false);
+    ROS_INFO("[Params] Seam finding in blending %i", blend_seams ? 1 : 0);
+
     nh.param("kf_min_inliers", kf_min_inliers, 550);
     ROS_INFO("[Params] Minimum number of inliers for KF: %i", kf_min_inliers);
 

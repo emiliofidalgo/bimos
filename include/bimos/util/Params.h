@@ -44,6 +44,7 @@ public:
     int min_inliers;
     int optim_every_kfs;
     bool blend_exp;
+    bool blend_seams;
     int kf_min_inliers;
     double kf_overlap;
     bool batch;
@@ -65,7 +66,8 @@ protected:
         blend_exp(false),
         kf_min_inliers(550),
         kf_overlap(0.4),
-        batch(false)
+        batch(false),
+        blend_seams(false)
     {
     }
 

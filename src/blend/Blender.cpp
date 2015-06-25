@@ -86,10 +86,13 @@ void Blender::run()
         compensator->feed(corners, images_warped, masks_warped);
     }
 
-    ROS_INFO("[blender] Finding seams ...");
-    cv::Ptr<cv::detail::SeamFinder> seam_finder = new cv::detail::GraphCutSeamFinder(cv::detail::GraphCutSeamFinderBase::COST_COLOR);
-    seam_finder->find(images_warped_f, corners, masks_warped);
-    images_warped_f.clear();
+    if (p->blend_seams)
+    {
+        ROS_INFO("[blender] Finding seams ...");
+        cv::Ptr<cv::detail::SeamFinder> seam_finder = new cv::detail::GraphCutSeamFinder(cv::detail::GraphCutSeamFinderBase::COST_COLOR);
+        seam_finder->find(images_warped_f, corners, masks_warped);
+        images_warped_f.clear();
+    }
 
     ROS_INFO("[blender] Blending the final mosaic ...");
     cv::Ptr<cv::detail::Blender> blender = cv::detail::Blender::createDefault(cv::detail::Blender::MULTI_BAND, false);
