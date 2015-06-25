@@ -31,6 +31,7 @@
 #include <bimos/motionest/HomographyEstimator.h>
 #include <bimos/util/Params.h>
 #include <bimos/util/Image.h>
+#include <bimos/util/util.h>
 
 namespace bimos
 {

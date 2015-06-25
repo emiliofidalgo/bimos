@@ -54,9 +54,28 @@ void KeyframeSelector::run()
     nimages = 0;
     nkfs = 0;
 
-    // Launching the topic for receiving images
-    _img_subs = _nh.subscribe("image", 300, &KeyframeSelector::receiveImage, this);
-    ros::spin();
+    if (p->batch)
+    {
+        // Loading the images directly from disk
+        std::vector<std::string> img_filenames;
+        getImageFilenames(p->batch_images_dir, img_filenames);
+
+        ros::Rate r(500);
+        for (unsigned i = 0; i < img_filenames.size(); i++)
+        {
+            cv::Mat img = cv::imread(img_filenames[i]);
+            processImage(img);
+
+            ros::spinOnce();
+            r.sleep();
+        }
+    }
+    else
+    {
+        // Launching the topic for receiving images
+        _img_subs = _nh.subscribe("image", 300, &KeyframeSelector::receiveImage, this);
+        ros::spin();
+    }
 }
 
 /**
