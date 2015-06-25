@@ -2,11 +2,6 @@
 
 <launch>
 
-    <!-- Arguments for image_sequence_publisher -->
-    <arg name="images_dir" default="/datasets/ODEMAR/130f/" />
-    <arg name="camera_info_file" default="/datasets/ODEMAR/calibration.yaml" />
-    <arg name="freq" default="1.0" />
-    <arg name="run_image_proc" default="false" />
     <!-- Arguments for bimos -->
     <arg name="img_topic" default="/image_publisher/image_raw" />
     <arg name="working_dir" default="/home/emilio/Escritorio/Serialization/Mosaicing/" />
