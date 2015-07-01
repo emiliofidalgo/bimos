@@ -37,6 +37,9 @@
 #include <bimos/util/Params.h>
 #include <bimos/util/util.h>
 
+// Parameters
+bimos::Params* p;
+
 // Creating the MosaicGraph structure
 bimos::MosaicGraph mgraph;
 
@@ -49,11 +52,26 @@ bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
     ROS_INFO("[optim] Optimize the positions of the mosaic...");
 
     double init_time = omp_get_wtime();
-
     ceres::Solver::Summary summ;
     mgraph.optimize(summ, false);
-
     double end_time = omp_get_wtime();
+
+    // Writing poses to a file
+    ROS_INFO("Writing poses to a file ...");
+    std::string filename = p->working_dir + "mosaic_poses.txt";
+    std::ofstream file;
+    file.open(filename.c_str());
+    for (int kf_ind = 0; kf_ind < mgraph.getNumberOfKeyframes(); kf_ind++)
+    {
+        bimos::Keyframe* kf = mgraph.getKeyframe(kf_ind);
+
+        std::vector<double> params;
+        kf->trans.decomposeTransformation(params);
+
+        file << params[0] << "\t" << params[1] << std::endl;
+    }
+    file.close();
+    ROS_INFO("Pose file completed");
 
     ROS_INFO("[optim] %s", summ.FullReport().c_str());
     ROS_INFO("[optim] Optimization time: %f", end_time - init_time);
@@ -76,6 +94,23 @@ bool optim_blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
     ceres::Solver::Summary summ;
     mgraph.optimize(summ, false);
     double end_opttime = omp_get_wtime();
+
+    // Writing poses to a file
+    ROS_INFO("Writing poses to a file ...");
+    std::string filename = p->working_dir + "mosaic_poses.txt";
+    std::ofstream file;
+    file.open(filename.c_str());
+    for (int kf_ind = 0; kf_ind < mgraph.getNumberOfKeyframes(); kf_ind++)
+    {
+        bimos::Keyframe* kf = mgraph.getKeyframe(kf_ind);
+
+        std::vector<double> params;
+        kf->trans.decomposeTransformation(params);
+
+        file << params[0] << "\t" << params[1] << std::endl;
+    }
+    file.close();
+    ROS_INFO("Pose file completed");
 
     ROS_INFO("[optim] %s", summ.FullReport().c_str());
 
@@ -105,7 +140,7 @@ int main(int argc, char** argv)
     ros::ServiceServer blendservice = nh.advertiseService("blend", blend);
     ros::ServiceServer optimblendservice = nh.advertiseService("optim_blend", optim_blend);
 
-    bimos::Params* p = bimos::Params::getInstance();
+    p = bimos::Params::getInstance();
     ROS_INFO("Reading parameters ...");
     p->readParams(nh);
     ROS_INFO("Parameters read");
@@ -155,7 +190,7 @@ int main(int argc, char** argv)
 
     optim_thread.join();
     lcloser_thread.join();
-    kfsel_thread.join();
+    kfsel_thread.join();    
 
     return 0;
 }
