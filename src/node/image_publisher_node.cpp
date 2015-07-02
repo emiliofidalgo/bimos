@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 
     // Defining publishers
     image_transport::ImageTransport it(nh);
-    image_transport::Publisher pub_im = it.advertise("image_raw", 1);
+    image_transport::Publisher pub_im = it.advertise("image_raw", 300);
     ros::Publisher pub_ci = nh.advertise<sensor_msgs::CameraInfo>("camera_info", 1);
 
     // Iterating for publishing the images

@@ -28,6 +28,7 @@ namespace bimos
  */
 KeyframeSelector::KeyframeSelector(const ros::NodeHandle& nh, Params* params, MosaicGraph* _mgraph) :
     _nh(nh),
+    _it(_nh),
     p(params),
     mgraph(_mgraph),
     lvkf_image(0),
@@ -71,9 +72,9 @@ void KeyframeSelector::run()
         }
     }
     else
-    {
+    {        
         // Launching the topic for receiving images
-        _img_subs = _nh.subscribe("image", 300, &KeyframeSelector::receiveImage, this);
+        _img_subs = _it.subscribe("image", 300, &KeyframeSelector::receiveImage, this);
         ros::spin();
     }
 }
