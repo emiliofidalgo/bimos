@@ -66,6 +66,13 @@ set(BIMOS_SRCS
 add_executable(bimos_node ${BIMOS_SRCS})
 target_link_libraries(bimos_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${CERES_LIBRARIES})
 
+# BIMOS Rotational
+add_executable(bimos_rotational
+    src/util/Params.cpp
+    src/util/util.cpp
+    src/node/bimos_rotational.cpp)
+target_link_libraries(bimos_rotational ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
+
 # Image Publisher Node
 add_executable(image_publisher
     src/util/util.cpp
