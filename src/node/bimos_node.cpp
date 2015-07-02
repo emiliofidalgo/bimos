@@ -46,16 +46,8 @@ bimos::MosaicGraph mgraph;
 // Blender class
 bimos::Blender blender;
 
-// Callback for optimize service
-bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+void writePoses()
 {
-    ROS_INFO("[optim] Optimize the positions of the mosaic...");
-
-    double init_time = omp_get_wtime();
-    ceres::Solver::Summary summ;
-    mgraph.optimize(summ, false);
-    double end_time = omp_get_wtime();
-
     // Writing poses to a file
     ROS_INFO("Writing poses to a file ...");
     std::string filename = p->working_dir + "mosaic_poses.txt";
@@ -72,6 +64,19 @@ bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
     }
     file.close();
     ROS_INFO("Pose file completed");
+}
+
+// Callback for optimize service
+bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+{
+    ROS_INFO("[optim] Optimize the positions of the mosaic...");
+
+    double init_time = omp_get_wtime();
+    ceres::Solver::Summary summ;
+    mgraph.optimize(summ, false);
+    double end_time = omp_get_wtime();
+
+    writePoses();
 
     ROS_INFO("[optim] %s", summ.FullReport().c_str());
     ROS_INFO("[optim] Optimization time: %f", end_time - init_time);
@@ -95,22 +100,7 @@ bool optim_blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
     mgraph.optimize(summ, false);
     double end_opttime = omp_get_wtime();
 
-    // Writing poses to a file
-    ROS_INFO("Writing poses to a file ...");
-    std::string filename = p->working_dir + "mosaic_poses.txt";
-    std::ofstream file;
-    file.open(filename.c_str());
-    for (int kf_ind = 0; kf_ind < mgraph.getNumberOfKeyframes(); kf_ind++)
-    {
-        bimos::Keyframe* kf = mgraph.getKeyframe(kf_ind);
-
-        std::vector<double> params;
-        kf->trans.decomposeTransformation(params);
-
-        file << params[0] << "\t" << params[1] << std::endl;
-    }
-    file.close();
-    ROS_INFO("Pose file completed");
+    writePoses();
 
     ROS_INFO("[optim] %s", summ.FullReport().c_str());
 
