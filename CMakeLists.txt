@@ -73,6 +73,13 @@ add_executable(bimos_rotational
     src/node/bimos_rotational.cpp)
 target_link_libraries(bimos_rotational ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
 
+# BIMOS Conv Factors
+add_executable(bimos_convfactors
+    src/util/Params.cpp
+    src/util/util.cpp
+    src/node/bimos_convfactors.cpp)
+target_link_libraries(bimos_convfactors ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
+
 # Image Publisher Node
 add_executable(image_publisher
     src/util/util.cpp

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+
+    <!-- Arguments for bimos -->
+    <arg name="working_dir" default="/home/emilio/Escritorio/Serialization/Mosaicing/" />
+    <arg name="fx" default="1.0" />
+    <arg name="fy" default="1.0" />
+    <arg name="distances_file" default="/home/emilio/Escritorio/distances.yml" />
+
+    <!-- Mosaic Builder node -->
+    <node pkg="bimos" type="bimos_convfactors" name="bimos_convfactors" output="screen">
+        <param name="working_dir" value="$(arg working_dir)" />
+        <param name="fx" value="$(arg fx)" />
+        <param name="fy" value="$(arg fy)" />
+        <param name="distances_file" value="$(arg distances_file)" />
+    </node>
+
+</launch>
