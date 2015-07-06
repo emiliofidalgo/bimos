@@ -22,8 +22,10 @@
 #define _PARAMS_H
 
 #include <ros/ros.h>
+#include <dynamic_reconfigure/server.h>
 
 #include <bimos/util/util.h>
+#include <bimos/BimosConfig.h>
 
 namespace bimos
 {
@@ -50,9 +52,13 @@ public:
     bool batch;
     std::string batch_images_dir;
 
+    dynamic_reconfigure::Server<bimos::BimosConfig> server;
+    dynamic_reconfigure::Server<bimos::BimosConfig>::CallbackType f;
+
     // Public functions.
     static Params* getInstance();
     void readParams(const ros::NodeHandle& nh);
+    void modifyParams(bimos::BimosConfig& config, uint32_t level);
 
 protected:
     // Protected constructor. Singleton class.
@@ -69,6 +75,8 @@ protected:
         batch(false),
         blend_seams(false)
     {
+        f = boost::bind(&Params::modifyParams, this, _1, _2);
+        server.setCallback(f);
     }
 
     ~Params()

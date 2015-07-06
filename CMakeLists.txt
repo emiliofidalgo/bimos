@@ -8,7 +8,12 @@ file(GLOB_RECURSE SRCS ${CMAKE_CURRENT_SOURCE_DIR} *.cxx *.cpp *.c *.py)
 file(GLOB_RECURSE LNCH ${CMAKE_CURRENT_SOURCE_DIR} *.launch)
 
 # Catkin dependencies
-find_package(catkin REQUIRED COMPONENTS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge obindex std_srvs)
+find_package(catkin REQUIRED COMPONENTS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge obindex std_srvs dynamic_reconfigure)
+
+# Dynamic reconfigure configuration
+generate_dynamic_reconfigure_options(
+    cfg/Bimos.cfg
+)
 
 # System dependencies
 find_package(OpenCV REQUIRED)
@@ -25,7 +30,7 @@ endif()
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES bimos
-    CATKIN_DEPENDS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge obindex std_srvs
+    CATKIN_DEPENDS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge obindex std_srvs dynamic_reconfigure
     DEPENDS OpenCV Boost Ceres OpenMP
 )
 
@@ -64,6 +69,7 @@ set(BIMOS_SRCS
 
 # BIMOS Node
 add_executable(bimos_node ${BIMOS_SRCS})
+add_dependencies(bimos_node ${PROJECT_NAME}_gencfg)
 target_link_libraries(bimos_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${CERES_LIBRARIES})
 
 # BIMOS Rotational

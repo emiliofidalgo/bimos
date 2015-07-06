@@ -87,4 +87,53 @@ void Params::readParams(const ros::NodeHandle& nh)
     ROS_INFO("[Params] Batch processing image directory %s", batch_images_dir.c_str());
 }
 
+void Params::modifyParams(BimosConfig& config, uint32_t level)
+{
+    ROS_INFO("[Param] Resetting parameters ...");
+
+    working_dir = config.working_dir;
+    ROS_INFO("[Params] Working directory: %s", working_dir.c_str());
+
+    img_descriptor = config.img_descriptor;
+    ROS_INFO("[Params] Image description %s", img_descriptor.c_str());
+
+    nkeypoints = config.nkeypoints;
+    ROS_INFO("[Params] Number of features: %i", nkeypoints);
+
+    pub_debug_info = config.pub_debug_info;
+    ROS_INFO("[Params] Publish debug info: %i", pub_debug_info ? 1 : 0);
+
+    lc_delay_kfs = config.lc_delay_kfs;
+    ROS_INFO("[Params] LC delay buffer size: %i", lc_delay_kfs);
+
+    match_ratio = config.match_ratio;
+    ROS_INFO("[Params] NNDR: %f", match_ratio);
+
+    min_inliers = config.min_inliers;
+    ROS_INFO("[Params] Minimum number of inliers for LC: %i", min_inliers);
+
+    optim_every_kfs = config.optim_every_kfs;
+    ROS_INFO("[Params] Optimizer after every KFs: %i", optim_every_kfs);
+
+    blend_exp = config.blend_exp;
+    ROS_INFO("[Params] Exposure compensator in blending %i", blend_exp ? 1 : 0);
+
+    blend_seams = config.blend_seams;
+    ROS_INFO("[Params] Seam finding in blending %i", blend_seams ? 1 : 0);
+
+    kf_min_inliers = config.kf_min_inliers;
+    ROS_INFO("[Params] Minimum number of inliers for KF: %i", kf_min_inliers);
+
+    kf_overlap = config.kf_overlap;
+    ROS_INFO("[Params] Minimum overlap for KF: %f", kf_overlap);
+
+    batch = config.batch;
+    ROS_INFO("[Params] Batch processing %i", batch ? 1 : 0);
+
+    batch_images_dir = config.batch_images_dir;
+    ROS_INFO("[Params] Batch processing image directory %s", batch_images_dir.c_str());
+
+    ROS_INFO("[Param] Done");
+}
+
 }
