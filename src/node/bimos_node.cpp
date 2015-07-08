@@ -24,7 +24,7 @@
 #include <signal.h>
 
 #include <boost/thread.hpp>
-#include <std_srvs/Empty.h>
+#include <std_msgs/Empty.h>
 
 #include <bimos/blend/Blender.h>
 #include <bimos/graph/MosaicGraph.h>
@@ -41,11 +41,12 @@
 bimos::Params* p;
 
 // Creating the MosaicGraph structure
-bimos::MosaicGraph mgraph;
+bimos::MosaicGraph* mgraph;
 
 // Blender class
 bimos::Blender blender;
 
+// Write the final poses of the mosaic into a file
 void writePoses()
 {
     // Writing poses to a file
@@ -53,9 +54,9 @@ void writePoses()
     std::string filename = p->working_dir + "mosaic_poses.txt";
     std::ofstream file;
     file.open(filename.c_str());
-    for (int kf_ind = 0; kf_ind < mgraph.getNumberOfKeyframes(); kf_ind++)
+    for (int kf_ind = 0; kf_ind < mgraph->getNumberOfKeyframes(); kf_ind++)
     {
-        bimos::Keyframe* kf = mgraph.getKeyframe(kf_ind);
+        bimos::Keyframe* kf = mgraph->getKeyframe(kf_ind);
 
         std::vector<double> params;
         kf->trans.decomposeTransformation(params);
@@ -66,38 +67,90 @@ void writePoses()
     ROS_INFO("Pose file completed");
 }
 
+void createMosaic(ros::NodeHandle& nh)
+{
+    ROS_INFO("Initializing mosaicing process ...");
+
+    // Preparing working directory
+    ROS_INFO("Preparing working directory ...");
+    boost::filesystem::path res_imgs_dir = p->working_dir + "images/";
+    boost::filesystem::remove_all(res_imgs_dir);
+    boost::filesystem::create_directory(res_imgs_dir);
+    res_imgs_dir = p->working_dir + "inliers/";
+    boost::filesystem::remove_all(res_imgs_dir);
+    boost::filesystem::create_directory(res_imgs_dir);
+    ROS_INFO("Working directory ready");
+
+    // Creating the information publisher class
+    bimos::MosaicPublisher mpublisher(nh, mgraph, p);
+
+    ROS_INFO("Node initialized");
+
+    // Keyframe Selector Thread
+    bimos::KeyframeSelector kfsel(nh, p, mgraph);
+    boost::thread kfsel_thread(&bimos::KeyframeSelector::run, &kfsel);
+
+    // Loop Closer Thread
+    bimos::LoopCloser lcloser(nh, p, mgraph);
+    boost::thread lcloser_thread(&bimos::LoopCloser::run, &lcloser);
+
+    // Optimizer Thread
+    bimos::Optimizer optim(p, mgraph);
+    boost::thread optim_thread(&bimos::Optimizer::run, &optim);
+
+    // Assigning parameters to the blender
+    blender.setParams(p);
+    blender.setGraph(mgraph);
+
+    ros::Rate rate(0.5);
+    while (mgraph->isBuilding())
+    {
+        if (p->pub_debug_info)
+        {
+            mpublisher.publishGraphInfo();
+        }
+
+        ros::spinOnce();
+        rate.sleep();
+    }    
+
+    optim_thread.join();    
+    lcloser_thread.join();    
+    kfsel_thread.join();
+
+    ROS_INFO("Mosaic finished");
+}
+
 // Callback for optimize service
-bool optimize(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+void optimize(const std_msgs::EmptyConstPtr& msg)
 {
     ROS_INFO("[optim] Optimize the positions of the mosaic...");
 
     double init_time = omp_get_wtime();
     ceres::Solver::Summary summ;
-    mgraph.optimize(summ, false);
+    mgraph->optimize(summ, false);
     double end_time = omp_get_wtime();
 
     writePoses();
 
     ROS_INFO("[optim] %s", summ.FullReport().c_str());
     ROS_INFO("[optim] Optimization time: %f", end_time - init_time);
-    return true;
 }
 
 // Callback for blend service
-bool blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+void blend(const std_msgs::EmptyConstPtr& msg)
 {
     boost::thread blender_thread(&bimos::Blender::run, &blender);
-    return true;
 }
 
 // Callback for optim_blend service
-bool optim_blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
+void optim_blend(const std_msgs::EmptyConstPtr& msg)
 {
     ROS_INFO("[optim] Optimize the positions of the mosaic...");
 
     double init_opttime = omp_get_wtime();
     ceres::Solver::Summary summ;
-    mgraph.optimize(summ, false);
+    mgraph->optimize(summ, false);
     double end_opttime = omp_get_wtime();
 
     writePoses();
@@ -108,79 +161,63 @@ bool optim_blend(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res)
     blender.run();
     double end_blentime = omp_get_wtime();
 
-    double graph_time = mgraph.getMosaicTime();
+    double graph_time = mgraph->getMosaicTime();
 
     ROS_INFO("[Timing]");
     ROS_INFO("Alignment time: %f", graph_time);
     ROS_INFO("Optimization time: %f", end_opttime - init_opttime);
     ROS_INFO("Blending: %f", end_blentime - init_blentime);
     ROS_INFO("Total:: %f s", graph_time + (end_opttime - init_opttime) + (end_blentime - init_blentime));
-
-    return true;
 }
 
+// Callback for init_mosaic service
+void init_mosaic(const std_msgs::EmptyConstPtr& msg)
+{
+    if (mgraph)
+    {
+        delete mgraph;
+    }
+
+    mgraph = new bimos::MosaicGraph();
+    mgraph->setBuildingState(true);
+    ros::NodeHandle nh("~");
+
+    createMosaic(nh);    
+}
+
+// Callback for stop_mosaic service
+void stop_mosaic(const std_msgs::EmptyConstPtr& msg)
+{
+    ROS_INFO("Stopping mosaic process ...");
+
+    if (mgraph)
+    {
+        mgraph->setBuildingState(false);
+    }
+}
+
+// Main function
 int main(int argc, char** argv)
-{    
+{
     ROS_INFO("Initializing node ...");
 
     // ROS
     ros::init(argc, argv, "bimos");
     ros::NodeHandle nh("~");
-    ros::ServiceServer optservice = nh.advertiseService("optimize", optimize);
-    ros::ServiceServer blendservice = nh.advertiseService("blend", blend);
-    ros::ServiceServer optimblendservice = nh.advertiseService("optim_blend", optim_blend);
+    ros::Subscriber optservice = nh.subscribe("optimize", 1, optimize);
+    ros::Subscriber blendservice = nh.subscribe("blend", 1, blend);
+    ros::Subscriber optimblendservice = nh.subscribe("optim_and_blend", 1, optim_blend);
+    ros::Subscriber initmosservice = nh.subscribe("init_mosaic", 1, init_mosaic);
+    ros::Subscriber stopmosservice = nh.subscribe("stop_mosaic", 1, stop_mosaic);
 
+    // Initializing mgraph structure
+    mgraph = 0;
+
+    // Reading parameters
     p = bimos::Params::getInstance();
-    ROS_INFO("Reading parameters ...");
-    p->readParams(nh);
-    ROS_INFO("Parameters read");
+    //ROS_INFO("Reading parameters ...");
+    //p->readParams(nh);
+    //ROS_INFO("Parameters read");
 
-    // Preparing working directory
-    ROS_INFO("Preparing working directory ...");
-    boost::filesystem::path res_imgs_dir = p->working_dir + "images/";
-    boost::filesystem::remove_all(res_imgs_dir);
-    boost::filesystem::create_directory(res_imgs_dir);
-    res_imgs_dir = p->working_dir + "inliers/";
-    boost::filesystem::remove_all(res_imgs_dir);
-    boost::filesystem::create_directory(res_imgs_dir);
-    ROS_INFO("Working directory ready");    
-
-    // Creating the information publisher class
-    bimos::MosaicPublisher mpublisher(nh, &mgraph, p);
-
-    ROS_INFO("Node initialized");
-
-    // Keyframe Selector Thread
-    bimos::KeyframeSelector kfsel(nh, p, &mgraph);
-    boost::thread kfsel_thread(&bimos::KeyframeSelector::run, &kfsel);
-
-    // Loop Closer Thread
-    bimos::LoopCloser lcloser(nh, p, &mgraph);
-    boost::thread lcloser_thread(&bimos::LoopCloser::run, &lcloser);
-
-    // Optimizer Thread
-    bimos::Optimizer optim(p, &mgraph);
-    boost::thread optim_thread(&bimos::Optimizer::run, &optim);
-
-    // Assigning parameters to the blender
-    blender.setParams(p);
-    blender.setGraph(&mgraph);
-
-    ros::Rate rate(0.5);
-    while (ros::ok())
-    {
-        if (p->pub_debug_info)
-        {
-            mpublisher.publishGraphInfo();
-        }
-
-        ros::spinOnce();
-        rate.sleep();
-    }
-
-    optim_thread.join();
-    lcloser_thread.join();
-    kfsel_thread.join();    
-
-    return 0;
+    ros::spin();
 }

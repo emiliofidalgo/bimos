@@ -53,6 +53,8 @@ public:
     void getKFTransforms(std::vector<Transform>& transforms);
     void getDotGraph(std::string& contents);
     double getMosaicTime();
+    void setBuildingState(bool value);
+    bool isBuilding();
 
     // Queues for thread intercommunication
     ConcurrentQueue<Keyframe *> newKFs;    
@@ -73,6 +75,10 @@ protected:
 
     // Adjuster for optimizing mosaic poses
     MosaicAdjuster madj;
+
+    // Variables to control the mosaicing process
+    boost::mutex mutex_building;
+    bool building;
 };
 
 }

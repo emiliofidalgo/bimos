@@ -46,7 +46,7 @@ Optimizer::~Optimizer()
 void Optimizer::run()
 {
     ros::Rate r(200);
-    while(ros::ok())
+    while(mgraph->isBuilding())
     {
         // Checking if we have to execute an optimization
         int nkfs = mgraph->getNumberOfKeyframes();

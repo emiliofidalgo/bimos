@@ -74,8 +74,13 @@ void KeyframeSelector::run()
     else
     {        
         // Launching the topic for receiving images
-        _img_subs = _it.subscribe("image", 300, &KeyframeSelector::receiveImage, this);
-        ros::spin();
+        _img_subs = _it.subscribe("image", 300, &KeyframeSelector::receiveImage, this);        
+        ros::Rate r(200);
+        while (mgraph->isBuilding())
+        {
+            ros::spinOnce();
+            r.sleep();
+        }
     }
 }
 

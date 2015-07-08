@@ -28,7 +28,8 @@ namespace bimos
  */
 MosaicGraph::MosaicGraph() :
     last_kf_inserted(0),
-    mosaic_frame(0)
+    mosaic_frame(0),
+    building(false)
 {
 }
 
@@ -327,6 +328,23 @@ double MosaicGraph::getMosaicTime()
 {
     boost::mutex::scoped_lock lock(mutex_mgraph);
     return (last_kf_inserted->end_time - kfs[0]->init_time);
+}
+
+void MosaicGraph::setBuildingState(bool value)
+{
+    boost::mutex::scoped_lock lock(mutex_building);
+    building = value;
+    if (!building)
+    {
+        // Inserting a NULL value for stopping threads
+        newKFs.push(0);
+    }
+}
+
+bool MosaicGraph::isBuilding()
+{
+    boost::mutex::scoped_lock lock(mutex_building);
+    return building;
 }
 
 }

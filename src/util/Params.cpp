@@ -89,7 +89,7 @@ void Params::readParams(const ros::NodeHandle& nh)
 
 void Params::modifyParams(BimosConfig& config, uint32_t level)
 {
-    ROS_INFO("[Param] Resetting parameters ...");
+    ROS_INFO("[Params] Resetting parameters ...");
 
     working_dir = config.working_dir;
     ROS_INFO("[Params] Working directory: %s", working_dir.c_str());
@@ -133,7 +133,7 @@ void Params::modifyParams(BimosConfig& config, uint32_t level)
     batch_images_dir = config.batch_images_dir;
     ROS_INFO("[Params] Batch processing image directory %s", batch_images_dir.c_str());
 
-    ROS_INFO("[Param] Done");
+    ROS_INFO("[Params] Done");
 }
 
 }
