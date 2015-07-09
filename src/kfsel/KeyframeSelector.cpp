@@ -121,6 +121,7 @@ void KeyframeSelector::processImage(const cv::Mat& img)
     imgdesc->describeImage(image->image, image->kps, image->dscs);
     ROS_INFO("[kfsel] Found %lu keypoints in image %i", image->kps.size(), nimages);
     nimages++;
+    mgraph->received_images = nimages;
 
     // If the image is the first one, it is considered as the first keyframe
     if (image->id == 0)

@@ -61,6 +61,10 @@ public:
     // Queues for thread intercommunication
     ConcurrentQueue<Keyframe *> newKFs;    
 
+    // Counters
+    int received_images;
+    int obs_ok;
+
 protected:
     // Structures
     Graph graph;
@@ -76,7 +80,7 @@ protected:
     boost::mutex mutex_mgraph;
 
     // Adjuster for optimizing mosaic poses
-    MosaicAdjuster madj;
+    MosaicAdjuster madj;    
 
     // Variables to control the mosaicing process
     boost::mutex mutex_building;

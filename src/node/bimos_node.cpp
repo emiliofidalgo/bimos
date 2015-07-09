@@ -176,6 +176,8 @@ void optim_blend(const std_msgs::EmptyConstPtr& msg)
 
     ROS_INFO("---");
     ROS_INFO("[Quality Measurements]");
+    ROS_INFO("Total number of images: %i", mgraph->received_images);
+    ROS_INFO("Selected Keyframes: %i", mgraph->getNumberOfKeyframes());
     ROS_INFO("Average error in pixels: %f", avg);
     ROS_INFO("Stddev  error in pixels: %f", stddev);
 }

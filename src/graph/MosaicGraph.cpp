@@ -31,7 +31,8 @@ double inline SQ(double x) { return x * x; }
 MosaicGraph::MosaicGraph() :
     last_kf_inserted(0),
     mosaic_frame(0),
-    building(false)
+    building(false),
+    received_images(0)
 {
 }
 
