@@ -121,7 +121,7 @@ void KeyframeSelector::processImage(const cv::Mat& img)
     imgdesc->describeImage(image->image, image->kps, image->dscs);
     ROS_INFO("[kfsel] Found %lu keypoints in image %i", image->kps.size(), nimages);
     nimages++;
-    mgraph->received_images = nimages;
+    mgraph->incrNumImages();
 
     // If the image is the first one, it is considered as the first keyframe
     if (image->id == 0)
@@ -180,6 +180,7 @@ void KeyframeSelector::processImage(const cv::Mat& img)
 
             // Adding the previous image as KF in the graph
             int nkf = mgraph->addKeyframe(lvkf_image, lvkf_rerror, lvkf_H);
+            mgraph->incrObsOK();
             saveMatchings(last_kf->id, nkf, p->working_dir + "inliers/", inliers);
             Keyframe* new_kf = mgraph->getLastInsertedKF();
             mgraph->addConstraints(last_kf, new_kf, lvkf_inliers);

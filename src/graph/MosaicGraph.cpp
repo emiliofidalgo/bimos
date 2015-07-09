@@ -32,7 +32,9 @@ MosaicGraph::MosaicGraph() :
     last_kf_inserted(0),
     mosaic_frame(0),
     building(false),
-    received_images(0)
+    received_images(0),
+    obs_ok(0),
+    obs_nok(0)
 {
 }
 
@@ -417,6 +419,61 @@ bool MosaicGraph::isBuilding()
 {
     boost::mutex::scoped_lock lock(mutex_building);
     return building;
+}
+
+/**
+ * @brief Increments the total number of images received by the process.
+ */
+void MosaicGraph::incrNumImages()
+{
+    received_images++;
+}
+
+/**
+ * @brief Returns the number of images received by the mosaicing process.
+ * @return
+ */
+int MosaicGraph::getNumberOfImages()
+{
+    return received_images;
+}
+
+/**
+ * @brief Increments the total number of successful observations.
+ */
+void MosaicGraph::incrObsOK()
+{
+    boost::mutex::scoped_lock lock(mutex_observ);
+    obs_ok++;
+}
+
+/**
+ * @brief Returns the total number of successful observations.
+ * @return
+ */
+int MosaicGraph::getObsOK()
+{
+    boost::mutex::scoped_lock lock(mutex_observ);
+    return obs_ok;
+}
+
+/**
+ * @brief Increments the total number of unsuccessful observations.
+ */
+void MosaicGraph::incrObsNOK()
+{
+    boost::mutex::scoped_lock lock(mutex_observ);
+    obs_nok++;
+}
+
+/**
+ * @brief Returns the total number of unsuccessful observations.
+ * @return
+ */
+int MosaicGraph::getObsNOK()
+{
+    boost::mutex::scoped_lock lock(mutex_observ);
+    return obs_nok;
 }
 
 }

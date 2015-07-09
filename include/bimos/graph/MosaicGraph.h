@@ -58,12 +58,15 @@ public:
     void setBuildingState(bool value);
     bool isBuilding();
 
-    // Queues for thread intercommunication
-    ConcurrentQueue<Keyframe *> newKFs;    
+    void incrNumImages();
+    int getNumberOfImages();
+    void incrObsOK();
+    int getObsOK();
+    void incrObsNOK();
+    int getObsNOK();
 
-    // Counters
-    int received_images;
-    int obs_ok;
+    // Queues for thread intercommunication
+    ConcurrentQueue<Keyframe *> newKFs;
 
 protected:
     // Structures
@@ -85,6 +88,12 @@ protected:
     // Variables to control the mosaicing process
     boost::mutex mutex_building;
     bool building;
+
+    // Counters
+    boost::mutex mutex_observ;
+    int received_images;
+    int obs_ok;
+    int obs_nok;
 };
 
 }
