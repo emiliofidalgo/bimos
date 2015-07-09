@@ -30,6 +30,7 @@
 #include <bimos/graph/Keyframe.h>
 #include <bimos/optim/MosaicAdjuster.h>
 #include <bimos/util/ConcurrentQueue.hpp>
+#include <bimos/util/util.h>
 
 namespace bimos
 {
@@ -52,6 +53,7 @@ public:
     int getNumberOfKeyframes();
     void getKFTransforms(std::vector<Transform>& transforms);
     void getDotGraph(std::string& contents);
+    void getMosaicError(double& avg, double& stddev, std::string& inliers_dir);
     double getMosaicTime();
     void setBuildingState(bool value);
     bool isBuilding();

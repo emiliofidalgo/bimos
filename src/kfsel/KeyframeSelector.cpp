@@ -179,7 +179,7 @@ void KeyframeSelector::processImage(const cv::Mat& img)
 
             // Adding the previous image as KF in the graph
             int nkf = mgraph->addKeyframe(lvkf_image, lvkf_rerror, lvkf_H);
-            //saveMatchings(last_kf->id, nkf, p->working_dir + "inliers/", inliers);
+            saveMatchings(last_kf->id, nkf, p->working_dir + "inliers/", inliers);
             Keyframe* new_kf = mgraph->getLastInsertedKF();
             mgraph->addConstraints(last_kf, new_kf, lvkf_inliers);
             ROS_INFO("[kfsel] Adding KF %i to the graph", nkf);

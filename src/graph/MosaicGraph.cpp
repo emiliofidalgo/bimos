@@ -23,6 +23,8 @@
 namespace bimos
 {
 
+double inline SQ(double x) { return x * x; }
+
 /**
  * @brief Default constructor.
  */
@@ -318,6 +320,75 @@ void MosaicGraph::getDotGraph(std::string& contents)
     ss << std::endl;
     //std::cout << ss.str() << std::endl; // TODO Comment this line. It is only for debugging.
     contents = ss.str();
+}
+
+/**
+ * @brief Computes the error according to the current structure of the mosaic.
+ * @param avg Average error in pixels.
+ * @param stddev Standard deviation of the error in pixels.
+ * @param inliers_dir Directory for loading inliers.
+ */
+void MosaicGraph::getMosaicError(double& avg, double& stddev, std::string& inliers_dir)
+{
+    boost::mutex::scoped_lock lock(mutex_mgraph);
+
+    // Computing the total number of links
+    int nlinks = 0;
+    for(std::map<int, std::map<int, Edge*> >::iterator outer_iter = edges.begin(); outer_iter != edges.end(); outer_iter++)
+    {
+        for(std::map<int, Edge*>::iterator inner_iter = outer_iter->second.begin(); inner_iter != outer_iter->second.end(); inner_iter++)
+        {
+            nlinks++;
+        }
+    }
+
+    // Computing the error for each link
+    cv::Mat_<double> errors(nlinks, 1, CV_64F);
+    int link_id = 0;
+    for(std::map<int, std::map<int, Edge*> >::iterator outer_iter = edges.begin(); outer_iter != edges.end(); outer_iter++)
+    {
+        for(std::map<int, Edge*>::iterator inner_iter = outer_iter->second.begin(); inner_iter != outer_iter->second.end(); inner_iter++)
+        {
+            // Computing the error for this edge
+            Edge* edg = inner_iter->second;
+            int ori = edg->ori;
+            int dest = edg->dest;
+
+            // Computing the tranformation from ori to dest
+            Transform t = kfs[ori]->trans.inv() * kfs[dest]->trans;
+
+            // Loading the matchings of this link
+            std::vector<cv::DMatch> inliers;
+            loadMatchings(ori, dest, inliers_dir, inliers);
+
+            double total_error = 0.0;
+            // Iterating for each inlier
+            for (unsigned inlier = 0; inlier < inliers.size(); inlier++)
+            {
+                double qidx = inliers[inlier].queryIdx;
+                double tidx = inliers[inlier].trainIdx;
+
+                double q_x = kfs[dest]->image->kps[qidx].pt.x;
+                double q_y = kfs[dest]->image->kps[qidx].pt.y;
+                double t_x = kfs[ori]->image->kps[tidx].pt.x;
+                double t_y = kfs[ori]->image->kps[tidx].pt.y;
+
+                double err = sqrt(SQ(t_x - (t.H(0,0) * q_x + t.H(0,1) * q_y + t.H(0,2))) + SQ(t_y - (t.H(1,0) * q_x + t.H(1,1) * q_y + t.H(1,2))));
+
+                total_error += err;
+            }
+
+            errors(link_id, 0) = total_error / double(inliers.size());
+            link_id++;
+        }
+    }
+
+    // Computing the average error
+    cv::Scalar     mean;
+    cv::Scalar     stdd;
+    cv::meanStdDev (errors, mean, stdd);
+    avg = mean[0];
+    stddev = stdd[0];
 }
 
 /**

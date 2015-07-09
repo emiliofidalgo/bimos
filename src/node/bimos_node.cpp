@@ -163,11 +163,21 @@ void optim_blend(const std_msgs::EmptyConstPtr& msg)
 
     double graph_time = mgraph->getMosaicTime();
 
+    ROS_INFO("---");
     ROS_INFO("[Timing]");
     ROS_INFO("Alignment time: %f", graph_time);
     ROS_INFO("Optimization time: %f", end_opttime - init_opttime);
     ROS_INFO("Blending: %f", end_blentime - init_blentime);
     ROS_INFO("Total:: %f s", graph_time + (end_opttime - init_opttime) + (end_blentime - init_blentime));
+
+    double avg, stddev;
+    std::string inliers_dir = p->working_dir + "inliers/";
+    mgraph->getMosaicError(avg, stddev, inliers_dir);
+
+    ROS_INFO("---");
+    ROS_INFO("[Quality Measurements]");
+    ROS_INFO("Average error in pixels: %f", avg);
+    ROS_INFO("Stddev  error in pixels: %f", stddev);
 }
 
 // Callback for init_mosaic service
