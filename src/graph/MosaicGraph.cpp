@@ -339,11 +339,11 @@ void MosaicGraph::getMosaicError(double& avg, double& stddev, double& max, doubl
     min = std::numeric_limits<int>::max();
 
     // Total number of inliers
-    int ninliers = 0;
+    long unsigned ninliers = 0;
 
     // Sums of values
-    double sum_x = 0.0;
-    double sum_x2 = 0.0;
+    long double sum_x = 0.0;
+    long double sum_x2 = 0.0;
 
     // Computing the error for the correspondences in each link
     for(std::map<int, std::map<int, Edge*> >::iterator outer_iter = edges.begin(); outer_iter != edges.end(); outer_iter++)
