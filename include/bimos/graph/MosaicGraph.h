@@ -24,6 +24,7 @@
 #include <sstream>
 
 #include <boost/thread.hpp>
+#include <limits>
 
 #include <bimos/graph/Edge.h>
 #include <bimos/graph/Graph.h>
@@ -53,7 +54,7 @@ public:
     int getNumberOfKeyframes();
     void getKFTransforms(std::vector<Transform>& transforms);
     void getDotGraph(std::string& contents);
-    void getMosaicError(double& avg, double& stddev, std::string& inliers_dir);
+    void getMosaicError(double& avg, double& stddev, double& max, double& min, std::string& inliers_dir);
     double getMosaicTime();
     void setBuildingState(bool value);
     bool isBuilding();

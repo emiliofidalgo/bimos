@@ -170,9 +170,9 @@ void optim_blend(const std_msgs::EmptyConstPtr& msg)
     ROS_INFO("Blending: %f", end_blentime - init_blentime);
     ROS_INFO("Total:: %f s", graph_time + (end_opttime - init_opttime) + (end_blentime - init_blentime));
 
-    double avg, stddev;
+    double avg, stddev, max, min;
     std::string inliers_dir = p->working_dir + "inliers/";
-    mgraph->getMosaicError(avg, stddev, inliers_dir);
+    mgraph->getMosaicError(avg, stddev, max, min, inliers_dir);
 
     ROS_INFO("---");
     ROS_INFO("[Quality Measurements]");
@@ -180,8 +180,10 @@ void optim_blend(const std_msgs::EmptyConstPtr& msg)
     ROS_INFO("Selected keyframes: %i", mgraph->getNumberOfKeyframes());
     ROS_INFO("Average error in pixels: %f", avg);
     ROS_INFO("Stddev  error in pixels: %f", stddev);
-    ROS_INFO("Successful observations: %i", mgraph->getObsOK());
-    ROS_INFO("Unsuccessful observations: %i", mgraph->getObsNOK());
+    ROS_INFO("Max     error in pixels: %f", max);
+    ROS_INFO("Min     error in pixels: %f", min);
+    //ROS_INFO("Successful observations: %i", mgraph->getObsOK());
+    //ROS_INFO("Unsuccessful observations: %i", mgraph->getObsNOK());
 }
 
 // Callback for init_mosaic service

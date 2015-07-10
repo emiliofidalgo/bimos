@@ -331,23 +331,21 @@ void MosaicGraph::getDotGraph(std::string& contents)
  * @param stddev Standard deviation of the error in pixels.
  * @param inliers_dir Directory for loading inliers.
  */
-void MosaicGraph::getMosaicError(double& avg, double& stddev, std::string& inliers_dir)
+void MosaicGraph::getMosaicError(double& avg, double& stddev, double& max, double& min, std::string& inliers_dir)
 {
     boost::mutex::scoped_lock lock(mutex_mgraph);
 
-    // Computing the total number of links
-    int nlinks = 0;
-    for(std::map<int, std::map<int, Edge*> >::iterator outer_iter = edges.begin(); outer_iter != edges.end(); outer_iter++)
-    {
-        for(std::map<int, Edge*>::iterator inner_iter = outer_iter->second.begin(); inner_iter != outer_iter->second.end(); inner_iter++)
-        {
-            nlinks++;
-        }
-    }
+    max = -1.0;
+    min = std::numeric_limits<int>::max();
 
-    // Computing the error for each link
-    cv::Mat_<double> errors(nlinks, 1, CV_64F);
-    int link_id = 0;
+    // Total number of inliers
+    int ninliers = 0;
+
+    // Sums of values
+    double sum_x = 0.0;
+    double sum_x2 = 0.0;
+
+    // Computing the error for the correspondences in each link
     for(std::map<int, std::map<int, Edge*> >::iterator outer_iter = edges.begin(); outer_iter != edges.end(); outer_iter++)
     {
         for(std::map<int, Edge*>::iterator inner_iter = outer_iter->second.begin(); inner_iter != outer_iter->second.end(); inner_iter++)
@@ -364,7 +362,9 @@ void MosaicGraph::getMosaicError(double& avg, double& stddev, std::string& inlie
             std::vector<cv::DMatch> inliers;
             loadMatchings(ori, dest, inliers_dir, inliers);
 
-            double total_error = 0.0;
+            // Incrementing the total number of inliers
+            ninliers += static_cast<int>(inliers.size());
+
             // Iterating for each inlier
             for (unsigned inlier = 0; inlier < inliers.size(); inlier++)
             {
@@ -378,20 +378,26 @@ void MosaicGraph::getMosaicError(double& avg, double& stddev, std::string& inlie
 
                 double err = sqrt(SQ(t_x - (t.H(0,0) * q_x + t.H(0,1) * q_y + t.H(0,2))) + SQ(t_y - (t.H(1,0) * q_x + t.H(1,1) * q_y + t.H(1,2))));
 
-                total_error += err;
-            }
+                sum_x += err;
+                sum_x2 += SQ(err);
 
-            errors(link_id, 0) = total_error / double(inliers.size());
-            link_id++;
+                // Computing max and min
+                if (err > max)
+                {
+                    max = err;
+                }
+
+                if (err < min)
+                {
+                    min = err;
+                }
+            }
         }
     }
 
-    // Computing the average error
-    cv::Scalar     mean;
-    cv::Scalar     stdd;
-    cv::meanStdDev (errors, mean, stdd);
-    avg = mean[0];
-    stddev = stdd[0];
+    // Computing the average error and stddev
+    avg = sum_x / static_cast<double>(ninliers);
+    stddev = sqrt((sum_x2 / static_cast<double>(ninliers)) - SQ(avg));
 }
 
 /**
