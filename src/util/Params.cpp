@@ -80,6 +80,9 @@ void Params::readParams(const ros::NodeHandle& nh)
     nh.param("kf_overlap", kf_overlap, 0.4);
     ROS_INFO("[Params] Minimum overlap for KF: %f", kf_overlap);
 
+    nh.param("max_reproj_error", max_reproj_error, 3.0);
+    ROS_INFO("[Params] Maximum reprojection error when computing homographies: %f", max_reproj_error);
+
     nh.param("batch", batch, false);
     ROS_INFO("[Params] Batch processing %i", batch ? 1 : 0);
 
@@ -132,6 +135,9 @@ void Params::modifyParams(BimosConfig& config, uint32_t level)
 
     batch_images_dir = config.batch_images_dir;
     ROS_INFO("[Params] Batch processing image directory %s", batch_images_dir.c_str());
+
+    max_reproj_error = config.max_reproj_error;
+    ROS_INFO("[Params] Maximum reprojection error when computing homographies: %f", max_reproj_error);
 
     ROS_INFO("[Params] Done");
 }

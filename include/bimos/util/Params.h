@@ -51,6 +51,7 @@ public:
     double kf_overlap;
     bool batch;
     std::string batch_images_dir;
+    double max_reproj_error;
 
     dynamic_reconfigure::Server<bimos::BimosConfig> server;
     dynamic_reconfigure::Server<bimos::BimosConfig>::CallbackType f;
@@ -73,7 +74,8 @@ protected:
         kf_min_inliers(550),
         kf_overlap(0.4),
         batch(false),
-        blend_seams(false)
+        blend_seams(false),
+        max_reproj_error(3.0)
     {
         f = boost::bind(&Params::modifyParams, this, _1, _2);
         server.setCallback(f);

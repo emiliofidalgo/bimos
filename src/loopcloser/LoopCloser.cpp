@@ -129,7 +129,7 @@ void LoopCloser::run()
                     cv::Mat_<double> H;
                     std::vector<cv::DMatch> inliers;
                     double rep_error;
-                    HomographyEstimator::estimate(newkf->image, cand_kf->image, H, inliers, rep_error, p->match_ratio);
+                    HomographyEstimator::estimate(newkf->image, cand_kf->image, H, inliers, rep_error, p->match_ratio, p->max_reproj_error);
                     ROS_INFO("[loopcloser] Candidate %i, Score %f, Inliers %i, MRE: %f", cand_id, score, static_cast<int>(inliers.size()), rep_error);
 
                     // Detecting if the number of inliers is higher than the indicated threshold

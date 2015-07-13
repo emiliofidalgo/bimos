@@ -137,7 +137,7 @@ void KeyframeSelector::processImage(const cv::Mat& img)
         cv::Mat_<double> H;
         std::vector<cv::DMatch> inliers;
         double rep_error;
-        HomographyEstimator::estimate(last_kf->image, image, H, inliers, rep_error, p->match_ratio);
+        HomographyEstimator::estimate(last_kf->image, image, H, inliers, rep_error, p->match_ratio, p->max_reproj_error);
 
         // Iterating for each match
         std::vector<cv::Point2f> tpoints;
@@ -191,7 +191,7 @@ void KeyframeSelector::processImage(const cv::Mat& img)
             cv::Mat_<double> H_n;
             std::vector<cv::DMatch> inliers_n;
             double rep_error_n;
-            HomographyEstimator::estimate(new_kf->image, image, H_n, inliers_n, rep_error_n, p->match_ratio);
+            HomographyEstimator::estimate(new_kf->image, image, H_n, inliers_n, rep_error_n, p->match_ratio, p->max_reproj_error);
 
             // Assigning this image as the new possible KF
             lvkf_image = image;
