@@ -148,6 +148,10 @@ void optim_blend(const std_msgs::EmptyConstPtr& msg)
 {
     ROS_INFO("[optim] Optimize the positions of the mosaic...");
 
+    double avg_b, stddev_b, max_b, min_b;
+    std::string inliers_dir = p->working_dir + "inliers/";
+    mgraph->getMosaicError(avg_b, stddev_b, max_b, min_b, inliers_dir);
+
     double init_opttime = omp_get_wtime();
     ceres::Solver::Summary summ;
     mgraph->optimize(summ, false);
@@ -171,7 +175,6 @@ void optim_blend(const std_msgs::EmptyConstPtr& msg)
     ROS_INFO("Total:: %f s", graph_time + (end_opttime - init_opttime) + (end_blentime - init_blentime));
 
     double avg, stddev, max, min;
-    std::string inliers_dir = p->working_dir + "inliers/";
     mgraph->getMosaicError(avg, stddev, max, min, inliers_dir);
 
     ROS_INFO("---");
@@ -182,6 +185,10 @@ void optim_blend(const std_msgs::EmptyConstPtr& msg)
     ROS_INFO("Stddev  error in pixels: %f", stddev);
     ROS_INFO("Max     error in pixels: %f", max);
     ROS_INFO("Min     error in pixels: %f", min);
+    ROS_INFO("[Old] Average error in pixels: %f", avg_b);
+    ROS_INFO("[Old] Stddev  error in pixels: %f", stddev_b);
+    ROS_INFO("[Old] Max     error in pixels: %f", max_b);
+    ROS_INFO("[Old] Min     error in pixels: %f", min_b);
     //ROS_INFO("Successful observations: %i", mgraph->getObsOK());
     //ROS_INFO("Unsuccessful observations: %i", mgraph->getObsNOK());
 }

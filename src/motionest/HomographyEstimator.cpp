@@ -62,11 +62,13 @@ bool HomographyEstimator::estimate(Image* image_prev, Image* image, cv::Mat_<dou
     ParameterEstimator<PointPair2D,double>* estimator;
     if (type == SIMILARITY)
     {
-        estimator = new SimilarityEstimator2D(SQF(hom_delta));
+//        estimator = new SimilarityEstimator2D(SQF(hom_delta));
+        estimator = new SimilarityEstimator2D(hom_delta);
     }
     else
     {
-        estimator = new AffineEstimator2D(SQF(hom_delta));
+//        estimator = new AffineEstimator2D(SQF(hom_delta));
+        estimator = new AffineEstimator2D(hom_delta);
     }
 
     // Performing RANSAC

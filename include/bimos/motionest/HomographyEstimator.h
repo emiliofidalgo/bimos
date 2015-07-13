@@ -35,7 +35,7 @@ namespace bimos
 
 struct HomographyEstimator
 {
-    static bool estimate(Image* image_prev, Image* image, cv::Mat_<double>& H, std::vector<cv::DMatch>& matches_inliers, double& rep_error, double ratio = 0.8, double hom_delta = 7.0, TransformType type = SIMILARITY);
+    static bool estimate(Image* image_prev, Image* image, cv::Mat_<double>& H, std::vector<cv::DMatch>& matches_inliers, double& rep_error, double ratio = 0.8, double hom_delta = 3.0, TransformType type = SIMILARITY);
 };
 
 }
