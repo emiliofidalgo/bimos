@@ -10,15 +10,15 @@
     <arg name="pub_debug_info" default="true" />
     <arg name="lc_delay_kfs" default="7" />
     <arg name="match_ratio" default="0.8" />
-    <arg name="min_inliers" default="100" />
+    <arg name="min_inliers" default="35" />
     <arg name="optim_every_kfs" default="30" />
     <arg name="blend_exp" default="false" />
-    <arg name="blend_seams" default="false" />
+    <arg name="blend_seams" default="true" />
     <arg name="kf_min_inliers" default="100" />
     <arg name="kf_overlap" default="0.2" />
     <arg name="batch" default="true" />
     <arg name="batch_images_dir" default="/datasets/ODEMAR/130f/" />
-    <arg name="max_reproj_error" default="10.0" />
+    <arg name="max_reproj_error" default="30.0" />
 
     <!-- Mosaic Builder node -->
     <node pkg="bimos" type="bimos_node" name="bimos_node" output="screen">
