@@ -11,7 +11,7 @@ BIMOS is released as a ROS package, and relies on OpenCV, Ceres, OBIndex and Boo
 
 BIMOS has been submitted to ICRA:
 
-**Fast Image Mosaicing using Incremental Bags of Binary Words**
+**Fast Image Mosaicing using Incremental Bags of Binary Words**     
 Emilio Garcia-Fidalgo, Alberto Ortiz, Francisco Bonnin-Pascual and Joan P. Company     
 IEEE International Conference on Robotics and Automation (ICRA)     
 Stockholm (Sweden), 2016     
