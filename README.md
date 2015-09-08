@@ -1,7 +1,6 @@
 # BIMOS
-## Binary descriptor-based Image Mosaicing
 
-BIMOS is an open source image mosaicing algorithm which can produce seamless mosaics on different scenarios and camera configurations in a reasonable amount of time. It implements a multi-threaded mosaicing architecture that permits to decouple the strategic steps involved in the process, speeding up the time required to estimate the final topology. In order to find the existent relations between the images, BIMOS employs [OBIndex] (http://github.com/emiliofidalgo/obindex), a binary visual dictionary that is built online, allowing the use of binary descriptors to accelerate the image description process.
+BIMOS (Binary descriptor-based Image Mosaicing) is an open source image mosaicing algorithm which can produce seamless mosaics on different scenarios and camera configurations in a reasonable amount of time. It implements a multi-threaded mosaicing architecture that permits to decouple the strategic steps involved in the process, speeding up the time required to estimate the final topology. In order to find the existent relations between the images, BIMOS employs [OBIndex] (http://github.com/emiliofidalgo/obindex), a binary visual dictionary that is built online, allowing the use of binary descriptors to accelerate the image description process.
 
 The algorithm can generate mosaics from sequences where enough overlap exists between consecutive frames. BIMOS assumes that either the scene is planar or the distance from the camera to the scene is high enough so as to neglect the depth changes. It is also assumed that the camera is more or less perpendicular to the scene and at a more or less constant distance. Note that BIMOS is not a solution for generating rotational panoramas.
 
