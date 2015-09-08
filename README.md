@@ -61,7 +61,7 @@ For an example of use, see the demo file (`src/demo/example.cpp`).
 
 ## Known limitations
 
-Currently, the memory allocation is performed during the class initialization and not dynamically. This implies that you should indicate as a parameter (`max_descriptors`) the approximate number of descriptors that you need to index. See the demo file (`src/demo/example.cpp`) to see an example of how to set this parameter.
+- Despite BIMOS can deal with hundreds of images during the topology estimation, the blending step is an adaptation of the stitching OpenCV module. This module loads the images on RAM memory. Due to this reason, if you plan to create a mosaic using a high number of images, you can run out of memory at this point.
 
 ## Contact
 
