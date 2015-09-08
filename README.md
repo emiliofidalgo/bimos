@@ -61,7 +61,11 @@ For an example of use, see the demo file (`src/demo/example.cpp`).
 
 ## Known limitations
 
-- Despite BIMOS can deal with hundreds of images during the topology estimation, the blending step is an adaptation of the stitching OpenCV module. This module loads the images on RAM memory. Due to this reason, if you plan to create a mosaic using a high number of images, you can run out of memory at this point.
+- Despite BIMOS can deal with hundreds of images during the topology estimation, the blending step is an adaptation of the stitching OpenCV module. This module loads the images on the RAM memory. Due to this reason, if you plan to create a mosaic using a high number of images, you can run out of memory at this point.
+
+- BIMOS cannot be used with unordered sequences. Images comprising the dataset should be enumerated consecutively when using the `batch` option.
+
+<!-- - You should be sure that at least the first image can be considered as a KF -->
 
 ## Contact
 
