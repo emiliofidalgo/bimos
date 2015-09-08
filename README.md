@@ -65,4 +65,4 @@ Currently, the memory allocation is performed during the class initialization an
 
 ## Contact
 
-If you have problems or questions using the library, please contact the authors (emilio.garcia@uib.es). Improvements are totally welcome.
+If you have problems or questions using BIMOS, please contact the author (emilio.garcia@uib.es). [Feature requests](http://github.com/emiliofidalgo/bimos/issues) and [contributions](http://github.com/emiliofidalgo/bimos/pulls) are totally welcome.
