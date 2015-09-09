@@ -1,10 +1,10 @@
 # BIMOS
 
-BIMOS (Binary descriptor-based Image Mosaicing) is an open source image mosaicing algorithm which can produce seamless mosaics on different scenarios and camera configurations in a reasonable amount of time. It implements a multi-threaded mosaicing architecture that permits to decouple the strategic steps involved in the process, speeding up the time required to estimate the final topology. In order to find the existent relations between the images, BIMOS employs [OBIndex] (http://github.com/emiliofidalgo/obindex), a binary visual dictionary that is built online, allowing the use of binary descriptors to accelerate the image description process.
+BIMOS (Binary descriptor-based Image Mosaicing) is an open source image mosaicing algorithm which can produce seamless mosaics on different scenarios and camera configurations in a reasonable amount of time. It is based on a multi-threaded mosaicing architecture that permits decoupling the strategic steps involved in the process, speeding up the time required to estimate the final topology. In order to find the existent relations between the images, BIMOS employs [OBIndex] (http://github.com/emiliofidalgo/obindex), a binary BoW scheme that is built online, allowing the use of binary descriptors to accelerate the image description process.
 
-The algorithm can generate mosaics from sequences where enough overlap exists between consecutive frames. BIMOS assumes that either the scene is planar or the distance from the camera to the scene is high enough so as to neglect the depth changes. It is also assumed that the camera is more or less perpendicular to the scene and at a more or less constant distance. Note that BIMOS is not a solution for generating rotational panoramas.
+The algorithm can generate mosaics from sequences where consecutive frames present enough overlap between them. BIMOS assumes that either the scene is planar or the distance from the camera to the scene is high enough so as to neglect the depth changes. It is also assumed that the camera is more or less perpendicular to the scene and at a more or less constant distance. Note that BIMOS is not a solution for generating rotational panoramas.
 
-BIMOS is released as a ROS package, and relies on OpenCV, Ceres, OBIndex and Boost libraries. Note that BIMOS is research code. The authors are not responsible for any errors it may contain. Use it at your own risk!
+BIMOS is released as a ROS package, and relies on [OpenCV](http://opencv.org), [Ceres Solver](http://ceres-solver.org), [OBIndex](http://github.com/emiliofidalgo/obindex) and [Boost](http://www.boost.org) libraries. Note that BIMOS is research code. The authors are not responsible for any errors it may contain. **Use it at your own risk!**
 
 ## Related publications
 
@@ -60,9 +60,9 @@ For an example of use, see the demo file (`src/demo/example.cpp`).
 
 ## Known limitations
 
-- Despite BIMOS can deal with hundreds of images during the topology estimation, the blending step is an adaptation of the stitching OpenCV module. This module loads the images on the RAM memory. Due to this reason, if you plan to create a mosaic using a high number of images, you can run out of memory at this point.
+- Despite BIMOS can deal with hundreds of images during the estimation of the topology, the blending step is an adaptation of the *stitching* OpenCV module. This module loads the images on the RAM memory. Due to this reason, if you plan to create a mosaic using a high number of images, you can run out of memory at this point.
 
-- BIMOS cannot be used with unordered sequences. Images comprising the dataset should be enumerated consecutively when using the `batch` option.
+- BIMOS cannot be used with unordered sequences. Images comprising the input dataset should be enumerated consecutively when using the `batch` option.
 
 <!-- - You should be sure that at least the first image can be considered as a KF -->
 
