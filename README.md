@@ -61,10 +61,10 @@ This installation process has been tested and verified using Ubuntu 14.04.1 LTS 
 
 We developed a [rqt](http://wiki.ros.org/rqt)-based GUI to interact with BIMOS. To load the interface, open a new terminal and execute rqt:
 
-    `$ rqt`   
+	`$ rqt`   
 
-Next, go to *'Perspectives - Import...'* and open the file *resources/bimos.perspective* stored in the root package directory. You should see a window like this:
-![alt BIMOS Interface](https://raw.github.com/emiliofidalgo/bimos/develop/resources/rqt.png)
+Next, go to *'Perspectives - Import...'* and open the file *resources/bimos.perspective* stored in the root package directory. You should see a window like this:   
+![alt BIMOS Interface](https://github.com/emiliofidalgo/bimos/blob/develop/resources/rqt.png)
 
 ## Known limitations
 
