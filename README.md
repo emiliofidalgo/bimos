@@ -34,25 +34,28 @@ BIMOS is distributed under the terms of the [GPL3 License] (http://github.com/em
 
 ## Installation
 
-1. First of all, you will need to have installed all library dependencies:
+This installation process has been tested and verified using Ubuntu 14.04.1 LTS and ROS Indigo, but other configurations should also work.
 
-	`sudo apt-get install libflann-dev`   
-	`sudo apt-get install libboost-system-dev`   
-	`sudo apt-get install libboost-filesystem-dev`   
+1. First of all, follow the instructions to install [OBIndex] (http://github.com/emiliofidalgo/obindex) in your workspace.
+
+2. Install BIMOS dependencies:
+
+	`sudo apt-get install libceres-dev`   
+	`sudo apt-get install libsuitesparse-dev`   
 
 2. Clone the repository into your workspace:
 	
 	`cd ~/your_workspace/src`   
-	`git clone https://github.com/emiliofidalgo/obindex.git`   
+	`git clone https://github.com/emiliofidalgo/bimos.git`   
 
 3. Compile the package using `catkin_make`:
 	
 	`cd ..`   
 	`catkin_make -DCMAKE_BUILD_TYPE=Release`   
 
-4. You can run an example:
+4. Launch BIMOS:
 	
-	`rosrun obindex test_bindex /directory/of/images`   
+	`roslaunch bimos bimos.launch`   
 
 ## Usage
 
