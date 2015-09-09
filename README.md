@@ -40,26 +40,31 @@ This installation process has been tested and verified using Ubuntu 14.04.1 LTS 
 
 2. Install BIMOS dependencies:
 
-	`sudo apt-get install libceres-dev`   
-	`sudo apt-get install libsuitesparse-dev`   
+	`$ sudo apt-get install libceres-dev`   
+	`$ sudo apt-get install libsuitesparse-dev`   
 
 2. Clone the repository into your workspace:
 	
-	`cd ~/your_workspace/src`   
-	`git clone https://github.com/emiliofidalgo/bimos.git`   
+	`$ cd ~/your_workspace/src`   
+	`$ git clone https://github.com/emiliofidalgo/bimos.git`   
 
 3. Compile the package using `catkin_make`:
 	
-	`cd ..`   
-	`catkin_make -DCMAKE_BUILD_TYPE=Release`   
+	`$ cd ..`   
+	`$ catkin_make -DCMAKE_BUILD_TYPE=Release`   
 
 4. Launch BIMOS:
 	
-	`roslaunch bimos bimos.launch`   
+	`$ roslaunch bimos bimos.launch`   
 
 ## Usage
 
-For an example of use, see the demo file (`src/demo/example.cpp`).
+We developed a [rqt](http://wiki.ros.org/rqt)-based GUI to interact with BIMOS. To load the interface, open a new terminal and execute rqt:
+
+    `$ rqt`   
+
+Next, go to *'Perspectives - Import...'* and open the file *resources/bimos.perspective* stored in the root package directory. You should see a window like this:
+![alt BIMOS Interface](https://raw.github.com/emiliofidalgo/bimos/develop/resources/rqt.png)
 
 ## Known limitations
 
