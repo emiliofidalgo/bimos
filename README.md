@@ -144,7 +144,12 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 
 - Using the same image alignment, you can call the `/bimos_node/blend` command to create another version of the mosaic, modifying the blending options.
 
-- If you want to repeat the image alignment or generate a mosaic of a different dataset, check/unckeck the `/bimos_node/stop_mosaic` to reinitialize BIMOS, modify the parameters as needed, and then check/uncheck the `/bimos_node/init_mosaic` again.
+- If you want to repeat the image alignment or generate a mosaic using a different dataset, check/unckeck the `/bimos_node/stop_mosaic` to reinitialize BIMOS, modify the parameters as needed, and then check/uncheck the `/bimos_node/init_mosaic` again.
+
+- As a result, you should obtain something like these:
+
+![ODEMAR](https://github.com/emiliofidalgo/bimos/blob/develop/resources/mosaic_ODEMAR.jpg)   
+![Valldemossa](https://github.com/emiliofidalgo/bimos/blob/develop/resources/mosaic_Valldemossa.jpg)   
 
 ## Known limitations
 
