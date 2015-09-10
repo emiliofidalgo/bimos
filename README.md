@@ -89,11 +89,16 @@ The three different parts that the interface presents are:
 
 Before generating a mosaic, some BIMOS options should be set according to the conditions of your dataset.
 
-- `working_dir`:
-- `img_descriptor`:
-- `nkeypoints`:
-- `pub_debug_info`:
-- `lc_delay_kfs`:
+- `working_dir`: Directory where BIMOS operates and where the final results will be stored. **This directory should be writable!**.
+- `img_descriptor`: Combination of detector/descriptor to be used. The available options are:
+	- *ORB_ORB* (Default)
+	- *ORB_BRIEF*
+	- *ORB_LDB*
+	- *FAST_BRIEF*
+	- *FAST_LDB*
+- `nkeypoints`: Number of features to find in each input image.
+- `pub_debug_info`: This option controls if debug information should be published or not. Currently, only the graph image is published, which can be shown during the topology estimation selecting the corresponding topic in the GUI. For large mosaics, this options can severely affect to the performance of BIMOS and this option should be disabled.
+- `lc_delay_kfs`: 
 - `match_ratio`:
 - `min_inliers`:
 - `optim_every_kfs`:
