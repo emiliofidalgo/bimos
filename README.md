@@ -69,7 +69,7 @@ This installation process has been tested and verified using Ubuntu 14.04.1 LTS 
 
 ### GUI
 
-We composed a [rqt](http://wiki.ros.org/rqt)-based GUI to interact with BIMOS. To load the interface, open a new terminal and execute:
+We composed a simple [rqt](http://wiki.ros.org/rqt)-based GUI to interact with BIMOS. To load the interface, open a new terminal and execute:
 
     $ rqt   
 
@@ -102,7 +102,7 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 
 - `pub_debug_info`: This option controls if debug information should be published or not. Currently, only the graph image is published, which can be shown during the topology estimation selecting the corresponding topic in the GUI. For large mosaics, this options can severely affect to the performance of BIMOS and this option should be disabled.
 
-- `lc_delay_kfs`: Minimum inserted keyframes to consider a keyframe as a possible loop candidate. This is used to avoid closing loops with recent added keyframes.
+- `lc_delay_kfs`: Minimum inserted keyframes to consider a keyframe as a possible loop candidate. This is used to avoid closing loops with recently added keyframes.
 
 - `match_ratio`: Nearest neighbour distance ratio to match descriptors. Usually, a value of 0.8 is a good option here.
 
@@ -122,7 +122,7 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 
 - `batch_images_dir`: When `batch` option is checked, this is the path to the directory where the input images are stored. The images should be named consecutively using the same number of digits. For instance: *image00001.jpg*, *image00002.jpg*, and so on.
 
-- `max_reproj_error`: Maximum reprojection error when computing a homography between two images. The higher this value, the less number of inliers between the images. Depending on the scenario, this value could be set to a higher value to be less restrictive. The errors will be corrected by means of the optimizations.
+- `max_reproj_error`: Maximum reprojection error when computing a homography between two images. The higher this value, the less number of inliers between the images. Depending on the scenario, this value could be set to a higher value to be less restrictive. The errors will be corrected by means of optimizations.
 
 ### Creating a mosaic
 
@@ -134,13 +134,13 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 
 - Let's suppose that ODEMAR dataset has been unzipped in */home/user/ODEMAR/*. Then, set the `batch_images_dir` option to */home/user/ODEMAR/* (**Do not forget the '/' character!**).
 
-- Check the `/bimos_node/init_mosaic` command to start the mosaicing process. Uncheck it as soon as log files are shown on the screen.
+- Check the `/bimos_node/init_mosaic` command to start the mosaicing process. Uncheck it as soon as log lines start to appear on the screen.
 
-- If you want to see the topology, press *Refresh* in the graph viewer and select the `/bimos_node/mosaic_graph` topic in the list.
+- If you want to see the topology, press *Refresh* in the graph viewer component and select the `/bimos_node/mosaic_graph` topic in the list.
 
 - After all the images have been processed, check/uncheck the `/bimos_node/optim_and_blend` command to perform a final optimization and start the blending step.
 
-- After a while, measures resulting from the mosaicing process, such as times and reprojection errors, will appear on the screen. The resulting mosaic is also saved as a JPG image in the working directory, along with other interesting files such as the 2D poses. Note that two reduced versions of the mosaic have also been saved.
+- After a while, measures resulting from the mosaicing process, such as times and reprojection errors, will appear on the screen. The resulting mosaic is also saved as a JPG image in the working directory, along with other interesting files such as the optimized 2D poses. Note that two reduced versions of the mosaic have also been saved.
 
 - Using the same image alignment, you can call the `/bimos_node/blend` command to create another version of the mosaic, modifying the blending options.
 
