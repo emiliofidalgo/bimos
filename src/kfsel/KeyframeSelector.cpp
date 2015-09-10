@@ -175,7 +175,15 @@ void KeyframeSelector::processImage(const cv::Mat& img)
             lvkf_inliers = inliers;
         }
         else
-        {
+        {            
+            if (image->id == 1)
+            {
+                ROS_ERROR("[kfsel] The second received image needs to be considered as a keyframe.");
+                ROS_ERROR("[kfsel] In order to achieve this, you can reduce the 'kf_min_inliers' and/or 'kf_overlap' parameters or increment the 'max_reproj_error' parameter.");
+                ROS_ERROR("[kfsel] If it is not possible, perhaps the dataset does not present enough overlap between consecutive images to obtain a mosaic.");
+                exit(0);
+            }
+
             // Current image cannot be considered a KF
 
             // Adding the previous image as KF in the graph
