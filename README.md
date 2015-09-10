@@ -124,6 +124,28 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 
 - `max_reproj_error`: Maximum reprojection error when computing a homography between two images. The higher this value, the less number of inliers between the images. Depending on the scenario, this value could be set to a higher value to be less restrictive. The errors will be corrected by means of the optimizations.
 
+### Creating a mosaic
+
+- After setting the corresponding options, we are ready to generate a mosaic. As examples, we provide two datasets. Download and unzip these files using the following links:
+
+	- [ODEMAR](https://www.dropbox.com/s/dq3fi7h515auuu3/ODEMAR.tar.gz?dl=0), 64 images of size 480x270 pixels (~19MB), front-looking camera attached to an underwater vehicle.
+
+	- [Valldemossa](https://www.dropbox.com/s/9nqx2kgbbc70pd8/Valldemossa.tar.gz?dl=0), 201 images of size 320x180 pixels (~6MB), bottom-looking camera attached to an underwater vehicle.
+
+- Let's suppose that ODEMAR dataset has been unzipped in */home/user/ODEMAR/*. Then, set the `batch_images_dir` option to */home/user/ODEMAR/* (**Do not forget the '/' character!**).
+
+- Check the `/bimos_node/init_mosaic` command to start the mosaicing process. Uncheck it as soon as log files are shown on the screen.
+
+- If you want to see the topology, press *Refresh* in the graph viewer and select the `/bimos_node/mosaic_graph` topic in the list.
+
+- After all the images have been processed, check/uncheck the `/bimos_node/optim_and_blend` command to perform a final optimization and start the blending step.
+
+- After a while, measures resulting from the mosaicing process, such as times and reprojection errors, will appear on the screen. The resulting mosaic is also saved as a JPG image in the working directory, along with other interesting files such as the 2D poses. Note that two reduced versions of the mosaic have also been saved.
+
+- Using the same image alignment, you can call the `/bimos_node/blend` command to create another version of the mosaic, modifying the blending options.
+
+- If you want to repeat the image alignment or generate a mosaic of a different dataset, check/unckeck the `/bimos_node/stop_mosaic` to reinitialize BIMOS, modify the parameters as needed, and then check/uncheck the `/bimos_node/init_mosaic` again.
+
 ## Known limitations
 
 - Despite BIMOS can deal with hundreds of images during the estimation of the topology, the blending step is an adaptation of the *stitching* OpenCV module. This module loads the images on the RAM memory. Due to this reason, if you plan to create a mosaic using a high number of images, you can run out of memory at this point.
