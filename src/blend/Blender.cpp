@@ -146,7 +146,7 @@ void Blender::run()
 
     mosaic_id++;
 
-    ROS_INFO("[blend] Blending time: %f", end_time - init_time);
+    //ROS_INFO("[blend] Blending time: %f", end_time - init_time);
 }
 
 /**

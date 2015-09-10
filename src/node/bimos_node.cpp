@@ -189,8 +189,12 @@ void optim_blend(const std_msgs::EmptyConstPtr& msg)
     ROS_INFO("[Old] Stddev  error in pixels: %f", stddev_b);
     ROS_INFO("[Old] Max     error in pixels: %f", max_b);
     ROS_INFO("[Old] Min     error in pixels: %f", min_b);
-    //ROS_INFO("Successful observations: %i", mgraph->getObsOK());
-    //ROS_INFO("Unsuccessful observations: %i", mgraph->getObsNOK());
+
+    ROS_INFO("---");
+    ROS_INFO("[Overlap Detection]");
+    ROS_INFO("Overlapping pairs: %i", mgraph->getObsOK());
+    ROS_INFO("Loop closures detected: %i", (mgraph->getObsOK() - (mgraph->getNumberOfKeyframes() - 1)));
+
 }
 
 // Callback for init_mosaic service
