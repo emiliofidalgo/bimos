@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package>
+    <name>bimos</name>
+    <version>0.1.0</version>
+    <description>Binary Image Mosaicing Package</description>
+    <author email="emilio.garcia@uib.es">Emilio Garcia-Fidalgo</author>
+    <maintainer email="emilio.garcia@uib.es">Emilio Garcia-Fidalgo</maintainer>
+    <license>GPL</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <build_depend>roscpp</build_depend>
+    <build_depend>rospy</build_depend>
+    <build_depend>camera_calibration_parsers</build_depend>
+    <build_depend>sensor_msgs</build_depend>
+    <build_depend>image_transport</build_depend>
+    <build_depend>cv_bridge</build_depend>
+    <build_depend>obindex</build_depend>
+    <build_depend>std_srvs</build_depend>
+    <build_depend>dynamic_reconfigure</build_depend>
+
+    <run_depend>roscpp</run_depend>
+    <run_depend>rospy</run_depend>
+    <run_depend>camera_calibration_parsers</run_depend>
+    <run_depend>sensor_msgs</run_depend>
+    <run_depend>image_transport</run_depend>
+    <run_depend>cv_bridge</run_depend>
+    <run_depend>obindex</run_depend>
+    <run_depend>std_srvs</run_depend>
+    <run_depend>dynamic_reconfigure</run_depend>
+</package>

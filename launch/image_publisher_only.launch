@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+
+    <!-- Arguments for image_sequence_publisher -->
+    <arg name="images_dir" default="/datasets/ODEMAR/130f/" />
+    <arg name="camera_info_file" default="/datasets/ODEMAR/calibration.yaml" />
+    <arg name="freq" default="1.0" />
+    <arg name="run_image_proc" default="false" />
+
+    <!-- Sequence Publisher node -->
+    <node pkg="bimos" type="image_publisher" name="image_publisher" output="screen">
+        <param name="images_dir" value="$(arg images_dir)" />
+        <param name="camera_info_file" value="$(arg camera_info_file)" />
+        <param name="freq" value="$(arg freq)" />
+    </node>
+
+    <group if="$(arg run_image_proc)" ns="image_publisher">
+        <node pkg="image_proc" type="image_proc" name="image_proc" output="screen" />
+    </group>
+
+</launch>

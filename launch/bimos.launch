@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+
+    <!-- Arguments for bimos -->
+    <arg name="img_topic" default="/image_publisher/image_raw" />
+    <arg name="working_dir" default="/home/emilio/Escritorio/Serialization/Mosaicing/" />
+    <arg name="img_descriptor" default="ORB_ORB" />
+    <arg name="nkeypoints" default="3000" />
+    <arg name="pub_debug_info" default="true" />
+    <arg name="lc_delay_kfs" default="7" />
+    <arg name="match_ratio" default="0.8" />
+    <arg name="min_inliers" default="35" />
+    <arg name="optim_every_kfs" default="30" />
+    <arg name="blend_exp" default="false" />
+    <arg name="blend_seams" default="true" />
+    <arg name="kf_min_inliers" default="100" />
+    <arg name="kf_overlap" default="0.2" />
+    <arg name="batch" default="true" />
+    <arg name="batch_images_dir" default="/datasets/ODEMAR/130f/" />
+    <arg name="max_reproj_error" default="30.0" />
+
+    <!-- Mosaic Builder node -->
+    <node pkg="bimos" type="bimos_node" name="bimos_node" output="screen">
+        <param name="working_dir" value="$(arg working_dir)" />
+        <param name="img_descriptor" value="$(arg img_descriptor)" />
+        <param name="nkeypoints" value="$(arg nkeypoints)" />
+        <param name="pub_debug_info" value="$(arg pub_debug_info)" />
+        <param name="lc_delay_kfs" value="$(arg lc_delay_kfs)" />
+        <param name="match_ratio" value="$(arg match_ratio)" />
+        <param name="min_inliers" value="$(arg min_inliers)" />
+        <param name="optim_every_kfs" value="$(arg optim_every_kfs)" />
+        <param name="blend_exp" value="$(arg blend_exp)" />
+        <param name="blend_seams" value="$(arg blend_seams)" />
+        <param name="kf_min_inliers" value="$(arg kf_min_inliers)" />
+        <param name="kf_overlap" value="$(arg kf_overlap)" />
+        <param name="batch" value="$(arg batch)" />
+        <param name="batch_images_dir" value="$(arg batch_images_dir)" />
+        <param name="max_reproj_error" value="$(arg max_reproj_error)" />
+
+        <remap from="~image" to="$(arg img_topic)" />
+    </node>
+
+</launch>

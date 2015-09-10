@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+
+    <!-- Arguments for bimos -->    
+    <arg name="working_dir" default="/home/emilio/Escritorio/Serialization/Mosaicing/" />    
+    <arg name="batch_images_dir" default="/datasets/rot/Cars" />
+
+    <!-- Mosaic Builder node -->
+    <node pkg="bimos" type="bimos_rotational" name="bimos_rotational" output="screen">
+        <param name="working_dir" value="$(arg working_dir)" />        
+        <param name="batch_images_dir" value="$(arg batch_images_dir)" />
+
+        <remap from="~image" to="$(arg img_topic)" />
+    </node>
+
+</launch>
