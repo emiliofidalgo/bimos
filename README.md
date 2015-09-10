@@ -128,9 +128,9 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 
 - After setting the corresponding options, we are ready to generate a mosaic. As examples, we provide two datasets. Download and unzip these files using the following links:
 
-	- [ODEMAR](https://www.dropbox.com/s/dq3fi7h515auuu3/ODEMAR.tar.gz?dl=0), 64 images of size 480x270 pixels (~19MB), front-looking camera attached to an underwater vehicle.
+	- [ODEMAR](https://www.dropbox.com/s/dq3fi7h515auuu3/ODEMAR.tar.gz?dl=0), 64 images of size 480x270 pixels (~19MB), front-looking camera attached to an underwater vehicle (Thanks to Miquel Massot-Campos).
 
-	- [Valldemossa](https://www.dropbox.com/s/9nqx2kgbbc70pd8/Valldemossa.tar.gz?dl=0), 201 images of size 320x180 pixels (~6MB), bottom-looking camera attached to an underwater vehicle.
+	- [Valldemossa](https://www.dropbox.com/s/9nqx2kgbbc70pd8/Valldemossa.tar.gz?dl=0), 201 images of size 320x180 pixels (~6MB), bottom-looking camera attached to an underwater vehicle (Thanks to Francisco Bonin-Font).
 
 - Let's suppose that ODEMAR dataset has been unzipped in */home/user/ODEMAR/*. Then, set the `batch_images_dir` option to */home/user/ODEMAR/* (**Do not forget the '/' character!**).
 
