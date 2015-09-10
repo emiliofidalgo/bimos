@@ -90,25 +90,39 @@ The three different parts that the interface presents are:
 Before generating a mosaic, some BIMOS options should be set according to the conditions of your dataset.
 
 - `working_dir`: Directory where BIMOS operates and where the final results will be stored. **This directory should be writable!**.
+
 - `img_descriptor`: Combination of detector/descriptor to be used. The available options are:
 	- *ORB_ORB* (Default)
 	- *ORB_BRIEF*
 	- *ORB_LDB*
 	- *FAST_BRIEF*
 	- *FAST_LDB*
+	
 - `nkeypoints`: Number of features to find in each input image.
+
 - `pub_debug_info`: This option controls if debug information should be published or not. Currently, only the graph image is published, which can be shown during the topology estimation selecting the corresponding topic in the GUI. For large mosaics, this options can severely affect to the performance of BIMOS and this option should be disabled.
-- `lc_delay_kfs`: 
-- `match_ratio`:
-- `min_inliers`:
-- `optim_every_kfs`:
-- `blend_exp`:
-- `blend_seams`:
-- `kf_min_inliers`:
-- `kf_overlap`:
-- `batch`:
-- `batch_images_dir`:
-- `max_reproj_error`:
+
+- `lc_delay_kfs`: Minimum inserted keyframes to consider a keyframe as a possible loop candidate. This is used to avoid closing loops with recent added keyframes.
+
+- `match_ratio`: Nearest neighbour distance ratio to match descriptors. Usually, a value of 0.8 is a good option here.
+
+- `min_inliers`: Minimum number of inliers to consider a loop closure detection. It should be configured depending on the movement of the camera.
+
+- `optim_every_kfs`: Number of new inserted keyframes to launch a graph optimization. If large loops are not present in the trajectory, this value could be low.
+
+- `blend_exp`: Exposure compensation during the blending step. This option is computationally demanding and can increase the time needed to create the final composite. It is recommended to uncheck it unless for a low number of images.
+
+- `blend_seams`: Seam finding during the blending step. This option should be checked to obtain a seamless mosaic. However, it can be disabled to obtain a draft of the mosaic, since it can be also computationally demanding.
+
+- `kf_min_inliers`: Minimum number of inliers between two consecutive images to consider an image as a new keyframe. Usually the higher the value, the larger the number of images used for the final mosaic.
+
+- `kf_overlap`: Minimum overlap between two consecutive images to consider an image as a new keyframe. Usually the higher the value, the larger the number of images used for the final mosaic.
+ 
+- `batch`: If checked, the input images are loaded directly from a local directory indicated in the `batch_images_dir` option. Otherwise, images are received through a ROS topic.
+
+- `batch_images_dir`: When `batch` option is checked, this is the path to the directory where the input images are stored. The images should be named consecutively using the same number of digits. For instance: *image00001.jpg*, *image00002.jpg*, and so on.
+
+- `max_reproj_error`: Maximum reprojection error when computing a homography between two images. The higher this value, the less number of inliers between the images. Depending on the scenario, this value could be set to a higher value to be less restrictive. The errors will be corrected by means of the optimizations.
 
 ## Known limitations
 
