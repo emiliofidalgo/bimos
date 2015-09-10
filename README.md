@@ -40,31 +40,70 @@ This installation process has been tested and verified using Ubuntu 14.04.1 LTS 
 
 2. Install BIMOS dependencies:
 
-	`$ sudo apt-get install libceres-dev`   
-	`$ sudo apt-get install libsuitesparse-dev`   
+	```bash
+	$ sudo apt-get install libceres-dev   
+	$ sudo apt-get install libsuitesparse-dev   
+	```
 
 2. Clone the repository into your workspace:
 	
-	`$ cd ~/your_workspace/src`   
-	`$ git clone https://github.com/emiliofidalgo/bimos.git`   
+	```bash
+	$ cd ~/your_workspace/src   
+	$ git clone https://github.com/emiliofidalgo/bimos.git`   
+	```
 
 3. Compile the package using `catkin_make`:
 	
-	`$ cd ..`   
-	`$ catkin_make -DCMAKE_BUILD_TYPE=Release`   
+	```bash
+	$ cd ..   
+	$ catkin_make -DCMAKE_BUILD_TYPE=Release   
+	```
 
 4. Launch BIMOS:
 	
-	`$ roslaunch bimos bimos.launch`   
+	```bash
+	$ roslaunch bimos bimos.launch   
+	```
 
 ## Usage
 
-We developed a [rqt](http://wiki.ros.org/rqt)-based GUI to interact with BIMOS. To load the interface, open a new terminal and execute rqt:
+### GUI
 
-	`$ rqt`   
+We composed a [rqt](http://wiki.ros.org/rqt)-based GUI to interact with BIMOS. To load the interface, open a new terminal and execute:
+
+    $ rqt   
 
 Next, go to *'Perspectives - Import...'* and open the file *resources/bimos.perspective* stored in the root package directory. You should see a window like this:   
-![alt BIMOS Interface](https://github.com/emiliofidalgo/bimos/blob/develop/resources/rqt.png)
+
+![BIMOS Interface](https://github.com/emiliofidalgo/bimos/blob/develop/resources/rqt_num.png)   
+
+The three different parts that the interface presents are:
+
+1. The commands that can be send to interact with BIMOS.
+
+2. A graph viewer to see the topology while it is estimated. This component is for debugging purposes and can introduce performance issues when building large mosaics. For more information, see the `pub_debug_info` option.
+
+3. A `dynamic_reconfigure` component to set the different mosaicing options. The options are detailed in the following section.
+
+### Options
+
+Before generating a mosaic, some BIMOS options should be set according to the conditions of your dataset.
+
+- `working_dir`:
+- `img_descriptor`:
+- `nkeypoints`:
+- `pub_debug_info`:
+- `lc_delay_kfs`:
+- `match_ratio`:
+- `min_inliers`:
+- `optim_every_kfs`:
+- `blend_exp`:
+- `blend_seams`:
+- `kf_min_inliers`:
+- `kf_overlap`:
+- `batch`:
+- `batch_images_dir`:
+- `max_reproj_error`:
 
 ## Known limitations
 
