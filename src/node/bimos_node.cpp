@@ -49,11 +49,17 @@ bimos::Blender blender;
 // Write the final poses of the mosaic into a file
 void writePoses()
 {
+    // Generating directory for homographies
+    boost::filesystem::path res_imgs_dir = p->working_dir + "homographies/";
+    boost::filesystem::remove_all(res_imgs_dir);
+    boost::filesystem::create_directory(res_imgs_dir);
+
     // Writing poses to a file
     ROS_INFO("Writing poses to a file ...");
     std::string filename = p->working_dir + "mosaic_poses.txt";
     std::ofstream file;
     file.open(filename.c_str());
+    char name[500];
     for (int kf_ind = 0; kf_ind < mgraph->getNumberOfKeyframes(); kf_ind++)
     {
         bimos::Keyframe* kf = mgraph->getKeyframe(kf_ind);
@@ -62,6 +68,13 @@ void writePoses()
         kf->trans.decomposeTransformation(params);
 
         file << params[0] << "\t" << params[1] << std::endl;
+
+        // Storing the absolute homography
+        std::string yfilename = p->working_dir + "homographies/homography%06d.yml";
+        sprintf(name, yfilename.c_str(), kf_ind);
+        cv::FileStorage fs(std::string(name), cv::FileStorage::WRITE);
+        fs << "H" << kf->trans.H;
+        fs.release();
     }
     file.close();
     ROS_INFO("Pose file completed");
@@ -78,7 +91,7 @@ void createMosaic(ros::NodeHandle& nh)
     boost::filesystem::create_directory(res_imgs_dir);
     res_imgs_dir = p->working_dir + "inliers/";
     boost::filesystem::remove_all(res_imgs_dir);
-    boost::filesystem::create_directory(res_imgs_dir);
+    boost::filesystem::create_directory(res_imgs_dir);    
     ROS_INFO("Working directory ready");
 
     // Creating the information publisher class
