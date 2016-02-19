@@ -8,7 +8,7 @@ BIMOS is released as a ROS package, and relies on [OpenCV](http://opencv.org), [
 
 ## Related publications
 
-BIMOS has been submitted to ICRA:
+BIMOS was presented at ICRA conference. If you use BIMOS, we will be grateful if you cite:
 
 **Fast Image Mosaicing using Incremental Bags of Binary Words**     
 Emilio Garcia-Fidalgo, Alberto Ortiz, Francisco Bonnin-Pascual and Joan P. Company     
