@@ -69,10 +69,11 @@ void writePoses()
 
         file << params[0] << "\t" << params[1] << std::endl;
 
-        // Storing the absolute homography
+        // Storing the absolute homography and its name
         std::string yfilename = p->working_dir + "homographies/homography%06d.yml";
         sprintf(name, yfilename.c_str(), kf_ind);
         cv::FileStorage fs(std::string(name), cv::FileStorage::WRITE);
+        fs << "filename" << kf->image->filename;
         fs << "H" << kf->trans.H;
         fs.release();
     }
