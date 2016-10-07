@@ -43,7 +43,7 @@
 #include <bimos/util/util.h>
 
 int main(int argc, char** argv)
-{    
+{
 	ROS_INFO("Initializing node ...");
 
 	// ROS
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 	string ba_refine_mask = "xxxxx";
 	bool do_wave_correct = true;
 	WaveCorrectKind wave_correct = detail::WAVE_CORRECT_HORIZ;
-	bool save_graph = false; 
+	bool save_graph = false;
 	std::string save_graph_to = p->working_dir + "mosaic.graph";
 	string warp_type = "cylindrical";
 	int expos_comp_type = ExposureCompensator::GAIN_BLOCKS;
@@ -192,7 +192,14 @@ int main(int argc, char** argv)
 	{
 		ROS_INFO("[MosaicBuilder] Saving matches graph...");
 		ofstream f(save_graph_to.c_str());
-		f << matchesGraphAsString(img_names, pairwise_matches, conf_thresh);
+		// Changes due opencv 3.1
+		vector<String> img_names_cv;
+		for (size_t i = 0; i < img_names.size(); i++)
+		{
+			img_names_cv.push_back(String(img_names[i]));
+		}
+		String out = matchesGraphAsString(img_names_cv, pairwise_matches, conf_thresh);
+		f << out.c_str();
 	}
 
 	// Leave only images we are sure are from the same panorama
@@ -285,6 +292,8 @@ int main(int argc, char** argv)
 	vector<Point> corners(num_images);
 	vector<Mat> masks_warped(num_images);
 	vector<Mat> images_warped(num_images);
+	vector<UMat> masks_warped_umat(num_images);
+	vector<UMat> images_warped_umat(num_images);
 	vector<Size> sizes(num_images);
 	vector<Mat> masks(num_images);
 
@@ -347,14 +356,25 @@ int main(int argc, char** argv)
 		warper->warp(masks[i], K, cameras[i].R, INTER_NEAREST, BORDER_CONSTANT, masks_warped[i]);
 	}
 
-	vector<Mat> images_warped_f(num_images);
+	vector<UMat> images_warped_f(num_images);
 	for (int i = 0; i < num_images; ++i)
-		images_warped[i].convertTo(images_warped_f[i], CV_32F);
+	{
+		Mat tmp_img;
+		images_warped[i].convertTo(tmp_img, CV_32F);
+		images_warped_f[i] = tmp_img.getUMat( ACCESS_READ );
+	}
 
 	//ROS_INFO("[MosaicBuilder] Warping images, time: " << ((getTickCount() - t) / getTickFrequency()) << " sec");
 
+	// Changes due opencv2.4 -> opencv3.1
+	for (size_t i = 0; images_warped.size(); ++i)
+	{
+		images_warped_umat[i] = images_warped[i].getUMat( ACCESS_READ );
+		masks_warped_umat[i] = masks_warped[i].getUMat( ACCESS_READ );
+	}
+
 	Ptr<ExposureCompensator> compensator = ExposureCompensator::createDefault(expos_comp_type);
-	compensator->feed(corners, images_warped, masks_warped);
+	compensator->feed(corners, images_warped_umat, masks_warped_umat);
 
 	Ptr<SeamFinder> seam_finder;
 	if (seam_find_type == "no")
@@ -389,7 +409,7 @@ int main(int argc, char** argv)
         return 0;
 	}
 
-	seam_finder->find(images_warped_f, corners, masks_warped);
+	seam_finder->find(images_warped_f, corners, masks_warped_umat);
 
 	// Release unused memory
 	images.clear();

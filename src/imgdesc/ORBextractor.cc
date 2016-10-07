@@ -58,8 +58,10 @@
 *********************************************************************/
 
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/features2d.hpp>
 #include <vector>
 
 //#include "ORBextractor.h"
@@ -720,7 +722,7 @@ static void computeDescriptors(const Mat& image, vector<KeyPoint>& keypoints, Ma
 
 void ORBextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPoint>& _keypoints,
                       OutputArray _descriptors)
-{ 
+{
     if(_image.empty())
         return;
 

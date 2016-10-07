@@ -3,9 +3,9 @@
 	Created on: Apr 10, 2013
 	Author: xinyang
 
-    LDB - Local Difference Binary 
+    LDB - Local Difference Binary
     Reference implementation of
-    [1] Xin Yang and Kwang-Ting(Tim) Cheng. LDB: An Ultra-Fast Feature for 
+    [1] Xin Yang and Kwang-Ting(Tim) Cheng. LDB: An Ultra-Fast Feature for
 	Scalable Augmened Reality on Mobile Device. In Proceedings of
     the IEEE International Symposium on Mixed and Augmented Reality(ISMAR2012).
 
@@ -31,11 +31,11 @@
 #ifndef LDB_H_
 #define LDB_H_
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/features2d/features2d.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/features2d.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 #include <vector>
 
 //using namespace cv;
@@ -46,16 +46,16 @@ class LDB
 public:
 
 	int kBytes;
-	
+
 	LDB(int _patchSize = 48);
 	~LDB();
     // returns the descriptor size in bytes
         int descriptorSize() const;
     // Compute the LDB features and descriptors on an image
-    void compute( const cv::Mat& image, cv::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, bool flag) const;
+    void compute( const cv::Mat& image, std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, bool flag) const;
 
 protected:
-	
+
 	int nfeatures;
 	double scaleFactor;
 	int nlevels;

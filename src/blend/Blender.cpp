@@ -27,14 +27,14 @@ namespace bimos
  * @brief Default constructor.
  */
 Blender::Blender()
-{    
+{
 }
 
 /**
  * @brief Default destructor.
  */
 Blender::~Blender()
-{    
+{
 }
 
 /**
@@ -54,8 +54,10 @@ void Blender::run()
     std::vector<cv::Point> corners(nimages);
     std::vector<cv::Size> sizes(nimages);
     std::vector<cv::Mat> images_warped(nimages);
-    std::vector<cv::Mat> images_warped_f(nimages);
+    std::vector<cv::UMat> images_warped_f(nimages);
     std::vector<cv::Mat> masks_warped(nimages);
+    std::vector<cv::UMat> masks_warped_umat(nimages);
+    std::vector<cv::UMat> images_warped_umat(nimages);
 
     // Warping images
     ROS_INFO("[blender] Warping images ...");
@@ -75,22 +77,29 @@ void Blender::run()
         warpImg(masks[i], transforms[i], masks_warped[i], cv::INTER_NEAREST, cv::BORDER_CONSTANT);
 
         // Passing the warped image to float.
-        images_warped[i].convertTo(images_warped_f[i], CV_32F);
+        cv::Mat tmp_img;
+        images_warped[i].convertTo(tmp_img, CV_32F);
+        images_warped_f[i] = tmp_img.getUMat( cv::ACCESS_READ );
     }
 
     cv::Ptr<cv::detail::ExposureCompensator> compensator;
     if (p->blend_exp)
     {
         ROS_INFO("[blender] Compensating exposures ...");
+        for (size_t i = 0; images_warped.size(); ++i)
+        {
+            images_warped_umat[i] = images_warped[i].getUMat( cv::ACCESS_READ );
+            masks_warped_umat[i] = masks_warped[i].getUMat( cv::ACCESS_READ );
+        }
         compensator = cv::detail::ExposureCompensator::createDefault(cv::detail::ExposureCompensator::GAIN_BLOCKS);
-        compensator->feed(corners, images_warped, masks_warped);
+        compensator->feed(corners, images_warped_umat, masks_warped_umat);
     }
 
     if (p->blend_seams)
     {
         ROS_INFO("[blender] Finding seams ...");
         cv::Ptr<cv::detail::SeamFinder> seam_finder = new cv::detail::GraphCutSeamFinder(cv::detail::GraphCutSeamFinderBase::COST_COLOR);
-        seam_finder->find(images_warped_f, corners, masks_warped);
+        seam_finder->find(images_warped_f, corners, masks_warped_umat);
         images_warped_f.clear();
     }
 
@@ -142,7 +151,7 @@ void Blender::run()
     std::string pano_filename4 = p->working_dir + "mosaic_" + SSTR(mosaic_id) + "_r4.jpg";
     cv::Mat pano_r4;
     cv::resize(pano_r2, pano_r4, cv::Size(), 0.5, 0.5, CV_INTER_AREA);
-    cv::imwrite(pano_filename4, pano_r4);    
+    cv::imwrite(pano_filename4, pano_r4);
 
     mosaic_id++;
 
