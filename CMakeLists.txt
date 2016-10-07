@@ -20,11 +20,7 @@ find_package(OpenCV REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 find_package(Ceres REQUIRED)
 find_package(OpenMP REQUIRED)
-if(OPENMP_FOUND)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif()
+find_package(Eigen3 REQUIRED)
 
 # Defining the package
 catkin_package(
@@ -39,7 +35,7 @@ catkin_package(
 ###########
 
 # Including directories.
-include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${CERES_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${CERES_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
 
 # Custom target to include headers and launch files in QtCreator
 add_custom_target(dtarget_bimos SOURCES ${HDRS} ${SRCS} ${LNCH})
@@ -70,7 +66,7 @@ set(BIMOS_SRCS
 # BIMOS Node
 add_executable(bimos_node ${BIMOS_SRCS})
 add_dependencies(bimos_node ${PROJECT_NAME}_gencfg)
-target_link_libraries(bimos_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${CERES_LIBRARIES})
+target_link_libraries(bimos_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${CERES_LIBRARIES} ${EIGEN3_LIBRARIES})
 
 # BIMOS Rotational
 add_executable(bimos_rotational

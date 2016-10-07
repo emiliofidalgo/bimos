@@ -12,21 +12,9 @@ BIMOS was presented at ICRA conference. If you use BIMOS, we will be grateful if
 
 **Fast Image Mosaicing using Incremental Bags of Binary Words**     
 Emilio Garcia-Fidalgo, Alberto Ortiz, Francisco Bonnin-Pascual and Joan P. Company     
-IEEE International Conference on Robotics and Automation (ICRA), pp. 1174-1180. 
-Stockholm (Sweden), 2016     
-
-<!--The paper can be downloaded from [here] (http://emiliofidalgo.github.io/static/papers/conf_ETFA_Garcia2014.pdf). If you use this software in an academic work, please cite:
-
-	@INPROCEEDINGS{GarciaFidalgoETFA14,
-		author={Garcia-Fidalgo, Emilio and Ortiz, Alberto},
-		booktitle={Emerging Technology and Factory Automation (ETFA), 2014 IEEE},
-		title={On the use of binary feature descriptors for loop closure detection},
-		year={2014},
-		month={Sept},
-		pages={1-8},
-		doi={10.1109/ETFA.2014.7005121}
-	}
-	-->
+IEEE International Conference on Robotics and Automation (ICRA), pp. 1174-1180.         
+Stockholm (Sweden), 2016      
+Link to [IEEE Xplore] (http://ieeexplore.ieee.org/document/7487247/)        
 
 ## Conditions of use
 
@@ -40,29 +28,31 @@ This installation process has been tested and verified using Ubuntu 14.04.1 LTS 
 
 2. Install BIMOS dependencies:
 
+Install ceres and its own dependencies as explained [here] (http://ceres-solver.org/building.html#linux). Note that installing ceres with the command
+
 	```bash
-	$ sudo apt-get install libceres-dev   
-	$ sudo apt-get install libsuitesparse-dev   
+	$ sudo apt-get install libceres-dev
 	```
+will cause compilation errors [see the bug report] (https://bugs.launchpad.net/ubuntu/+source/ceres-solver/+bug/1595692).
 
 2. Clone the repository into your workspace:
-	
+
 	```bash
-	$ cd ~/your_workspace/src   
-	$ git clone https://github.com/emiliofidalgo/bimos.git`   
+	$ cd ~/your_workspace/src
+	$ git clone https://github.com/emiliofidalgo/bimos.git`
 	```
 
 3. Compile the package using `catkin_make`:
-	
+
 	```bash
-	$ cd ..   
-	$ catkin_make -DCMAKE_BUILD_TYPE=Release   
+	$ cd ..
+	$ catkin_make -DCMAKE_BUILD_TYPE=Release
 	```
 
 4. Launch BIMOS:
-	
+
 	```bash
-	$ roslaunch bimos bimos.launch   
+	$ roslaunch bimos bimos.launch
 	```
 
 ## Usage
@@ -71,11 +61,11 @@ This installation process has been tested and verified using Ubuntu 14.04.1 LTS 
 
 We composed a simple [rqt](http://wiki.ros.org/rqt)-based GUI to interact with BIMOS. To load the interface, open a new terminal and execute:
 
-    $ rqt   
+    $ rqt
 
-Next, go to *'Perspectives - Import...'* and open the file *resources/bimos.perspective* stored in the root package directory. You should see a window like this:   
+Next, go to *'Perspectives - Import...'* and open the file *resources/bimos.perspective* stored in the root package directory. You should see a window like this:
 
-![BIMOS Interface](https://github.com/emiliofidalgo/bimos/blob/develop/resources/rqt_num.png)   
+![BIMOS Interface](https://github.com/emiliofidalgo/bimos/blob/develop/resources/rqt_num.png)
 
 The three different parts that the interface presents are:
 
@@ -97,7 +87,7 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 	- *ORB_LDB*
 	- *FAST_BRIEF*
 	- *FAST_LDB*
-	
+
 - `nkeypoints`: Number of features to find in each input image.
 
 - `pub_debug_info`: This option controls if debug information should be published or not. Currently, only the graph image is published, which can be shown during the topology estimation selecting the corresponding topic in the GUI. For large mosaics, this options can severely affect to the performance of BIMOS and this option should be disabled.
@@ -117,7 +107,7 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 - `kf_min_inliers`: Minimum number of inliers between two consecutive images to consider an image as a new keyframe. Usually the higher the value, the larger the number of images used for the final mosaic.
 
 - `kf_overlap`: Minimum overlap between two consecutive images to consider an image as a new keyframe. Usually the higher the value, the larger the number of images used for the final mosaic.
- 
+
 - `batch`: If checked, the input images are loaded directly from a local directory indicated in the `batch_images_dir` option. Otherwise, images are received through a ROS topic.
 
 - `batch_images_dir`: When `batch` option is checked, this is the path to the directory where the input images are stored. The images should be named consecutively using the same number of digits. For instance: *image00001.jpg*, *image00002.jpg*, and so on.
@@ -149,7 +139,7 @@ Before generating a mosaic, some BIMOS options should be set according to the co
 - As a result, you should obtain something like this (Valldemossa):
 
 <!--![ODEMAR](https://github.com/emiliofidalgo/bimos/blob/develop/resources/mosaic_ODEMAR.jpg)   -->
-![Valldemossa](https://github.com/emiliofidalgo/bimos/blob/develop/resources/mosaic_Valldemossa.jpg)   
+![Valldemossa](https://github.com/emiliofidalgo/bimos/blob/develop/resources/mosaic_Valldemossa.jpg)
 
 ## Known limitations
 
