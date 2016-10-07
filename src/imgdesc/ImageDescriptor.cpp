@@ -31,9 +31,9 @@ namespace bimos
 ImageDescriptor::ImageDescriptor(const std::string& method, const int nfeatures) :
     _method(method),
     _nfeatures(nfeatures),
-    _fastdet(new cv::FastAdjuster(10), nfeatures, nfeatures + 250, 300),
+    _fastdet(cv::FastFeatureDetector::create()),
     _orb(nfeatures, 1.2, 8, ORB_SLAM::ORBextractor::FAST_SCORE, 10),
-    _briefdes(32),
+    _briefdes(cv::xfeatures2d::BriefDescriptorExtractor::create()),
     _ldbdes(48)
 {
     if (method == "FAST_BRIEF")
@@ -84,9 +84,9 @@ void ImageDescriptor::describeImage(const cv::Mat& image, std::vector<cv::KeyPoi
  * @param descs \see ImageDescriptor::describeImage
  */
 void ImageDescriptor::describeImage_FASTBRIEF(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
-{    
-    _fastdet.detect(image, kps);
-    _briefdes.compute(image, kps, descs);
+{
+    _fastdet->detect(image, kps);
+    _briefdes->compute(image, kps, descs);
 }
 
 /**
@@ -97,8 +97,8 @@ void ImageDescriptor::describeImage_FASTBRIEF(const cv::Mat &image, std::vector<
  * @param descs \see ImageDescriptor::describeImage
  */
 void ImageDescriptor::describeImage_FASTLDB(const cv::Mat &image, std::vector<cv::KeyPoint> &kps, cv::Mat &descs)
-{    
-    _fastdet.detect(image, kps);
+{
+    _fastdet->detect(image, kps);
     _ldbdes.compute(image, kps, descs, false); // There is a bug in LDB when computing angle. It needs to be revised, but for now it is set to false.
 }
 
@@ -119,7 +119,7 @@ void ImageDescriptor::describeImage_ORBBRIEF(const cv::Mat &image, std::vector<c
 
     _orb(greyMat, cv::Mat(), kps, descs);
     descs.release();
-    _briefdes.compute(greyMat, kps, descs);
+    _briefdes->compute(greyMat, kps, descs);
 }
 
 /**

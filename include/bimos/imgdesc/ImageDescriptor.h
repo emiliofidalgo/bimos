@@ -23,6 +23,7 @@
 
 #include <bimos/imgdesc/ldb.h>
 #include <bimos/imgdesc/ORBextractor.h>
+#include <opencv2/xfeatures2d.hpp>
 
 namespace bimos
 {
@@ -55,9 +56,9 @@ private:
     int _nfeatures;
 
     // Objects for keypoint detection and description
-    cv::DynamicAdaptedFeatureDetector _fastdet;
+    cv::Ptr<cv::FastFeatureDetector> _fastdet;
     ORB_SLAM::ORBextractor _orb;
-    cv::BriefDescriptorExtractor _briefdes;
+    cv::Ptr<cv::xfeatures2d::BriefDescriptorExtractor> _briefdes;
     LDB _ldbdes;
 };
 
