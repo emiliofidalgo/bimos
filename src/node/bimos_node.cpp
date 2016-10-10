@@ -92,7 +92,7 @@ void createMosaic(ros::NodeHandle& nh)
     boost::filesystem::create_directory(res_imgs_dir);
     res_imgs_dir = p->working_dir + "inliers/";
     boost::filesystem::remove_all(res_imgs_dir);
-    boost::filesystem::create_directory(res_imgs_dir);    
+    boost::filesystem::create_directory(res_imgs_dir);
     ROS_INFO("Working directory ready");
 
     // Creating the information publisher class
@@ -123,13 +123,11 @@ void createMosaic(ros::NodeHandle& nh)
         {
             mpublisher.publishGraphInfo();
         }
-
-        ros::spinOnce();
         rate.sleep();
-    }    
+    }
 
-    optim_thread.join();    
-    lcloser_thread.join();    
+    optim_thread.join();
+    lcloser_thread.join();
     kfsel_thread.join();
 
     ROS_INFO("Mosaic finished");
@@ -223,7 +221,7 @@ void init_mosaic(const std_msgs::EmptyConstPtr& msg)
     mgraph->setBuildingState(true);
     ros::NodeHandle nh("~");
 
-    createMosaic(nh);    
+    createMosaic(nh);
 }
 
 // Callback for stop_mosaic service
@@ -256,9 +254,17 @@ int main(int argc, char** argv)
 
     // Reading parameters
     p = bimos::Params::getInstance();
-    //ROS_INFO("Reading parameters ...");
-    //p->readParams(nh);
-    //ROS_INFO("Parameters read");
+    // Detect final slash
+    if (p->working_dir[p->working_dir.length()-1] != '/')
+        p->working_dir = p->working_dir + "/";
 
-    ros::spin();
+    // ROS spin
+    ros::Rate r(50);
+    while (ros::ok())
+    {
+        ros::spinOnce();
+        r.sleep();
+    }
+
+    ros::shutdown();
 }

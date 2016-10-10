@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     // Iterating for publishing the images
     ros::Rate loop_rate(frequency);
     for (unsigned i = 0; i < filenames.size(); i++)
-    {        
+    {
         if (ros::isShuttingDown())
         {
             break;
@@ -99,8 +99,6 @@ int main(int argc, char **argv)
             cinfo.header.frame_id = camera_name;
             pub_ci.publish(cinfo);
         }
-
-		ros::spinOnce();
         loop_rate.sleep();
 	}
 

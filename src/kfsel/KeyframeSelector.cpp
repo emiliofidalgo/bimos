@@ -66,17 +66,15 @@ void KeyframeSelector::run()
         {
             cv::Mat img = cv::imread(img_filenames[i]);
             processImage(img);
-
-            ros::spinOnce();
             r.sleep();
         }
     }
     else
-    {        
+    {
         // Launching the topic for receiving images
-        _img_subs = _it.subscribe("image", 300, &KeyframeSelector::receiveImage, this);        
-        ros::Rate r(200);
-        while (mgraph->isBuilding())
+        _img_subs = _it.subscribe("image", 5, &KeyframeSelector::receiveImage, this);
+        ros::Rate r(50);
+        while (ros::ok())
         {
             ros::spinOnce();
             r.sleep();
@@ -175,7 +173,7 @@ void KeyframeSelector::processImage(const cv::Mat& img)
             lvkf_inliers = inliers;
         }
         else
-        {            
+        {
             if (image->id == 1)
             {
                 ROS_ERROR("[kfsel] The second received image needs to be considered as a keyframe.");
