@@ -45,6 +45,9 @@ Params* Params::getInstance()
 void Params::readParams(const ros::NodeHandle& nh)
 {
     nh.param<std::string>("working_dir", working_dir, "");
+    // Detect final slash
+    if (working_dir[working_dir.length()-1] != '/')
+        working_dir = working_dir + "/";
     ROS_INFO("[Params] Working directory: %s", working_dir.c_str());
 
     nh.param<std::string>("img_descriptor", img_descriptor, "FAST_LDB");
