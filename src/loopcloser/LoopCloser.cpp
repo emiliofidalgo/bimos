@@ -31,7 +31,7 @@ LoopCloser::LoopCloser(const ros::NodeHandle& nh, Params* params, MosaicGraph* _
     p(params),
     mgraph(_mgraph),
     bindex_init(false)
-{    
+{
     vi::BinaryIndexParams bparams;
     bparams.max_descriptors = p->nkeypoints * 10000; // Assuming a maximum of 10000 images. Be careful with this value!
     bindex = new vi::BinaryIndex(bparams);
@@ -41,7 +41,7 @@ LoopCloser::LoopCloser(const ros::NodeHandle& nh, Params* params, MosaicGraph* _
  * @brief Default destructor.
  */
 LoopCloser::~LoopCloser()
-{    
+{
     delete bindex;
 }
 
@@ -156,7 +156,6 @@ void LoopCloser::run()
         }
 
         // Sleeping the needed time
-        ros::spinOnce();
         r.sleep();
     }
 }

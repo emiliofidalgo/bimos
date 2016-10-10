@@ -63,7 +63,7 @@ public:
 
 protected:
     // Protected constructor. Singleton class.
-    Params() :        
+    Params() :
         nkeypoints(2500),
         pub_debug_info(false),
         lc_delay_kfs(5),

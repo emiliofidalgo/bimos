@@ -82,26 +82,28 @@ void Blender::run()
         images_warped_f[i] = tmp_img.getUMat( cv::ACCESS_READ );
     }
 
-    cv::Ptr<cv::detail::ExposureCompensator> compensator;
-    if (p->blend_exp)
-    {
-        ROS_INFO("[blender] Compensating exposures ...");
-        for (size_t i = 0; images_warped.size(); ++i)
+    #if defined(HAVE_OPENCV_GPU)
+        cv::Ptr<cv::detail::ExposureCompensator> compensator;
+        if (p->blend_exp)
         {
-            images_warped_umat[i] = images_warped[i].getUMat( cv::ACCESS_READ );
-            masks_warped_umat[i] = masks_warped[i].getUMat( cv::ACCESS_READ );
+            ROS_INFO("[blender] Compensating exposures ...");
+            for (size_t i = 0; images_warped.size(); ++i)
+            {
+                images_warped_umat[i] = images_warped[i].getUMat( cv::ACCESS_READ );
+                masks_warped_umat[i] = masks_warped[i].getUMat( cv::ACCESS_READ );
+            }
+            compensator = cv::detail::ExposureCompensator::createDefault(cv::detail::ExposureCompensator::GAIN_BLOCKS);
+            compensator->feed(corners, images_warped_umat, masks_warped_umat);
         }
-        compensator = cv::detail::ExposureCompensator::createDefault(cv::detail::ExposureCompensator::GAIN_BLOCKS);
-        compensator->feed(corners, images_warped_umat, masks_warped_umat);
-    }
 
-    if (p->blend_seams)
-    {
-        ROS_INFO("[blender] Finding seams ...");
-        cv::Ptr<cv::detail::SeamFinder> seam_finder = new cv::detail::GraphCutSeamFinder(cv::detail::GraphCutSeamFinderBase::COST_COLOR);
-        seam_finder->find(images_warped_f, corners, masks_warped_umat);
-        images_warped_f.clear();
-    }
+        if (p->blend_seams)
+        {
+            ROS_INFO("[blender] Finding seams ...");
+            cv::Ptr<cv::detail::SeamFinder> seam_finder = new cv::detail::GraphCutSeamFinder(cv::detail::GraphCutSeamFinderBase::COST_COLOR);
+            seam_finder->find(images_warped_f, corners, masks_warped_umat);
+            images_warped_f.clear();
+        }
+    #endif
 
     ROS_INFO("[blender] Blending the final mosaic ...");
     cv::Ptr<cv::detail::Blender> blender = cv::detail::Blender::createDefault(cv::detail::Blender::MULTI_BAND, false);
@@ -117,11 +119,13 @@ void Blender::run()
     {
         ROS_INFO("[blender] Compositing image %i ...", i);
 
-        if (p->blend_exp)
-        {
-            // Compensate exposure
-            compensator->apply(i, corners[i], images_warped[i], masks_warped[i]);
-        }
+        #if defined(HAVE_OPENCV_GPU)
+            if (p->blend_exp)
+            {
+                // Compensate exposure
+                compensator->apply(i, corners[i], images_warped[i], masks_warped[i]);
+            }
+        #endif
 
         images_warped[i].convertTo(image_warped_s, CV_16S);
 
