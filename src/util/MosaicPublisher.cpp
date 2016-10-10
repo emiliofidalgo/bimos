@@ -44,20 +44,25 @@ void MosaicPublisher::publishGraphInfo()
     out << dot_graph;
     out.close();
 
-    // Calling to the conversion function
-    std::string command = "dot -Kneato -n -Tjpg " + p->working_dir + "mgraph.dot -o " + p->working_dir + "mgraph.jpg";
-    std::system(command.c_str());
+    // Calling to the conversion functions
+    std::string command1 = "dot -Kneato -n -Tpdf " + p->working_dir + "mgraph.dot -o " + p->working_dir + "mgraph.pdf";
+    std::system(command1.c_str());
+    std::string command2 = "convert " + p->working_dir + "mgraph.pdf " + p->working_dir + "mgraph.jpg";
+    std::system(command2.c_str());
 
     // Publishing the image
-    std_msgs::Header hdr;
-    hdr.stamp = ros::Time::now();
-    hdr.frame_id = "mosaic_graph";
-    cv::Mat img_graph = cv::imread(p->working_dir + "mgraph.jpg");
+    if (pub_graph.getNumSubscribers() > 0)
+    {
+        std_msgs::Header hdr;
+        hdr.stamp = ros::Time::now();
+        hdr.frame_id = "mosaic_graph";
+        cv::Mat img_graph = cv::imread(p->working_dir + "mgraph.jpg");
 
-    sensor_msgs::Image img_msg;
-    cv_bridge::CvImage cv_image(hdr, "bgr8", img_graph);
-    cv_image.toImageMsg(img_msg);
-    pub_graph.publish(img_msg);
+        sensor_msgs::Image img_msg;
+        cv_bridge::CvImage cv_image(hdr, "bgr8", img_graph);
+        cv_image.toImageMsg(img_msg);
+        pub_graph.publish(img_msg);
+    }
 }
 
 }
