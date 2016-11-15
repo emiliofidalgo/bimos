@@ -27,7 +27,7 @@ catkin_package(
     INCLUDE_DIRS include
     LIBRARIES bimos
     CATKIN_DEPENDS roscpp camera_calibration_parsers sensor_msgs image_transport cv_bridge obindex std_srvs dynamic_reconfigure
-    DEPENDS OpenCV Boost Ceres OpenMP
+    DEPENDS OpenCV Boost
 )
 
 ###########
