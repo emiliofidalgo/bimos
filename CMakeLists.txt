@@ -65,7 +65,7 @@ set(BIMOS_SRCS
 
 # BIMOS Node
 add_executable(bimos_node ${BIMOS_SRCS})
-add_dependencies(bimos_node ${PROJECT_NAME}_gencfg)
+add_dependencies(bimos_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(bimos_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${CERES_LIBRARIES} ${EIGEN3_LIBRARIES})
 
 # BIMOS Rotational
@@ -73,6 +73,7 @@ add_executable(bimos_rotational
     src/util/Params.cpp
     src/util/util.cpp
     src/node/bimos_rotational.cpp)
+add_dependencies(bimos_rotational ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(bimos_rotational ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
 
 # BIMOS Conv Factors
@@ -80,10 +81,12 @@ add_executable(bimos_convfactors
     src/util/Params.cpp
     src/util/util.cpp
     src/node/bimos_convfactors.cpp)
+add_dependencies(bimos_convfactors ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(bimos_convfactors ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
 
 # Image Publisher Node
 add_executable(image_publisher
     src/util/util.cpp
     src/node/image_publisher_node.cpp)
+add_dependencies(image_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(image_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES})
