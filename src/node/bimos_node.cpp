@@ -123,6 +123,7 @@ void createMosaic(ros::NodeHandle& nh)
         {
             mpublisher.publishGraphInfo();
         }
+        ros::spinOnce();
         rate.sleep();
     }
 
