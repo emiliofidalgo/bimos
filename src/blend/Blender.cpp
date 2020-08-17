@@ -80,9 +80,11 @@ void Blender::run()
         cv::Mat tmp_img;
         images_warped[i].convertTo(tmp_img, CV_32F);
         images_warped_f[i] = tmp_img.getUMat( cv::ACCESS_READ );
+
+        masks_warped_umat[i] = masks_warped[i].getUMat( cv::ACCESS_READ );
     }
 
-    #if defined(HAVE_OPENCV_GPU)
+    #if defined(HAVE_OPENCV_CUDAWARPING)
         cv::Ptr<cv::detail::ExposureCompensator> compensator;
         if (p->blend_exp)
         {
@@ -90,7 +92,7 @@ void Blender::run()
             for (size_t i = 0; images_warped.size(); ++i)
             {
                 images_warped_umat[i] = images_warped[i].getUMat( cv::ACCESS_READ );
-                masks_warped_umat[i] = masks_warped[i].getUMat( cv::ACCESS_READ );
+                //masks_warped_umat[i] = masks_warped[i].getUMat( cv::ACCESS_READ );
             }
             compensator = cv::detail::ExposureCompensator::createDefault(cv::detail::ExposureCompensator::GAIN_BLOCKS);
             compensator->feed(corners, images_warped_umat, masks_warped_umat);
@@ -119,7 +121,7 @@ void Blender::run()
     {
         ROS_INFO("[blender] Compositing image %i ...", i);
 
-        #if defined(HAVE_OPENCV_GPU)
+        #if defined(HAVE_OPENCV_CUDAWARPING)
             if (p->blend_exp)
             {
                 // Compensate exposure
